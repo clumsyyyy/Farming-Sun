@@ -1,5 +1,5 @@
 :- include('globals.pl').
-
+:- dynamic(map/3).
 changePos(X, Y):-
     retractall(pos(_, _)), assertz(pos(X, Y)).
 

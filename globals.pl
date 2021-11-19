@@ -1,7 +1,5 @@
-:- dynamic(pos/2).
-
-
-:- dynamic(level/1).
+:- dynamic(pos/2). 
+:- dynamic(level/1). 
 :- dynamic(farmLevel/1).
 :- dynamic(farmEXP/1).
 :- dynamic(fishLevel/1).
