@@ -1,23 +1,12 @@
-/* dump predicate */
-
-:- dynamic(level/1).
-:- dynamic(farmLevel/1).
-:- dynamic(farmEXP/1).
-:- dynamic(fishLevel/1).
-:- dynamic(fishEXP/1).
-:- dynamic(ranchLevel/1).
-:- dynamic(ranchEXP/1).
-:- dynamic(exp/1).
-:- dynamic(gold/1).
-
-:- dynamic(inventory/1).
+:- include('game.pl').
+:- include('globals.pl').
 
 startGame:-
     write(' _   _                          _   \n'),
     write('| | | | __ _ _ ____ _____ _____| |_  \n'),
     write('| |_| |/ _` | __\\ \\ / / _ \\/ __| __| \n'),
     write('|  _  | (_| | |  \\ V / __/ \\__ \\ |_  \n'),
-    write('|_| |_|\\__,_|_|  \\/\\ \\___||___/\\__| \n'),
+    write('|_| |_|\\__,_|_|   \\/ \\ ___||___/\\__| \n'),
     write('Harvest Star!!!\n'),
     write('Lets play and pay our debts together\n'),
     write('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n'),
@@ -30,9 +19,14 @@ startGame:-
     write('% 7. a      : gerak ke barat 1 langkah                                         %\n'),
     write('% 8. Status : menampilkan status pemain                                        %\n'),
     write('% 9. help   : menampilkan segala bantuan                                       %\n'),
-    write('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%').
+    write('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n'),
+    start.
 
-
+selectJob(Num, Output):-
+    (Num = 1 -> Output = 'You chose fisherman!\n';
+    Num = 2 -> Output = 'You chose farmer!\n';
+    Num = 3 -> Output = 'You chose rancher!\n').
+    
 
 start:-
     write('Welcome to Harvest Star. Choose your job\n'),
@@ -41,5 +35,11 @@ start:-
     write('3. Rancher\n'),
     write('>>> '),
     read(Option),
-    write(Option).
+    selectJob(Option, Output),
+    write(Output),
+    write('Beginning game....\n'),
+    assertz(time(1)),
+    assertz(gold(0)),
+    game.
     
+

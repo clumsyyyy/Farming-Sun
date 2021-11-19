@@ -1,6 +1,4 @@
-:- dynamic(map/3).
-:- dynamic(pos/2).
-
+:- include('globals.pl').
 
 changePos(X, Y):-
     retractall(pos(_, _)), assertz(pos(X, Y)).
@@ -42,23 +40,42 @@ printMap(A, B):-
 map:-
     \+pos(_, _),
     initTest,
-    printMap(0, 0).
+    printMap(0, 0), !.
 map:-
-    printMap(0, 0).
+    printMap(0, 0), !.
 
 % ================= movement mechanics ================= %
-w:- pos(A, B), A1 is (A - 1), map(A1, B, '#'), write('Anda menabrak pagar').
-w:- pos(A, B), A1 is (A - 1), map(A1, B, 'o'), write('Anda tidak bisa berjalan di air!').
-w:- pos(A, B), A1 is (A - 1), write('Pindah ke atas'), changePos(A1, B).
+w:- pos(A, B), A1 is (A - 1), map(A1, B, '#'), write('Oops, you\'ve hit a fence!\n\n'), map.
+w:- pos(A, B), A1 is (A - 1), map(A1, B, 'o'), write('You\'ve arrived at the Lake!\nYou can fish here.\n\n'), map.
+w:- pos(A, B), A1 is (A - 1), map(A1, B, 'H'), write('You\'ve arrived at your House!\n\n'), map.
+w:- pos(A, B), A1 is (A - 1), map(A1, B, 'Q'), write('You\'ve arrived at the Quest Centre!\nYou can pick up quests here.\n\n'), map.
+w:- pos(A, B), A1 is (A - 1), map(A1, B, 'M'), write('You\'ve arrived at the Marketplace!\nYou can buy items here\n\n'), map.
+w:- pos(A, B), A1 is (A - 1), map(A1, B, 'R'), write('You\'ve arrived at the Ranch!\n\n'), map.
+w:- pos(A, B), A1 is (A - 1), write('Moved one tile above!\n\n'), changePos(A1, B), map.
 
-a:- pos(A, B), B1 is (B - 1), map(A, B1, '#'), write('Anda menabrak pagar').
-a:- pos(A, B), B1 is (B - 1), map(A, B1, 'o'), write('Anda tidak bisa berjalan di air!').
-a:- pos(A, B), B1 is (B - 1), write('Pindah ke kiri'), changePos(A, B1).
 
-s:- pos(A, B), A1 is (A + 1), map(A1, B, '#'), write('Anda menabrak pagar').
-s:- pos(A, B), A1 is (A + 1), map(A1, B, 'o'), write('Anda tidak bisa berjalan di air!').
-s:- pos(A, B), A1 is (A + 1), write('Pindah ke bawah'), changePos(A1, B).
+a:- pos(A, B), B1 is (B - 1), map(A, B1, '#'), write('Oops, you\'ve hit a fence!\n\n'), map.
+a:- pos(A, B), B1 is (B - 1), map(A, B1, 'o'), write('You\'ve arrived at the Lake!\nYou can fish here.\n\n'), map.
+a:- pos(A, B), B1 is (B - 1), map(A, B1, 'H'), write('You\'ve arrived at your House!\n\n'), map.
+a:- pos(A, B), B1 is (B - 1), map(A, B1, 'Q'), write('You\'ve arrived at the Quest Centre!\nYou can pick up quests here.\n\n'), map.
+a:- pos(A, B), B1 is (B - 1), map(A, B1, 'M'), write('You\'ve arrived at the Marketplace!\nYou can buy items here\n\n'), map.
+a:- pos(A, B), B1 is (B - 1), map(A, B1, 'R'), write('You\'ve arrived at the Ranch!\n\n'), map.
+a:- pos(A, B), B1 is (B - 1), write('Moved one tile left!\n\n'), changePos(A, B1), map.
 
-d:- pos(A, B), B1 is (B + 1), map(A, B1, '#'), write('Anda menabrak pagar').
-d:- pos(A, B), B1 is (B + 1), map(A, B1, 'o'), write('Anda tidak bisa berjalan di air!').
-d:- pos(A, B), B1 is (B + 1), write('Pindah ke kanan'), changePos(A, B1).
+
+s:- pos(A, B), A1 is (A + 1), map(A1, B, '#'), write('Oops, you\'ve hit a fence!\n\n'), map.
+s:- pos(A, B), A1 is (A + 1), map(A1, B, 'o'), write('You\'ve arrived at the Lake!\nYou can fish here.\n\n'), map.
+s:- pos(A, B), A1 is (A + 1), map(A1, B, 'H'), write('You\'ve arrived at your House!\n\n').
+s:- pos(A, B), A1 is (A + 1), map(A1, B, 'Q'), write('You\'ve arrived at the Quest Centre!\nYou can pick up quests here.\n\n'), map.
+s:- pos(A, B), A1 is (A + 1), map(A1, B, 'M'), write('You\'ve arrived at the Marketplace!\nYou can buy items here\n\n'), map.
+s:- pos(A, B), A1 is (A + 1), map(A1, B, 'R'), write('You\'ve arrived at the Ranch!\n\n'), map.
+s:- pos(A, B), A1 is (A + 1), write('Moved one tile below!\n'), changePos(A1, B), map.
+
+
+d:- pos(A, B), B1 is (B + 1), map(A, B1, '#'), write('Oops, you\'ve hit a fence!\n\n'), map.
+d:- pos(A, B), B1 is (B + 1), map(A, B1, 'o'), write('You\'ve arrived at the Lake!\nYou can fish here.\n\n'), map.
+d:- pos(A, B), B1 is (B + 1), map(A, B1, 'H'), write('You\'ve arrived at your House!\n\n'), map.
+d:- pos(A, B), B1 is (B + 1), map(A, B1, 'Q'), write('You\'ve arrived at the Quest Centre!\nYou can pick up quests here.\n\n'), map.
+d:- pos(A, B), B1 is (B + 1), map(A, B1, 'M'), write('You\'ve arrived at the Marketplace!\nYou can buy items here\n\n'), map.
+d:- pos(A, B), B1 is (B + 1), map(A, B1, 'R'), write('You\'ve arrived at the Ranch!\n\n'), map.
+d:- pos(A, B), B1 is (B + 1), write('Moved one tile right!\n\n'), changePos(A, B1), map.
