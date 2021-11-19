@@ -78,15 +78,68 @@ chicken:-
     write('You have no chickens!\n').
 chicken:-
     livestock(chicken, X),
-    X > 0.
+    X > 0,
+    ranchTimeMgmt(chickenDelay, Delay), day(Day), ranchTimeMgmt(chickenLastDay, LastDay),
+    Delta is Day - LastDay,
+    Delta < Delay,
+    write('Your chicken is too tired to lay eggs!\n'),
+    DayRemain is Delay - Delta,
+    write('Try to come back here in '), write(DayRemain), write(' days.\n').
 
 
 cow:-
     livestock(cow, X),
     X = 0,
     write('You have no cows!\n').
+cow :-
+    livestock(cow, X),
+    X > 0,
+    ranchTimeMgmt(cowDelay, Delay), day(Day), ranchTimeMgmt(cowLastDay, LastDay),
+    Delta is Day - LastDay,
+    Delta >= Delay,
+    livestock(cow, N),
+    write('Your cow produces '), write(N), write(' bottle of milk!\n'),
+    retract(ranchTimeMgmt(cowLastDay, LastDay)),
+    assertz(ranchTimeMgmt(cowLastDay, Day)),
+    % exp
+    E is N * 3,
+    expUp(E),
+    !.
+cow :-
+    livestock(cow, X),
+    X > 0,
+    ranchTimeMgmt(cowDelay, Delay), day(Day), ranchTimeMgmt(cowLastDay, LastDay),
+    Delta is Day - LastDay,
+    Delta < Delay,
+    write('Your cow hasn\'t produced any milk!\n'),
+    DayRemain is Delay - Delta,
+    write('Try to come back here in '), write(DayRemain), write(' days.\n').
+
 
 sheep:-
     livestock(sheep, X),
     X = 0,
     write('You have no sheep!\n').
+sheep :-
+    livestock(sheep, X),
+    X > 0,
+    ranchTimeMgmt(sheepDelay, Delay), day(Day), ranchTimeMgmt(sheepLastDay, LastDay),
+    Delta is Day - LastDay,
+    Delta >= Delay,
+    livestock(sheep, N),
+    write('Your sheep produces '), write(N), write(' pack of wool!\n'),
+    retract(ranchTimeMgmt(sheepLastDay, LastDay)),
+    assertz(ranchTimeMgmt(sheepLastDay, Day)),
+    % exp sheep
+    E is N * 10,
+    expUp(E),
+    !.
+sheep :-
+    livestock(sheep, X),
+    X > 0,
+    ranchTimeMgmt(sheepDelay, Delay), day(Day), ranchTimeMgmt(sheepLastDay, LastDay),
+    Delta is Day - LastDay,
+    Delta < Delay,
+    write('Your sheep hasn\'t produced any wool!\n'),
+    DayRemain is Delay - Delta,
+    write('Try to come back here in '), write(DayRemain), write(' days.\n').
