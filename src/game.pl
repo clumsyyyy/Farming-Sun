@@ -1,9 +1,10 @@
 :- include('globals.pl').
 :- include('map.pl').
 :- include('fishing.pl').
-:- include('ranching.pl').
+% :- include('ranching.pl').
 :- include('inventory.pl').
 :- include('house.pl').
+:- include('quest.pl').
 
 game:-
     write('Use W, A, S, and D (.) to move!\n\n'),
