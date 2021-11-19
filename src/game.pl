@@ -2,7 +2,7 @@
 :- include('map.pl').
 :- include('fishing.pl').
 :- include('inventory.pl').
-:- include('ranch.pl').
+:- include('ranching.pl').
 :- include('house.pl').
 
 game:-
