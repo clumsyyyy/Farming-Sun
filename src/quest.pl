@@ -68,7 +68,7 @@ doHarvest:-
     Hf > 0,
     Hfx is Hf-1,
     retract(myquest(_,_,_,_,_,_)),
-    assertz(myquest(Hi,Hfx,Fi,Ff,Ri,Rf)),!.
+    assertz(myquest(Hi,Hfx,Fi,Ff,Ri,Rf)),!;true.
     
 
 doFish:-
@@ -76,14 +76,14 @@ doFish:-
     Ff > 0,
     Ffx is Ff-1,
     retract(myquest(_,_,_,_,_,_)),
-    assertz(myquest(Hi,Hf,Fi,Ffx,Ri,Rf)),!.
+    assertz(myquest(Hi,Hf,Fi,Ffx,Ri,Rf)),!;true.
 
 doRanch:-
     myquest(Hi,Hf,Fi,Ff,Ri,Rf),
     Rf > 0,
     Rfx is Rf-1,
     retract(myquest(_,_,_,_,_,_)),
-    assertz(myquest(Hi,Hf,Fi,Ff,Ri,Rfx)),!.
+    assertz(myquest(Hi,Hf,Fi,Ff,Ri,Rfx)),!;true.
 
 isNotInQuest:-
     myquest(X,X,X,X,X,X),

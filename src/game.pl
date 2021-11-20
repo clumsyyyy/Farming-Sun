@@ -5,6 +5,7 @@
 :- include('inventory.pl').
 :- include('house.pl').
 :- include('quest.pl').
+:- include('farming.pl').
 
 game:-
     write('Use W, A, S, and D (.) to move!\n\n'),

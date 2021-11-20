@@ -46,6 +46,7 @@ map:-
 
 % ================= movement mechanics ================= %
 w:- pos(A, B), A1 is (A - 1), map(A1, B, '#'), write('Oops, you\'ve hit a fence!\n\n'), map, !.
+w:- pos(A, B), A1 is (A - 1), map(A1, B, '='), write('You\'ve arrived at the digged tile!\nYou can plant seed here.\n\n'), A2 is A1-1, changePos(A2, B), map, !.
 w:- pos(A, B), A1 is (A - 1), map(A1, B, 'o'), write('You\'ve arrived at the Lake!\nYou can fish here.\n\n'), map, !.
 w:- pos(A, B), A1 is (A - 1), map(A1, B, 'H'), write('You\'ve arrived at your House!\n\n'), changePos(A1, B), map, !.
 w:- pos(A, B), A1 is (A - 1), map(A1, B, 'Q'), write('You\'ve arrived at the Quest Centre!\nYou can pick up quests here.\n\n'), changePos(A1, B), map, !.
@@ -55,6 +56,7 @@ w:- pos(A, B), A1 is (A - 1), write('Moved one tile above!\n\n'), changePos(A1, 
 w:- fishing, !, write('lpm;t').
 
 a:- pos(A, B), B1 is (B - 1), map(A, B1, '#'), write('Oops, you\'ve hit a fence!\n\n'), map, !.
+a:- pos(A, B), B1 is (B - 1), map(A, B1, '='), write('You\'ve arrived at the digged tile!\nYou can plant seed here.\n\n'), A1 is A-1, changePos(A1,B1), map, !.
 a:- pos(A, B), B1 is (B - 1), map(A, B1, 'o'), write('You\'ve arrived at the Lake!\nYou can fish here.\n\n'), map, !.
 a:- pos(A, B), B1 is (B - 1), map(A, B1, 'H'), write('You\'ve arrived at your House!\n\n'), changePos(A, B1), map, !.
 a:- pos(A, B), B1 is (B - 1), map(A, B1, 'Q'), write('You\'ve arrived at the Quest Centre!\nYou can pick up quests here.\n\n'), changePos(A, B1), map, !.
@@ -64,6 +66,7 @@ a:- pos(A, B), B1 is (B - 1), write('Moved one tile left!\n\n'), changePos(A, B1
 
 
 s:- pos(A, B), A1 is (A + 1), map(A1, B, '#'), write('Oops, you\'ve hit a fence!\n\n'), map, !.
+s:- pos(A, B), A1 is (A + 1), map(A1, B, '='), write('You\'ve arrived at the digged tile!\nYou can plant seed here.\n\n'), map, !.
 s:- pos(A, B), A1 is (A + 1), map(A1, B, 'o'), write('You\'ve arrived at the Lake!\nYou can fish here.\n\n'), map, !.
 s:- pos(A, B), A1 is (A + 1), map(A1, B, 'H'), write('You\'ve arrived at your House!\n\n'), changePos(A1, B), !.
 s:- pos(A, B), A1 is (A + 1), map(A1, B, 'Q'), write('You\'ve arrived at the Quest Centre!\nYou can pick up quests here.\n\n'), changePos(A1, B), map, !.
@@ -73,6 +76,7 @@ s:- pos(A, B), A1 is (A + 1), write('Moved one tile below!\n'), changePos(A1, B)
 
 
 d:- pos(A, B), B1 is (B + 1), map(A, B1, '#'), write('Oops, you\'ve hit a fence!\n\n'), map, !.
+d:- pos(A, B), B1 is (B + 1), map(A, B1, '='), write('You\'ve arrived at the digged tile!\nYou can plant seed here.\n\n'), A1 is A-1, changePos(A1,B1), map, !.
 d:- pos(A, B), B1 is (B + 1), map(A, B1, 'o'), write('You\'ve arrived at the Lake!\nYou can fish here.\n\n'), map, !.
 d:- pos(A, B), B1 is (B + 1), map(A, B1, 'H'), write('You\'ve arrived at your House!\n\n'), changePos(A, B1), map.
 d:- pos(A, B), B1 is (B + 1), map(A, B1, 'Q'), write('You\'ve arrived at the Quest Centre!\nYou can pick up quests here.\n\n'), changePos(A, B1), map, !.
