@@ -1,8 +1,7 @@
 # Harvest
-> Permainan `bertani` berbasis CLI menggunakan _GNU Prolog_ - Tugas Besar Mata Kuliah IF2121 Logika Komputasional
+> Permainan bertani berbasis CLI menggunakan _GNU Prolog_ - Tugas Besar Mata Kuliah IF2121 Logika Komputasional
 
 
-~~OH RATNA KENAPA LU PILIH IRFANNNN PADAHAL BIJINYA KAPALANNNNNNNNNNN~~ 
 
 ## Table of Contents
 * [Informasi Umum](#informasi-umum)
