@@ -2,6 +2,9 @@
 
 
 house:-
+/*  I.S. pemain berada di atas tile 'H'
+    F.S. pemain dapat mengakses menu di rumah
+    (untuk sementara, yang dapat diakses adalah fungsi `sleep`) */
     pos(X, Y), map(X, Y, 'H'),
     write('Welcome back to the house.\n'),
     write('What do you want to do?\n'),
@@ -15,6 +18,7 @@ house:-
     write('You\'re not at home').
 
 sleep:-
+/* Fungsi meng-update day ke predikat global */
     write('He then went sleepe, next day he wake.\n\n'),
     day(Day),
     Day1 is Day + 1,
