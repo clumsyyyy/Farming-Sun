@@ -17,3 +17,4 @@
 
 % ======= ranch vars ======
 :- dynamic(livestock/2).
+:- dynamic(ranchTimeMgmt/2).

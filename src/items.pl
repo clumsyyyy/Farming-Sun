@@ -1,19 +1,14 @@
 % PRACTICALLY INI AVAILABLE ITEMS
-
-
 :- dynamic(item_in_inventory/3). 
 
-% ITEM ALIAS GUA BIKIN STATIC KARENA SEMUA HARUS PREDEFINED DARI AWAL ITEM APA AJA YANG BISA DIAKSES DI GAME
 % (ITEM CODENAME, ITEM NAME (string))
 item_alias(shovel, "Shovel").
 item_alias(fishing_rod, "Fishing Rod").
 item_alias(carrot, "Carrot").
 item_alias(corn, "Corn").
 item_alias(egg, "Egg").
-item_alias(salmon, "Salmon").
-item_alias(tuna, "Tuna").
-item_alias(utaha_kasumigaoka, "Utaha Kasumigaoka").
-item_alias(eriri_spencer, "Eriri Spencer").
+item_alias(wool, "Pack of Wool").
+item_alias(milk, "Bottle of Milk").
 item_alias(endless_rizette, "Endless Rizette").
 item_alias(fornaxos, "Fornaxos").
 item_alias(rolotia, "Rolotia").
@@ -39,23 +34,26 @@ item_alias(alice, "Alice").
 item_alias(shirra, "Shirra").
 item_alias(grenzor, "Grenzor").
 
-% ITEM GROUP JUGA STATIC KARENA SEMUA HARUS PREDEFINED DARI AWAL ITEM APA AJA YANG BISA DIAKSES DI GAME
-% NOTE, GABOLEH ADA ITEM YANG ADA DI DUA ITEM GROUPS YANG BERBEDA
-
-item_group(waifu_thirafi, [utaha_kasumigaoka, shiori, endless_rizette]).
-item_group(istri_thirafi, [eriri_spencer]).
-item_group(bodyguard_thirafi, [fornaxos, rolotia, alira, shiori, cyrus, altaireon, maxima, norza, rei, finn, kaidaros, voraxion, merdain, diabolos, rashanar, vesh, kirin, artimeia, le_fay, orzachron, alice, shirra, grenzor]).
-
+% ITEM GROUP : unik untuk setiap item
+item_group(fishing, [endless_rizette, fornaxos, rolotia,
+                alira, shiori, cyrus, altaireon, maxima, norza,
+                rei, finn, kaidaros, voraxion, merdain, diabolos,
+                rashanar, vesh, kirin, artimeia, le_fay, orzachron, alice, shirra, grenzor]).
+item_group(farming, [shovel, tomato, corn, tomato_seed, corn_seed]).
+item_group(ranching, [egg, wool, milk]).
 
 % (ITEM CODENAME, ITEM LEVEL, ITEMQTY)
 % ITEM QTY BISA NOL ATAU NEGATIF (DISARANKAN TIDAK KALO EMANG GAPERLU-PERLU BANGET)
 % YANG BAKAL DIDISPLAY DI INVENTORY CUMA YANG POSITIF AJA
 item_in_inventory(shovel,1,1).
 item_in_inventory(fishing_rod, 1, 1).
-item_in_inventory(carrot, -1, 3).
-item_in_inventory(corn, -1, 4).
-item_in_inventory(egg, -1, 3).
-item_in_inventory(salmon, -1, 5).
-item_in_inventory(tuna, -1, 3).
-item_in_inventory(utaha_kasumigaoka, 100, 0).
-item_in_inventory(eriri_spencer, 100, 1).
+
+
+% equipment level up mechanics (Max level: 10)
+levelUpEquipment(Equipment) :-
+    item_in_inventory(Equipment, Level, Qty),
+    Qty == 1,
+    Level < 10,
+    L1 is Level+1,
+    retract(item_in_inventory(Equipment, Level, Qty)),
+    assertz(item_in_inventory(Equipment, L1, Qty)).
