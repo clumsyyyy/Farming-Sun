@@ -3,11 +3,14 @@
 :-dynamic(myseed/2).
 :-dynamic(myplant/8).
 
+% fakta untuk jenis bibit yang dapat ditanam
 seed(tomato, 2, 'tomato', 't','T',3).
 seed(corn, 1, 'corn', 'c','C',2).
 
 
 dig:-
+/*  I.S. tanah yang akan digali kosong
+    F.S. tanah digali, pemain dapat menanam di sana */
     isTileEmpty,
     pos(A, B), 
     A1 is (A - 1), 
@@ -22,7 +25,12 @@ dig:-
     write('You can\'t dig here. Dig somewhere else.\n'),!.
 
 
+
 plant:-
+/*  I.S. tanah telah tergali, program menampilkan bibit yang dapat ditanamkan
+    F.S. bibit akan ditanam, jumlah bibit diupdate, pemain dapat memanen
+    di waktu yang ditentukan
+*/
     isTileDigged,
     pos(X,Y),
     X1 is X+1,
@@ -56,6 +64,8 @@ plant:-
     format('This tile is ready to Harvest~n'),!.
 
 harvest:-
+/*  I.S. tile yang telah ditanamkan siap untuk dipanen
+    F.S. tanaman berhasil dipanen, tile akan diubah ke status bisa digali */
     isTileReadyToHarvest,
     pos(X,Y),
     X1 is X+1,
@@ -71,6 +81,7 @@ harvest:-
     doHarvest,!.
 
 displaySeed:-
+/* Menampilkan bibit yang dapat ditanamkan */
     forall(seed(Name, Qty,_,_,_,_), print_seed(Name, Qty)).
 
 print_seed(Name, Qty):-
@@ -81,23 +92,27 @@ print_seed(Name, Qty):-
     ).
 
 isTilePlanted:-
+/* Mengecek apakah ada yang ditanam di tile */
     pos(X,Y),
     X1 is X+1,
     map(X1,Y,Z),
     myplant(X1,Y,_,_,Z,_,_,_).
 
 isTileReadyToHarvest:-
+/* Mengecek apakah ada yang siap dipanen di tile */
     pos(X,Y),
     X1 is X+1,
     map(X1,Y,Z),
     myplant(X1,Y,_,_,_,Z,_,_).
 
 isTileDigged:-
+/* Mengecek apakah tile telah digali */
     pos(X,Y),
     X1 is X+1,
     map(X1,Y,'=').
 
 isTileEmpty:-
+/* Mengecek apakah tile kosong */
     pos(X,Y),
     X1 is X-1,
     X2 is X+1,

@@ -2,6 +2,8 @@
 :- include('globals.pl').
 
 startGame:-
+/*  I.S. Game belum dimulai, gunakan perintah ini untuk memulai game dan menampilkan menu awal.
+    F.S. Game berjalan, pemain dapat memilih job yang diinginkan dan memulai game */
     write(' _   _                          _   \n'),
     write('| | | | __ _ _ ____ _____ _____| |_  \n'),
     write('| |_| |/ _` | __\\ \\ / / _ \\/ __| __| \n'),
@@ -23,12 +25,16 @@ startGame:-
     start.
 
 selectJob(Num, Output):-
+/* Fungsi perantara untuk memilih pekerjaan */
     (Num = 1 -> Output = 'You chose fisherman!\n';
     Num = 2 -> Output = 'You chose farmer!\n';
     Num = 3 -> Output = 'You chose rancher!\n').
     
 
 start:-
+/*  I.S. dynamic predicate global untuk permainan belum terdefinisi, pemain memilih class
+    F.S. dynamic predicate global (gold, day, exp permainan) diinisialisasi, permainan akan dimulai */
+    % cek file 'game.pl' untuk melihat permainan
     write('Welcome to Harvest Star. Choose your job\n'),
     write('1. Fisherman\n'),
     write('2. Farmer\n'),
