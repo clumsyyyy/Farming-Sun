@@ -4,6 +4,11 @@ rateFishing_SR(0.2).
 rateFishing_R(10).
 rateFishing_C(30).
 
+item_group_helper_FISHING(fishable_SSR, [endless_rizette, fornaxos, rolotia]). 
+item_group_helper_FISHING(fishable_SR, [alira, shiori, cyrus, altaireon, maxima, norza]).
+item_group_helper_FISHING(fishable_R, [rei, finn, kaidaros, voraxion, merdain, diabolos]).
+item_group_helper_FISHING(fishable_C, [rashanar, vesh, kirin, artimeia, le_fay, orzachron, alice, shirra, grenzor]).
+
 getNormalizeVal(X, Res) :- getNormalizeVal(X, Res, 1).
 getNormalizeVal(0, Res, _) :- Res is 100, !.
 getNormalizeVal(X, Res, Base) :-
@@ -101,10 +106,10 @@ fishit :-
     rateFishing_SR(OldRateSR),
     rateFishing_R(OldRateR),
     rateFishing_C(OldRateC),
-    item_group(fishable_SSR, PoolSSR),
-    item_group(fishable_SR, PoolSR),
-    item_group(fishable_R, PoolR),
-    item_group(fishable_C, PoolC),
+    item_group_helper_FISHING(fishable_SSR, PoolSSR),
+    item_group_helper_FISHING(fishable_SR, PoolSR),
+    item_group_helper_FISHING(fishable_R, PoolR),
+    item_group_helper_FISHING(fishable_C, PoolC),
     length(PoolSSR, PoolSSR_Len),
     length(PoolSR, PoolSR_Len),
     % length(PoolR, PoolR_Len),
@@ -155,10 +160,10 @@ displayFishingRate :-
     rateFishing_SR(RateSR),
     rateFishing_R(RateR),
     rateFishing_C(RateC),
-    item_group(fishable_SSR, PoolSSR),
-    item_group(fishable_SR, PoolSR),
-    item_group(fishable_R, PoolR),
-    item_group(fishable_C, PoolC),
+    item_group_helper_FISHING(fishable_SSR, PoolSSR),
+    item_group_helper_FISHING(fishable_SR, PoolSR),
+    item_group_helper_FISHING(fishable_R, PoolR),
+    item_group_helper_FISHING(fishable_C, PoolC),
     format('~nFlying Fish\'s Manor\'s Daily Menu~n',[]),
     format('~n---- SSR Tier ----~n',[]),
     forall(member(X, PoolSSR), (
@@ -183,16 +188,8 @@ displayFishingRate :-
         format('~s ~n', [Alias])
     )),
     nl.
-
-fishing:-
-    pos(A, B), A1 is A - 1, A2 is A + 1, B1 is B - 1, B2 is B + 1,
-    map(A1, B, W), map(A2, B, X), map(A, B1, Y), map(A, B2, Z),
-    (W \== 'o', X \== 'o', Y \== 'o', Z \== 'o'),
-    write('You cannot fish here! Go to the lake to fish!\n').
     
 fishing :-
-    pos(A, B), A1 is A - 1, A2 is A + 1, B1 is B - 1, B2 is B + 1,
-    (map(A1, B, 'o') ; map(A2, B, 'o') ; map(A, B1, 'o') ; map(A, B2, 'o')),
     format('Welcome to Flying Fish Manor.~nHere are our Today\'s Menu~n', []),
     displayFishingRate,
     format('please type \'fishit\' to fish, and \'displayFishingRate\' to display our Today\'s Menu again ^_^~n', []).

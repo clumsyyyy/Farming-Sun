@@ -43,7 +43,7 @@ item_alias(grenzor, "Grenzor").
 % NOTE, GABOLEH ADA ITEM YANG ADA DI DUA ITEM GROUPS YANG BERBEDA
 
 item_group(waifu_thirafi, [utaha_kasumigaoka, shiori, endless_rizette]).
-item_group(istri_thirafi, [eriri_spencer])
+item_group(istri_thirafi, [eriri_spencer]).
 item_group(bodyguard_thirafi, [fornaxos, rolotia, alira, shiori, cyrus, altaireon, maxima, norza, rei, finn, kaidaros, voraxion, merdain, diabolos, rashanar, vesh, kirin, artimeia, le_fay, orzachron, alice, shirra, grenzor]).
 
 
