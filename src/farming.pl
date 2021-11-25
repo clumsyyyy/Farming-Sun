@@ -1,6 +1,5 @@
 :-include('globals.pl').
 :-dynamic(seed/6).
-:-dynamic(myseed/2).
 :-dynamic(myplant/8).
 
 % fakta untuk jenis bibit yang dapat ditanam
@@ -23,8 +22,6 @@ dig:-
 dig:-
     \+isTileEmpty,
     write('You can\'t dig here. Dig somewhere else.\n'),!.
-
-
 
 plant:-
 /*  I.S. tanah telah tergali, program menampilkan bibit yang dapat ditanamkan
@@ -53,7 +50,8 @@ plant:-
 
 plant:-
     \+isTileDigged,
-    write('You can only plant in digged tile\n').
+    \+isTilePlanted,
+    write('You can only plant on digged tile\n'),!.
 
 plant:-
     isTilePlanted,
