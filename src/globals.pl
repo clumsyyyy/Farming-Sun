@@ -3,14 +3,16 @@
 
 % ====== predicate global ======
 :- dynamic(pos/2).          % posisi pemain
+% arg 1: absis, arg 2: ordinat
+:- dynamic(occupation/1).   % pekerjaan pemain
 :- dynamic(level/1).        % level
 :- dynamic(exp/1).          % exp
 :- dynamic(farmLevel/1).    % level farming
 :- dynamic(farmEXP/2).      % exp farming
-:- dynamic(fishLevel/1).    % level mancing
 :- dynamic(fishEXP/2).      % exp mancing
 :- dynamic(ranchLevel/1).   % level ranching
 :- dynamic(ranchEXP/2).     % exp ranching
+% arg 1: level, lvlUpReq, exp
 :- dynamic(gold/1).         % duit
 :- dynamic(day/1).          % hari
 :- dynamic(inventory/1).    % invent
