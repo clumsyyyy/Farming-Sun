@@ -6,10 +6,10 @@ initRanch:-
     assertz(livestock(chicken, 0)),
     assertz(ranchEXP(exp, 0)),
     assertz(ranchEXP(lvl, 1)),
-    assertz(ranchEXP(lvlUpReq, 100)),
-    assertz(ranchTimeMgmt(cowDelay, 7)),
-    assertz(ranchTimeMgmt(chickenDelay, 12)),
-    assertz(ranchTimeMgmt(sheepDelay, 15)),
+    assertz(ranchEXP(lvlUpReq, 75)),
+    assertz(ranchTimeMgmt(cowDelay, 7.0)),
+    assertz(ranchTimeMgmt(chickenDelay, 12.0)),
+    assertz(ranchTimeMgmt(sheepDelay, 15.0)),
     assertz(ranchTimeMgmt(cowLastDay, -999)),
     assertz(ranchTimeMgmt(chickenLastDay, -999)),
     assertz(ranchTimeMgmt(sheepLastDay, -999)).
@@ -86,14 +86,15 @@ chicken:-
     Delta < Delay,
     write('Your chicken is too tired to lay eggs!\n'),
     DayRemain is Delay - Delta,
-    write('Try to come back here in '), write(DayRemain), write(' days.\n').
+    DR is ceiling(DayRemain),
+    write('Try to come back here in '), write(DR), write(' days.\n'),!.
 
 cow:-
-    pos(X, Y), map(X, Y, Z), \+ (Z == 'R'), write('You\'re not in the ranch!').
+    pos(X, Y), map(X, Y, Z), \+ (Z == 'R'), write('You\'re not in the ranch!'),!.
 cow:-
     livestock(cow, X),
     X = 0,
-    write('You have no cows!\n').
+    write('You have no cows!\n'),!.
 cow :-
     livestock(cow, X),
     X > 0,
@@ -116,14 +117,15 @@ cow :-
     Delta < Delay,
     write('Your cow hasn\'t produced any milk!\n'),
     DayRemain is Delay - Delta,
-    write('Try to come back here in '), write(DayRemain), write(' days.\n').
+    DR is ceiling(DayRemain),
+    write('Try to come back here in '), write(DR), write(' days.\n'),!.
 
 sheep:-
     pos(X, Y), map(X, Y, Z), \+ (Z == 'R'), write('You\'re not in the ranch!'),!.
 sheep:-
     livestock(sheep, X),
     X = 0,
-    write('You have no sheep!\n').
+    write('You have no sheep!\n'),!.
 sheep :-
     livestock(sheep, X),
     X > 0,
@@ -146,7 +148,8 @@ sheep :-
     Delta < Delay,
     write('Your sheep hasn\'t produced any wool!\n'),
     DayRemain is Delay - Delta,
-    write('Try to come back here in '), write(DayRemain), write(' days.\n').
+    DR is ceiling(DayRemain),
+    write('Try to come back here in '), write(DR), write(' days.\n'),!.
 
 ranchEXPUp(EXP_Given):-
     % regular EXP
@@ -165,7 +168,7 @@ ranchEXPUp(EXP_Given):-
     L1 is L + 1, E1 is E + EXP_Given,
     E1 >= R,
     E2 is E1 - R,
-    R1 is R + 100,
+    R1 is R + 25,
     retract(ranchEXP(lvl, L)),
     retract(ranchEXP(exp, E)),
     retract(ranchEXP(lvlUpReq, R)),
@@ -175,7 +178,8 @@ ranchEXPUp(EXP_Given):-
     write('\nYou gained '), write(EXP_Given), write(' Ranch EXP!\n'),
     write('Level Up!\n'),
     write('Your ranching experience is now at level '), write(L1), write('\n'),
-    write('EXP Status: '), write(E2), write('/'), write(R1), write('\n'),!.
+    write('EXP Status: '), write(E2), write('/'), write(R1), write('\n'),
+    ranchLvlUpEffect,!.
 
 
 % Efek level up, jeda hari untuk melakukan aktivitas ranching berkurang
@@ -186,9 +190,9 @@ ranchLvlUpEffect:-
     retract(ranchTimeMgmt(chickenDelay, X)),
     retract(ranchTimeMgmt(cowDelay, Y)),
     retract(ranchTimeMgmt(sheepDelay, Z)),
-    X1 is X - 1,
-    Y1 is Y - 1,
-    Z1 is Z - 1,
+    X1 is X - 1.0,
+    Y1 is Y - 1.0,
+    Z1 is Z - 1.0,
     assertz(ranchTimeMgmt(chickenDelay, X1)),
     assertz(ranchTimeMgmt(cowDelay, Y1)),
     assertz(ranchTimeMgmt(sheepDelay, Z1)),
@@ -196,7 +200,7 @@ ranchLvlUpEffect:-
 ranchLvlUpEffect:-
     ranchEXP(lvl, Level),
     Level >= 5,
-    Level < 10,
+    Level =< 10,
     retract(ranchTimeMgmt(chickenDelay, X)),
     retract(ranchTimeMgmt(cowDelay, Y)),
     retract(ranchTimeMgmt(sheepDelay, Z)),
@@ -208,8 +212,8 @@ ranchLvlUpEffect:-
     assertz(ranchTimeMgmt(sheepDelay, Z1)),
     !.
 
-cheatDay:-
+cheatDay(Skip):-
     retract(day(X)),
-    X1 is X + 1,
+    X1 is X + Skip,
     assertz(day(X1)),
     !.
