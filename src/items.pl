@@ -39,7 +39,7 @@ item_group(fishing, [endless_rizette, fornaxos, rolotia,
                 alira, shiori, cyrus, altaireon, maxima, norza,
                 rei, finn, kaidaros, voraxion, merdain, diabolos,
                 rashanar, vesh, kirin, artimeia, le_fay, orzachron, alice, shirra, grenzor]).
-item_group(farming, [shovel, tomato, corn, tomato_seed, corn_seed]).
+item_group(farming, [shovel, tomato, corn, tomato_seed, corn_seed, carrot]).
 item_group(ranching, [egg, wool, milk]).
 
 % (ITEM CODENAME, ITEM LEVEL, ITEMQTY)

@@ -70,7 +70,7 @@ harvest:-
     map(X1,Y,Z),
     myplant(X1,Y,Name,Alias,_,Z,_,_),
     retract(map(X1,Y,Z)),
-    assertz(map(X1,Y,_)),
+    assertz(map(X1,Y,' ')),
     item(Name,_,Qty),
     QtyNew is Qty+1,
     retract(Name,_,Qty),

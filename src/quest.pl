@@ -9,9 +9,9 @@ initQuest:-
 quest:-
     isNotInQuest,
     isOnTileQ,
-    random(1,10,H),
-    random(1,10,F),
-    random(1,10,R),
+    random(1,2,H),
+    random(1,2,F),
+    random(1,2,R),
     retract(myquest(_,_,_,_,_,_)),
     assertz(myquest(H,H,F,F,R,R)),
     Gold is H*10+F*10+R*10,
@@ -48,9 +48,8 @@ quest:-
     exp(E),
     Gplus is G+Gold,
     Eplus is E+EXP,
-    write(Gplus), write(Eplus),
-    retract(gold(_)),
-    retract(exp(_)),
+    retract(gold(G)),
+    retract(exp(E)),
     assertz(gold(Gplus)),
     assertz(exp(Eplus)),
     write('You have completed the quest, Here is the reward: \n'),
@@ -67,6 +66,8 @@ quest:-
     \+isOnTileQ,
     write('You are not in tile Q!\n'),!.
 
+
+% ini jatohnya cheat buat ngeh aja
 doHarvest:-
     myquest(Hi,Hf,Fi,Ff,Ri,Rf),
     Hf > 0,
@@ -91,7 +92,7 @@ doRanch:-
 
 isNotInQuest:-
     myquest(X,X,X,X,X,X),
-    X = -1.
+    X =:= -1.
 
 isOnTileQ:-
     pos(X, Y), map(X, Y, 'Q').
@@ -99,4 +100,4 @@ isOnTileQ:-
 isQuestClear:-
     \+isNotInQuest,
     myquest(_,X,_,X,_,X),
-    X = 0.
+    X =:= 0.

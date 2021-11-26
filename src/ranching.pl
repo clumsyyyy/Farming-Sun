@@ -16,6 +16,10 @@ buyCow:-
     X1 is X+1,
     retract(livestock(cow, X)),
     assertz(livestock(cow, X1)),
+    ranchEXP(exp, EXP),
+    NewEXP is EXP + 15,
+    retract(ranchEXP(exp, EXP)),
+    assertz(ranchEXP(exp, NewEXP)),
     write('Succesfully bought a new cow!\n').
 
 buyChicken:-
@@ -23,6 +27,10 @@ buyChicken:-
     X1 is X+1,
     retract(livestock(chicken, X)),
     assertz(livestock(chicken, X1)),
+    ranchEXP(exp, EXP),
+    NewEXP is EXP + 5,
+    retract(ranchEXP(exp, EXP)),
+    assertz(ranchEXP(exp, NewEXP)),
     write('Succesfully bought a new chicken!\n').
 
 buySheep:-
@@ -30,13 +38,15 @@ buySheep:-
     X1 is X+1,
     retract(livestock(sheep, X)),
     assertz(livestock(sheep, X1)),
+    ranchEXP(exp, EXP),
+    NewEXP is EXP + 10,
+    retract(ranchEXP(exp, EXP)),
+    assertz(ranchEXP(exp, NewEXP)),
     write('Succesfully bought a new sheep!\n').
 ranch:-
     pos(X, Y), map(X, Y, Z), \+ (Z == 'R'), write('You\'re not in the ranch!'), !.
 ranch:-
-    pos(X, Y), map(X, Y, 'R'), ranchEXP(exp, 0), write('Initializing a new ranch...\n'), initRanch, ranchMenu.
-ranch:-
-    pos(X, Y), map(X, Y, 'R'), ranchEXP(exp, _), ranchMenu.
+    pos(X, Y), map(X, Y, 'R'), ranchMenu.
 
 ranchMenu:-
     day(A), ranchEXP(lvl, B),

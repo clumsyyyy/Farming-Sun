@@ -6,6 +6,7 @@
 :- include('fishing.pl').
 :- include('ranching.pl').
 :- include('inventory.pl').
+:- include('market.pl').
 :- include('house.pl').
 :- include('quest.pl').
 
@@ -15,6 +16,7 @@ game:-
     write('Use W, A, S, and D (.) to move!\n\n'),
     write('Use the HELP menu for more information!\n\n'),
     initQuest,
+    initRanch,
     status,
     map.
 

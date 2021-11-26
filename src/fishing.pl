@@ -131,24 +131,28 @@ fishit :-
         Gacha >= 0, Gacha < MarkSSR -> (
             rd_member(Item, PoolSSR),
             catchfishmsg(Item, catching_fish_ssr),
+            doFish,
             !
         )
         ;
         Gacha >= MarkSSR, Gacha < MarkSR -> (
             rd_member(Item, PoolSR),
             catchfishmsg(Item, catching_fish_sr),
+            doFish,
             !
         )
         ;
         Gacha >= MarkSR, Gacha < MarkR -> (
             rd_member(Item, PoolR),
             catchfishmsg(Item, catching_fish_r),
+            doFish,
             !
         )
         ;
         Gacha >= MarkR, Gacha < MarkC -> (
             rd_member(Item, PoolC),
             catchfishmsg(Item, catching_fish_c),
+            doFish,
             !
         )
         ;

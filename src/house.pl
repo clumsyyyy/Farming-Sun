@@ -38,6 +38,7 @@ write:-
     assertz(diary(Day, Diary)),
     write('\n'),
     house.
+    
 write:-
     \+isOnHouse, write('You\'re not at home!').
 
