@@ -1,6 +1,7 @@
 :- include('game.pl').
 :- include('globals.pl').
 
+
 startGame:-
 /*  I.S. Game belum dimulai, gunakan perintah ini untuk memulai game dan menampilkan menu awal.
     F.S. Game berjalan, pemain dapat memilih job yang diinginkan dan memulai game */
@@ -26,9 +27,9 @@ startGame:-
 
 selectJob(Num, Output):-
 /* Fungsi perantara untuk memilih pekerjaan */
-    (Num = 1 -> Output = 'You chose fisherman!\n';
-    Num = 2 -> Output = 'You chose farmer!\n';
-    Num = 3 -> Output = 'You chose rancher!\n').
+    (Num = 1 -> assertz(occupation(fisherman)), Output = 'You chose fisherman!\n';
+    Num = 2 -> assertz(occupation(farmer)) ,Output = 'You chose farmer!\n';
+    Num = 3 -> assertz(occupation(rancher)) ,Output = 'You chose rancher!\n').
     
 
 start:-

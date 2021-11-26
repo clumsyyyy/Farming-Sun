@@ -22,10 +22,11 @@ game:-
 
 status:-
 /* Fungsi untuk menampilkan informasi terkait uang, hari, dan EXP pemain */
-    day(Day), gold(Gold),
+    day(Day), gold(Gold), occupation(Occupation),
     farmEXP(exp, FarmEXP), farmEXP(lvl, Farmlvl),
     fishEXP(exp, FishEXP), fishEXP(lvl, Fishlvl),
     ranchEXP(exp, RanchEXP), ranchEXP(lvl, Ranchlvl),
+    write('  Occupation: '), write(Occupation), write('\n'),
     write('     Day: '), write(Day), write(' | '),
     write('Gold: '), write(Gold), write('\n'),
     write('========== LEVELS ==========\n'),

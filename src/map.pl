@@ -79,7 +79,7 @@ w:- pos(A, B), A1 is (A - 1), map(A1, B, 'Q'), write('You\'ve arrived at the Que
 w:- pos(A, B), A1 is (A - 1), map(A1, B, 'M'), write('You\'ve arrived at the Marketplace!\nYou can buy items here\n\n'), changePos(A1, B), map, !.
 w:- pos(A, B), A1 is (A - 1), map(A1, B, 'R'), write('You\'ve arrived at the Ranch!\n\n'), changePos(A1, B), map, !.
 w:- pos(A, B), A1 is (A - 1), write('Moved one tile above!\n\n'), changePos(A1, B), map, !.
-w:- fishing, !, write('lpm;t').
+
 
 a:- pos(A, B), B1 is (B - 1), map(A, B1, '#'), write('Oops, you\'ve hit a fence!\n\n'), map, !.
 a:- pos(A, B), B1 is (B - 1), map(A, B1, _), myplant(A,B1,_,_,_,_,_,_), write('Oops, you can\'t step over the planted tile!\n\n'), map, !.
@@ -96,7 +96,7 @@ s:- pos(A, B), A1 is (A + 1), map(A1, B, '#'), write('Oops, you\'ve hit a fence!
 s:- pos(A, B), A1 is (A + 1), map(A1, B, _), myplant(A1,B,_,_,_,_,_,_), write('Oops, you can\'t step over the planted tile!\n\n'), map, !.
 s:- pos(A, B), A1 is (A + 1), map(A1, B, '='), write('You\'ve arrived at the digged tile!\nYou can plant seed here.\n\n'), map, !.
 s:- pos(A, B), A1 is (A + 1), map(A1, B, 'o'), write('You\'ve arrived at the Lake!\nYou can fish here.\n\n'), map, !.
-s:- pos(A, B), A1 is (A + 1), map(A1, B, 'H'), write('You\'ve arrived at your House!\n\n'), changePos(A1, B), !.
+s:- pos(A, B), A1 is (A + 1), map(A1, B, 'H'), write('You\'ve arrived at your House!\n\n'), changePos(A1, B), map, !.
 s:- pos(A, B), A1 is (A + 1), map(A1, B, 'Q'), write('You\'ve arrived at the Quest Centre!\nYou can pick up quests here.\n\n'), changePos(A1, B), map, !.
 s:- pos(A, B), A1 is (A + 1), map(A1, B, 'M'), write('You\'ve arrived at the Marketplace!\nYou can buy items here\n\n'), changePos(A1, B), map, !.
 s:- pos(A, B), A1 is (A + 1), map(A1, B, 'R'), write('You\'ve arrived at the Ranch!\n\n'), changePos(A1, B), map, !.
@@ -112,3 +112,4 @@ d:- pos(A, B), B1 is (B + 1), map(A, B1, 'Q'), write('You\'ve arrived at the Que
 d:- pos(A, B), B1 is (B + 1), map(A, B1, 'M'), write('You\'ve arrived at the Marketplace!\nYou can buy items here\n\n'), changePos(A, B1), map, !.
 d:- pos(A, B), B1 is (B + 1), map(A, B1, 'R'), write('You\'ve arrived at the Ranch!\n\n'), changePos(A, B1), map, !.
 d:- pos(A, B), B1 is (B + 1), write('Moved one tile right!\n\n'), changePos(A, B1), map, !.
+
