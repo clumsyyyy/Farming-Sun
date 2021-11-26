@@ -49,7 +49,6 @@ start:-
     assertz(gold(5000)), assertz(exp(0)),
     assertz(farmEXP(exp, 0)), assertz(farmEXP(lvl, 1)),
     assertz(fishEXP(exp, 0)), assertz(fishEXP(lvl, 1)),
-    assertz(ranchEXP(exp, 0)), assertz(ranchEXP(lvl, 1)),
     game.
     
 
