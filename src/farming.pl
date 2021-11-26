@@ -1,142 +1,148 @@
 :-include('globals.pl').
-:-dynamic(seed/6).
-% seed(Name, Quantity, Alias, SymbolPLanted, SymbolHarvested, HarvestDay).
-:-dynamic(myplant/8).
-% myplant(X,Y,Name,Alias,SymbolPlanted,SymbolHarvest,DayPlant,HarvestDay)
+:-dynamic(seed/5).
+% seed(Name, Quantity, Alias, SymbolPLanted, SymbolHarvested, DayToHarvest)
+:-dynamic(myPlant/7).
+% myPlant(X,Y,Name,SymbolPlanted,SymbolHarvest,DayPlant,DayToHarvest)
 
 % fakta untuk jenis bibit yang dapat ditanam
-seed(tomato, 2, 'tomato', 't','T',3).
-seed(corn, 1, 'corn', 'c','C',2).
+seed(tomato, 2, 't','T', 5).
+seed(corn, 1, 'c', 'C', 6).
+seed(carrot, 1, 'c', 'C', 3).
+seed(potato, 1, 'p', 'P', 8).
+
+% fakta untuk tanaman yang sedang ditanam
+myPlant(-1,-1,-1,-1,-1,-1,-1).
 
 % command: dig
 dig:-
 /*  I.S. tanah yang akan digali kosong
     F.S. tanah digali, pemain dapat menanam di sana */
-    isTileEmpty, %cek terlebih dahulu apakah tile kosong
-    item_in_inventory(shovel,_,1), %cek apakah pemain memiliki shovel
-    pos(A, B), 
-    A1 is (A - 1), 
-    changePos(A1, B),
-    assertz(map(A,B,'=')),
-    write('You digged the tile\n'),
-    retract(farmEXP(exp,Exp)),
-    ExpPlus is Exp+10, 
-    assertz(farmEXP(exp,ExpPlus)),
-    map, 
+    pos(A,B),
+    isTileEmpty(A,B) -> 
+        item_in_inventory(shovel,_,1), %cek apakah pemain memiliki shovel 
+        A1 is (A-1), 
+        changePos(A1, B),
+        assertz(map(A,B,'=')),
+        write('You digged the tile\n'),
+        farmEXP(exp,Exp),
+        occupation(O),
+        (O = 'farmer'  -> ExpPlus is Exp+10 ; ExpPlus is Exp+5),
+        retract(farmEXP(exp,Exp)),
+        assertz(farmEXP(exp,ExpPlus)),
+        map
+    ;
+        write('You can\'t dig here. Dig somewhere else.\n'),
     !.
-
-dig:-
-    \+isTileEmpty,
-    write('You can\'t dig here. Dig somewhere else.\n'),!.
-
-
-% command: plant
+    
 plant:-
 /*  I.S. tanah telah tergali, program menampilkan bibit yang dapat ditanamkan
     F.S. bibit akan ditanam, jumlah bibit diupdate, pemain dapat memanen
     di waktu yang ditentukan
 */
-    isTileDigged,
-    pos(X,Y),
-    X1 is X+1,
-    map(X1,Y,Z),
-    write('\nYou have:\n'),
-    displaySeed,
-    write('\nWhat do you want to plant?\n'),
-    read(Selectseed),
-    seed(Selectseed,Qty,Alias,SymP,SymH,TimeH),
-    format('You planted a ~w seed~n',[Alias]),
-    retract(map(X1,Y,Z)),
-    assertz(map(X1,Y,SymP)),
-    QtyNew is Qty-1,
-    retract(seed(Selectseed,Qty,Alias,SymP,SymH,TimeH)),
-    assertz(seed(Selectseed,QtyNew,Alias,SymP,SymH,TimeH)),
-    day(DayPlant),
-    assertz(myplant(X1,Y,Selectseed,Alias,SymP,SymH,DayPlant,TimeH)),
-    format('~w can be harvested in ~d days~n',[Alias,TimeH]),
+    pos(A,B),
+    A1 is A+1,
+    map(A1,B,Z),
+    isTileDigged(A1,B) ->
+        write('\nYou have:\n'),
+        displaySeed,
+        write('\nWhat do you want to plant?\n'),
+        read(SelectSeed),
+        seed(SelectSeed,Qty,SymP,SymH,DayToHarvest),
+        format('You planted a ~w seed~n',[SelectSeed]),
+        retract(map(A1,B,Z)),
+        assertz(map(A1,B,SymP)),
+        QtyNew is Qty-1,
+        retract(seed(SelectSeed,Qty,SymP,SymH,DayToHarvest)),
+        day(Day),
+        assertz(seed(SelectSeed,QtyNew,SymP,SymH,DayToHarvest)),
+        retract(myPlant(-1,-1,-1,-1,-1,-1,-1)),
+        assertz(myPlant(A1,B,SelectSeed,SymP,SymH,Day,DayToHarvest)),
+        format('~w can be harvested in ~d days~n',[SelectSeed,DayToHarvest]),
+        map
+    ;
+        isTilePlanted(A1,B) ->
+            myPlant(A1,B,Name,_,_,_,DayToHarvest),
+            format('This tile is already planted with ~w~n\n',[Name]),
+            showInfoHarvest(A1,B)
+        ;
+            write('You can only plant on digged tile\n'),
+    !.
+
+grow(A,B,SymP,SymH,DayPlant,DayToHarvest):-
+    day(Day),
+    RemainingDay is DayToHarvest - Day + DayPlant,
+    (RemainingDay = 0 ->
+        retract(map(A,B,SymP)),
+        assertz(map(A,B,SymH)); true);
+    true.
+        
+nextDay:-
+    day(Day),
+    Day1 is Day+1,
+    retract(day(Day)),
+    assertz(day(Day1)),
+    forall(myPlant(A,B,_,SymP,SymH,DayPlant,DayToHarvest), grow(A,B,SymP,SymH,DayPlant,DayToHarvest)),
+    write('\nDay '),write(Day1),write('\n'),
     map,
     !.
 
-plant:-
-    \+isTileDigged,
-    write('You can only plant on digged tile\n'),!.
-
-plant:-
-    isTilePlanted,
-    format('This tile is already planted~n'),!.
-
-plant:-
-    isTileReadyToHarvest,
-    format('This tile is ready to Harvest~n'),!.
-
-% command: harvest
 harvest:-
 /*  I.S. tile yang telah ditanamkan siap untuk dipanen
     F.S. tanaman berhasil dipanen, tile akan diubah ke status bisa digali */
-    isTileReadyToHarvest,
-    pos(X,Y),
-    X1 is X+1,
-    map(X1,Y,Z),
-    myplant(X1,Y,Name,Alias,_,Z,_,_),
-    retract(map(X1,Y,Z)),
-    assertz(map(X1,Y,' ')),
-    item(Name,_,Qty),
-    QtyNew is Qty+1,
-    retract(Name,_,Qty),
-    assertz(Name,_,QtyNew),
-    format('You harvested ~w~n',[Alias]),
-    doHarvest,!.
+    pos(A,B),
+    A1 is A+1,
+    timeToHarvest(A1,B,RemainingDay),
+    map(A1,B,Z),
+    myPlant(A1,B,Name,_,Z,_,_),
+    RemainingDay =< 0 ->
+        retract(map(A1,B,Z)),
+        item_in_inventory(Name,_,Qty),
+        QtyPlus is Qty+1,
+        retract(item_in_inventory(Name,_,Qty)),
+        assertz(item_in_inventory(Name,_,QtyPlus)),
+        format('You harvested ~w~n',[Name]),
+        farmEXP(exp,Exp),
+        occupation(O),
+        (O = 'farmer'  -> ExpPlus is Exp+10 ; ExpPlus is Exp+5),
+        retract(farmEXP(exp,Exp)),
+        assertz(farmEXP(exp,ExpPlus)),
+        doHarvest
+    ;   
+        write('You cannot harvest this plant yet.\n'),
+        showInfoHarvest(A1,B),
+    !.
 
 displaySeed:-
 /* Menampilkan bibit yang dapat ditanamkan */
-    forall(seed(Name, Qty,_,_,_,_), print_seed(Name, Qty)).
+    forall(seed(Name, Qty,_,_,_), printSeed(Name, Qty)).
 
-print_seed(Name, Qty):-
-    (
+printSeed(Name, Qty):-
     Qty > 0 ->
-        format('- ~d ~w seed~n',[Qty, Name]);
-    true
-    ).
+        format('- ~d ~w seed~n',[Qty, Name])
+    ;
+        true.
 
-isTilePlanted:-
-/* Mengecek apakah ada yang ditanam di tile */
-    pos(X,Y),
-    X1 is X+1,
-    map(X1,Y,Z),
-    myplant(X1,Y,_,_,Z,_,_,_).
+isTilePlanted(A,B):- % mengecek ada tanaman atau tidak
+    myPlant(A,B,_,_,_,_,_).
 
-plantedTilePos(X,Y):-
-/* Mengembalikan posisi tile yang telah ditanam */
-    myplant(X,Y,_,_,_,_,_,RemainingTimeHarvest),
-    RemainingTimeHarvest > 0.
+timeToHarvest(A,B,RemainingDay):- % mengembalikan sisa hari untuk panen
+    map(A,B,_),
+    myPlant(A,B,_,_,_,DayPlant,DayToHarvest),
+    day(Day),
+    RemainingDay is DayToHarvest - Day + DayPlant.
 
-isTileReadyToHarvest:-
-/* Mengecek apakah ada yang siap dipanen di tile */
-    pos(X,Y),
-    X1 is X+1,
-    map(X1,Y,Z),
-    myplant(X1,Y,_,_,_,Z,_,_).
+showInfoHarvest(A,B):-
+    myPlant(A,B,Name,_,_,_,_),
+    timeToHarvest(A,B,RemainingDay),
+    format('~w can be harvested in ~d days~n',[Name,RemainingDay]).
 
-readyToHarvestTilePos(X,Y):-
-/* Mengembalikan posisi tile yang siap dipanen */
-    myplant(X,Y,_,_,_,_,_,RemainingTimeHarvest),
-    RemainingTimeHarvest = 0. 
+isTileDigged(A,B):-
+    map(A,B,'=').
 
-isTileDigged:-
-/* Mengecek apakah tile telah digali */
-    pos(X,Y),
-    X1 is X+1,
-    map(X1,Y,'=').
-
-isTileEmpty:-
-/* Mengecek apakah tile kosong 
-   Jika player berada di posisi (X,Y)
-   maka (X+1,Y) tidak boleh tanaman dan (X-1,Y) harus kosong
-*/
-    pos(X,Y),
-    X1 is X-1,
-    X2 is X+1,
-    (myplant(X2,Y,_,_,_,_,_,_)) -> false; true,
-    \+map(X1,Y,_),
-    \+map(X2,Y,'='),
-    \+map(X,Y,_).
+isTileEmpty(A,B):-
+    A1 is A-1,
+    A2 is A+1,
+    \+map(A1,B,_),   % di belakang
+    \+map(A2,B,'='), % di depan
+    \+isTilePlanted(A2,B),
+    \+map(A,B,_).    % yang dipijak
