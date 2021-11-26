@@ -2,15 +2,15 @@
 
 
 % fakta item
-market_item(1, carrot, 'Carrot', 50, -1).
+market_item(1, carrot_seed, 'Carrot', 50, -1).
 market_item(2, corn_seed, 'Corn', 50, -1).
 market_item(3, tomato_seed, 'Tomato', 50, -1).
-market_item(4, potato, 'Potato', 50, -1).
+market_item(4, potato_seed, 'Potato', 50, -1).
 market_item(5, chicken, 'Chicken', 500, -1).
 market_item(6, sheep, 'Sheep', 1000, -1).
 market_item(7, cow, 'Cow', 1500, -1).
-market_item(8, shovel2, 'Lvl 2 Shovel', 300, 2).
-market_item(9, fishing_rod2, 'Lvl 2 Fishing Rod', 500, 2).
+market_item(8, shovel, 'Lvl 2 Shovel', 300, 2).
+market_item(9, fishing_rod, 'Lvl 2 Fishing Rod', 500, 2).
 
 isOnMarket:-
     pos(X, Y), map(X, Y, 'M').
@@ -55,10 +55,12 @@ buy:-
 buyItem(FinalPrice, Item, Quantity, Level):-
     gold(Gold), FinalPrice =< Gold,
     NewGold is Gold - FinalPrice,
-    retract(gold(Gold)),
     assertz(gold(NewGold)),
     write('\nYou are charged '), write(FinalPrice), write(' golds.\n'),
-    assertz(item_in_inventory(Item, Level, Quantity)).
+    item_in_inventory(Item, Lvl, Qty),
+    Qty1 is Qty + Quantity,
+    retract(item_in_inventory(Item, Lvl, Qty)),
+    assertz(item_in_inventory(Item, Level, Qty1)).
 
 buyItem(FinalPrice, _, _, _):-
     gold(Gold), FinalPrice > Gold,
