@@ -27,9 +27,9 @@ startGame:-
 
 selectJob(Num, Output):-
 /* Fungsi perantara untuk memilih pekerjaan */
-    (Num = 1 -> assertz(occupation('Fisherman')), Output = 'You chose fisherman!\n';
-    Num = 2 -> assertz(occupation('Farmer')) ,Output = 'You chose farmer!\n';
-    Num = 3 -> assertz(occupation('Rancher')) ,Output = 'You chose rancher!\n').
+    (Num = 1 -> assertz(occupation(fisherman)), Output = 'You chose fisherman!\n';
+    Num = 2 -> assertz(occupation(farmer)) ,Output = 'You chose farmer!\n';
+    Num = 3 -> assertz(occupation(rancher)) ,Output = 'You chose rancher!\n').
     
 
 start:-
