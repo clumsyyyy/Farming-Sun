@@ -1,4 +1,6 @@
 %kemungkinan rating ikan
+:- include('items.pl').
+
 rateFishing_SSR(0.03).
 rateFishing_SR(0.2).
 rateFishing_R(10).

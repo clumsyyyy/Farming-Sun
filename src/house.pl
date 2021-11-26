@@ -5,23 +5,58 @@ house:-
 /*  I.S. pemain berada di atas tile 'H'
     F.S. pemain dapat mengakses menu di rumah
     (untuk sementara, yang dapat diakses adalah fungsi `sleep`) */
-    pos(X, Y), map(X, Y, 'H'),
+    isOnHouse,
     write('Welcome back to the house.\n'),
     write('What do you want to do?\n'),
     write('1. Sleep\n'),
-    write('(gatau bonusnya mo gimana)\n'),
-    read(Option),
-    Option =:= 1 -> sleep.
+    write('2. Write Diary\n'),
+    write('3. Read Diary\n'), !.
 
 house:-
-    pos(X, Y), map(X, Y, Z), \+ (Z == 'H'), write(Z),
-    write('You\'re not at home').
+    \+isOnHouse,
+    write('You\'re not at home!').
 
 sleep:-
 /* Fungsi meng-update day ke predikat global */
-    write('He then went sleepe, next day he wake.\n\n'),
+    isOnHouse,
+    write('You went to sleep.\n\n'),
     day(Day),
     Day1 is Day + 1,
     retract(day(Day)),
     assertz(day(Day1)),
     game.
+
+isOnHouse:-
+    pos(X, Y), map(X, Y, 'H').
+
+write:-
+    isOnHouse,
+    write('Write your diary: '),
+    read(Diary),
+    write('Diary saved.'),
+    day(Day),
+    assertz(diary(Day, Diary)),
+    write('\n'),
+    house.
+write:-
+    \+isOnHouse, write('You\'re not at home!').
+
+read:-
+    isOnHouse,
+    write('Input diary day: '),
+    read(Date),
+    day(Day),
+    Date < Day, 
+    write('Diary for day'), write(Date), write(':\n'),
+    diary(Date, Diary), write(Diary),
+    write('\n\n'),
+    house.
+read:-
+    isOnHouse,
+    write('Input diary day: '),
+    read(Date),
+    day(Day),
+    Day >= Date, write('You cannot read the diary, as it has not existed yet!').
+    
+read:-
+    \+isOnHouse, write('You\'re not at home!').

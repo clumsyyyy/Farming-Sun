@@ -1,8 +1,11 @@
 :- include('globals.pl').
-:- dynamic(myquest/6). 
-:- dynamic(rewardquest/2).
-myquest(-1,-1,-1,-1,-1,-1).
-rewardquest(-1,-1).
+% :- dynamic(myquest/6). 
+% :- dynamic(rewardquest/2).
+
+initQuest:-
+    assertz(myquest(-1,-1,-1,-1,-1,-1)),
+    assertz(rewardquest(-1,-1)).
+
 quest:-
     isNotInQuest,
     isOnTileQ,
@@ -40,22 +43,23 @@ quest:-
 
 quest:-
     isQuestClear,
-    retract(myquest(_,_,_,_,_,_)),
-    assertz(myquest(-1,-1,-1,-1,-1,-1)),
     rewardquest(Gold,EXP),
     gold(G),
     exp(E),
     Gplus is G+Gold,
     Eplus is E+EXP,
+    write(Gplus), write(Eplus),
     retract(gold(_)),
     retract(exp(_)),
     assertz(gold(Gplus)),
-    assertz(gold(Eplus)),
+    assertz(exp(Eplus)),
     write('You have completed the quest, Here is the reward: \n'),
     format('~d Gold - ~d EXP~n',[Gold,EXP]),
     write('Reward has been added. Your current status: \n'),
     format('Gold: ~d~n',[Gplus]),
     format('EXP : ~d~n',[Eplus]),
+    retract(myquest(_,_,_,_,_,_)),
+    assertz(myquest(-1,-1,-1,-1,-1,-1)),
     retract(rewardquest(_,_)),
     assertz(rewardquest(-1,-1)),!.
 
@@ -96,8 +100,3 @@ isQuestClear:-
     \+isNotInQuest,
     myquest(_,X,_,X,_,X),
     X = 0.
-
-
-
-    
-

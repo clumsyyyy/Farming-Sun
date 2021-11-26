@@ -1,20 +1,31 @@
-:- dynamic(pos/2). 
+% note: SELALU INCLUDE FILE INI di fungsi modular
+% predicate dibuat global jadi bisa diakses dimana saja
 
+% ====== predicate global ======
+:- dynamic(pos/2).          % posisi pemain
+:- dynamic(level/1).        % level
+:- dynamic(exp/1).          % exp
+:- dynamic(farmLevel/1).    % level farming
+:- dynamic(farmEXP/2).      % exp farming
+:- dynamic(fishLevel/1).    % level mancing
+:- dynamic(fishEXP/2).      % exp mancing
+:- dynamic(ranchLevel/1).   % level ranching
+:- dynamic(ranchEXP/2).     % exp ranching
+:- dynamic(gold/1).         % duit
+:- dynamic(day/1).          % hari
+:- dynamic(inventory/1).    % invent
 
-% ====== global gamevars (exp, lvl, inv) ======
-:- dynamic(level/1). 
-:- dynamic(farmLevel/1).
-:- dynamic(farmEXP/2).
-:- dynamic(fishLevel/1).
-:- dynamic(fishEXP/2).
-:- dynamic(ranchLevel/1).
-:- dynamic(ranchEXP/2).
-:- dynamic(exp/1).
-:- dynamic(gold/1).
-:- dynamic(day/1).
-:- dynamic(inventory/1).
+% ======= predicate farming ======
+% :- dynamic(seed/6).
+% :- dynamic(myplant/8).
 
-
-% ======= ranch vars ======
+% ======= predicate ranching ======
 :- dynamic(livestock/2).
 :- dynamic(ranchTimeMgmt/2).
+
+% ======= predicate quest ======
+:- dynamic(myquest/6). 
+:- dynamic(rewardquest/2).
+
+% ======= diary ========
+:- dynamic(diary/2).
