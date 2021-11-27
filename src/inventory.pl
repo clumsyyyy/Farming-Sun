@@ -3,7 +3,7 @@ print_items(Item, Level, Qty) :-
     Qty > 0 ->
         item_alias(Item, Alias),
         (  
-        Level = 0 ->
+        Level =:= -1 ->
             format('~w ~s (~w) ~n', [Qty, Alias, Item])
         ;
             format('~w Level ~w ~s (~w) ~n', [Qty, Level, Alias, Item])
@@ -23,10 +23,27 @@ displayInventory :-
 inventory :-
     getTotalInv(Total),
     format('Your Inventory: (~w / 100) ~n', [Total]),
-    displayInventory.
+    displayInventory, nl,
+    format('to throw some item, type \'throwItem.\'~n', []).
+
+topItemInInv(Item, Level, Qty) :-
+    item_in_inventory(Item, Level, Qty),
+    Qty > 0, !.
 
 throwItem :-
-    inventory,
+    getTotalInv(Total),
+    Total =< 0,
+    write('You have nothing to throw!'), nl, !. 
+
+throwItem :-
+    getTotalInv(Total),
+    format('Your Inventory: (~w / 100) ~n', [Total]),
+    displayInventory, nl,
+    format('to throw an item, type its codenames. ~n', []),
+    format('for example:~n', []),
+    topItemInInv(CodenameEx, _, _),
+    item_alias(CodenameEx, AliasEx),
+    format('if you want to throw ~s, please type \'~w\'!~n', [AliasEx, CodenameEx]),
     write('Which item do you want to throw? '),
     read(Item),
     (
@@ -41,7 +58,7 @@ throwItem :-
             ToThrow =< Qty, ToThrow >= 0 ->
                 retract(item_in_inventory(Item, Level, Qty)),
                 NewQty is Qty - ToThrow,
-                asserta(item_in_inventory(Item, Level, NewQty)),
+                assertz(item_in_inventory(Item, Level, NewQty)),
                 format('You threw ~w ~s ~n', [ToThrow, Alias]),
                 (
                 NewQty =:= 0 ->

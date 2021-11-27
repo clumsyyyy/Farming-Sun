@@ -1,15 +1,45 @@
 %kemungkinan rating ikan
 :- include('items.pl').
+:- dynamic(rateFishing_SSR/1).
+:- dynamic(rateFishing_SR/1).
+:- dynamic(rateFishing_R/1).
+:- dynamic(rateFishing_C/1).    
+ % level up when 300, next level + 100
 
+expGain_SSR(250).
+expGain_SR(100).
+expGain_R(40).
+expGain_C(20).
+rateFishing_SSR_base(0.03).
+rateFishing_SR_base(0.2).
+rateFishing_R_base(10).
+rateFishing_C_base(30).
+rateFishing_SSR_multibase(0.01).
+rateFishing_SR_multibase(0.1).
+rateFishing_R_multibase(0.5).
+rateFishing_C_multibase(1).
 rateFishing_SSR(0.03).
 rateFishing_SR(0.2).
 rateFishing_R(10).
 rateFishing_C(30).
 
-item_group_helper_FISHING(fishable_SSR, [endless_rizette, fornaxos, rolotia]). 
-item_group_helper_FISHING(fishable_SR, [alira, shiori, cyrus, altaireon, maxima, norza]).
-item_group_helper_FISHING(fishable_R, [rei, finn, kaidaros, voraxion, merdain, diabolos]).
-item_group_helper_FISHING(fishable_C, [rashanar, vesh, kirin, artimeia, le_fay, orzachron, alice, shirra, grenzor]).
+item_group_helper_FISHING(fishable_SSR, [anemone, blackfin_tuna, moonfish]). 
+item_group_helper_FISHING(fishable_SR, [marblefish, longfin, lionfish, mooneye, jewelfish]).
+item_group_helper_FISHING(fishable_R, [gudgeon, glassfish, eulachon, dwarf_gourami, angelfish, spearfish]).
+item_group_helper_FISHING(fishable_C, [salmon, tuna, catfish, swordfish, mackarel, common_carp, tilapia, trout]).
+
+incrementFish(Item, Response) :-
+    getTotalInv(TotalInv),
+    (
+        TotalInv < 100 -> (
+            retract(item_in_inventory(Item, Level, Qty)),
+            NewQty is Qty + 1,
+            assertz(item_in_inventory(Item, Level, NewQty)),
+            Response = incSuccess
+        );
+        Response = incFail
+    ).
+
 
 getNormalizeVal(X, Res) :- getNormalizeVal(X, Res, 1).
 getNormalizeVal(0, Res, _) :- Res is 100, !.
@@ -29,10 +59,11 @@ rd_member(Item, Pool) :-
 
 catchfishmsg(Item, Rarity) :-
     (
-    Rarity = catching_fish_ssr ->
+    Rarity == catching_fish_ssr ->
         item_alias(Item, ItemAlias),
+        expGain_SSR(ExpGain),
         format('-------------------------------------------------~n', []),
-        format('|        FLYING FISH MANOR FISHING BOARD        |~n',[]),
+        format('|        FLYING FISH MANOR FISHING BOARD        |~n', []),
         format('-------------------------------------------------~n', []),
         format('|                                               |~n', []),
         format('|         +-+-+-+-+-+-#####-+-+-+-+-+-+         |~n', []),
@@ -47,10 +78,12 @@ catchfishmsg(Item, Rarity) :-
         format('|         +-+-+-+-+-+-#####-+-+-+-+-+-+         |~n', []),
         format('|                                               |~n', []),
         format('-------------------------------------------------~n', []),
-        format('~nResult: You got a ~s (SSR) !~n', [ItemAlias])
+        format('~nResult: You got a ~s (SSR) !~n', [ItemAlias]),
+        format('You gained ~d EXP!~n', [ExpGain])
     ;
-    Rarity = catching_fish_sr ->
+    Rarity == catching_fish_sr ->
         item_alias(Item, ItemAlias),
+        expGain_SR(ExpGain),
         format('-------------------------------------------------~n', []),
         format('|        FLYING FISH MANOR FISHING BOARD        |~n',[]),
         format('-------------------------------------------------~n', []),
@@ -63,10 +96,12 @@ catchfishmsg(Item, Rarity) :-
         format('|         *****************************         |~n', []),
         format('|                                               |~n', []),
         format('-------------------------------------------------~n', []),
-        format('~nResult: You got a ~s (SR) !~n', [ItemAlias])
+        format('~nResult: You got a ~s (SR) !~n', [ItemAlias]),
+        format('You gained ~d EXP!~n', [ExpGain])
     ;
-    Rarity = catching_fish_r ->
+    Rarity == catching_fish_r ->
         item_alias(Item, ItemAlias),
+        expGain_R(ExpGain),
         format('-------------------------------------------------~n', []),
         format('|        FLYING FISH MANOR FISHING BOARD        |~n',[]),
         format('-------------------------------------------------~n', []),
@@ -74,10 +109,12 @@ catchfishmsg(Item, Rarity) :-
         format('|      Great stuff, You caught an R Fish!       |~n', []),
         format('|                                               |~n', []),
         format('-------------------------------------------------~n', []),
-        format('~nResult: You got a ~s (R) !~n', [ItemAlias])
+        format('~nResult: You got a ~s (R) !~n', [ItemAlias]),
+        format('You gained ~d EXP!~n', [ExpGain])
     ;
-    Rarity = catching_fish_c ->
+    Rarity == catching_fish_c ->
         item_alias(Item, ItemAlias),
+        expGain_C(ExpGain),
         format('-------------------------------------------------~n', []),
         format('|        FLYING FISH MANOR FISHING BOARD        |~n',[]),
         format('-------------------------------------------------~n', []),
@@ -85,9 +122,10 @@ catchfishmsg(Item, Rarity) :-
         format('|          Nice, You caught a C Fish!           |~n', []),
         format('|                                               |~n', []),
         format('-------------------------------------------------~n', []),
-        format('~nResult: You got a ~s (C) !~n', [ItemAlias])
+        format('~nResult: You got a ~s (C) !~n', [ItemAlias]),
+        format('You gained ~d EXP!~n', [ExpGain])
     ;
-    Rarity = catching_fish_none ->
+    Rarity == catching_fish_none ->
         format('-------------------------------------------------~n', []),
         format('|        FLYING FISH MANOR FISHING BOARD        |~n',[]),
         format('-------------------------------------------------~n', []),
@@ -97,10 +135,95 @@ catchfishmsg(Item, Rarity) :-
         format('|                                               |~n', []),
         format('-------------------------------------------------~n', [])
     ;
+    Rarity == catching_fish_fail_inven ->
+        format('-------------------------------------------------~n', []),
+        format('|        FLYING FISH MANOR FISHING BOARD        |~n',[]),
+        format('-------------------------------------------------~n', []),
+        format('|                                               |~n', []),
+        format('|    I am sorry, but your inventory is full     |~n', []),
+        format('|            Try to clear up some!              |~n', []),
+        format('|                                               |~n', []),
+        format('-------------------------------------------------~n', [])
+    ;
         fail
     ).
 
+adjustRate :-  adjustRate(_, _, _).
+
+adjustRate(LevelBonus, OccsBonus, RodBonus) :-
+    occupation(Occs),
+    fishEXP(lvl, FishingLevel),
+    item_in_inventory(fishing_rod, RodLevel, _),
+    (
+        Occs == fisherman -> OccsBonus is 5;
+        OccsBonus is 0
+    ),
+    (
+        RodLevel >= 10 -> RodBonus is 10;
+        RodBonus is RodLevel
+    ),
+    (
+        FishingLevel >= 10 -> LevelBonus is 10;
+        LevelBonus is FishingLevel 
+    ),
+    Multiplier is LevelBonus + OccsBonus + RodBonus,
+    rateFishing_SSR_base(OldRateSSR),
+    rateFishing_SR_base(OldRateSR),
+    rateFishing_R_base(OldRateR),
+    rateFishing_C_base(OldRateC),
+    rateFishing_SSR_multibase(RateSSRMulti),
+    rateFishing_SR_multibase(RateSRMulti),
+    rateFishing_R_multibase(RateRMulti),
+    rateFishing_C_multibase(RateCMulti),
+    retract(rateFishing_SSR(_)),
+    retract(rateFishing_SR(_)),
+    retract(rateFishing_R(_)),
+    retract(rateFishing_C(_)),
+    NewRateSSR is OldRateSSR + Multiplier * RateSSRMulti,
+    NewRateSR is OldRateSR + Multiplier * RateSRMulti,
+    NewRateR is OldRateR + Multiplier * RateRMulti,
+    NewRateC is OldRateC + Multiplier * RateCMulti,
+    assertz(rateFishing_SSR(NewRateSSR)),
+    assertz(rateFishing_SR(NewRateSR)),
+    assertz(rateFishing_R(NewRateR)),
+    assertz(rateFishing_C(NewRateC)).
+
+adjustLevel(AddedExp) :-
+    fishEXP(exp, Exp),
+    fishEXP(lvl, Level),
+    fishEXP(level_up_ceil_exp, LevelUpCeilExp),
+    NewExp is Exp + AddedExp,
+    (
+        NewExp >= LevelUpCeilExp -> (
+            NewLevel is Level + 1,
+            NewCeil is 2*LevelUpCeilExp + 100,
+            retract(fishEXP(level_up_ceil_exp, _)),
+            retract(fishEXP(lvl, _)),
+            assertz(fishEXP(level_up_ceil_exp, NewCeil)),
+            assertz(fishEXP(lvl, NewLevel)),
+            format('You Leveled Up to Level ~d!~n', [NewLevel])
+        );
+        true
+    ),
+    retract(fishEXP(exp, _)),
+    assertz(fishEXP(exp, NewExp)).
+
+fishit :- 
+    isInAppropriateFishingTile(RESP),
+    RESP == not_beside_lake, 
+    format('Hello, this is Flying Fish Manor\'s Messenger Pigeon.~n', []),
+    format('We are sorry to inform you that you should be beside a lake in order to fish.~n', []),
+    format('Please move to an appropriate tile, we are happily waiting for your next visit!', []), !.
 fishit :-
+    item_in_inventory(fishing_rod, _, QTY), QTY =< 0, 
+    format('Hello, this is Flying Fish Manor\'s Assistant, Ageha Himegi.~n', []),
+    format('We are sorry to inform you that you do not have a fishing rod.~n', []),
+    format('Please come back when you have one. We are waiting for your next visit!', []), !.
+fishit :-
+    getTotalInv(TotalInv),
+    TotalInv >= 100, catchfishmsg(none_fish, catching_fish_fail_inven), !.
+fishit :-
+    adjustRate,
     random(9999, 100000, Seed),
     set_seed(Seed),
     randomize,
@@ -130,29 +253,73 @@ fishit :-
     (
         Gacha >= 0, Gacha < MarkSSR -> (
             rd_member(Item, PoolSSR),
-            catchfishmsg(Item, catching_fish_ssr),
-            doFish,
+            incrementFish(Item, RESP),
+            (
+                RESP == incSuccess -> (
+                    catchfishmsg(Item, catching_fish_ssr),
+                    expGain_SSR(ExpGain),
+                    adjustLevel(ExpGain),
+                    doFish
+                );
+                RESP == incFail -> (
+                    catchfishmsg(Item, catching_fish_fail_inven)
+                );
+                fail
+            ),
             !
         )
         ;
         Gacha >= MarkSSR, Gacha < MarkSR -> (
             rd_member(Item, PoolSR),
-            catchfishmsg(Item, catching_fish_sr),
-            doFish,
+            incrementFish(Item, RESP),
+            (
+                RESP == incSuccess -> (
+                    catchfishmsg(Item, catching_fish_sr),
+                    expGain_SR(ExpGain),
+                    adjustLevel(ExpGain),
+                    doFish
+                );
+                RESP == incFail -> (
+                    catchfishmsg(Item, catching_fish_fail_inven)
+                );
+                fail
+            ),
             !
         )
         ;
         Gacha >= MarkSR, Gacha < MarkR -> (
             rd_member(Item, PoolR),
-            catchfishmsg(Item, catching_fish_r),
-            doFish,
+            incrementFish(Item, RESP),
+            (
+                RESP == incSuccess -> (
+                    catchfishmsg(Item, catching_fish_r),
+                    expGain_R(ExpGain),
+                    adjustLevel(ExpGain),
+                    doFish
+                );
+                RESP == incFail -> (
+                    catchfishmsg(Item, catching_fish_fail_inven)
+                );
+                fail
+            ),
             !
         )
         ;
         Gacha >= MarkR, Gacha < MarkC -> (
             rd_member(Item, PoolC),
-            catchfishmsg(Item, catching_fish_c),
-            doFish,
+            incrementFish(Item, RESP),
+            (
+                RESP == incSuccess -> (
+                    catchfishmsg(Item, catching_fish_c),
+                    expGain_C(ExpGain),
+                    adjustLevel(ExpGain),
+                    doFish
+                );
+                RESP == incFail -> (
+                    catchfishmsg(Item, catching_fish_fail_inven)
+                );
+                fail
+            ),
             !
         )
         ;
@@ -160,8 +327,14 @@ fishit :-
     ).
 
 
-
 displayFishingRate :-
+    isInAppropriateFishingTile(RESP),
+    RESP == not_beside_lake, 
+    format('Hello, this is Flying Fish Manor\'s Messenger Pigeon.~n', []),
+    format('We are sorry to inform you that you should be beside a lake in order to fish.~n', []),
+    format('Please move to an appropriate tile, we are happily waiting for your next visit!', []), !.
+displayFishingRate :-
+    adjustRate,
     rateFishing_SSR(RateSSR),
     rateFishing_SR(RateSR),
     rateFishing_R(RateR),
@@ -194,9 +367,56 @@ displayFishingRate :-
         format('~s ~n', [Alias])
     )),
     nl.
-    
+
+isInAppropriateFishingTile(Response) :- 
+    pos(CurX, CurY),
+    isInAppropriateFishingTile(Response, CurX, CurY).
+isInAppropriateFishingTile(Response, CurX, CurY) :-
+    Up is CurY - 1,
+    map(CurX, Up, Tile), Tile == 'o', Response = is_beside_lake, !.
+isInAppropriateFishingTile(Response, CurX, CurY) :-
+    Down is CurY + 1,
+    map(CurX, Down, Tile), Tile == 'o', Response = is_beside_lake, !.
+isInAppropriateFishingTile(Response, CurX, CurY) :-
+    Left is CurX - 1,
+    map(Left, CurY, Tile), Tile == 'o', Response = is_beside_lake, !.
+isInAppropriateFishingTile(Response, CurX, CurY) :-
+    Right is CurX + 1,
+    map(Right, CurY, Tile), Tile == 'o', Response = is_beside_lake, !.
+isInAppropriateFishingTile(Response, _, _) :-
+    Response = not_beside_lake.
+
+displayFishingID :- 
+    isInAppropriateFishingTile(RESP),
+    RESP == not_beside_lake, 
+    format('Hello, this is Flying Fish Manor\'s Messenger Pigeon.~n', []),
+    format('We are sorry to inform you that you should be beside a lake in order to fish.~n', []),
+    format('Please move to an appropriate tile, we are happily waiting for your next visit!', []), !.
+displayFishingID :-
+    fishEXP(level_up_ceil_exp, LevelUpCeilExp),
+    fishEXP(lvl, Level),
+    fishEXP(exp, Exp),
+    item_in_inventory(fishing_rod, RodLevel, _),
+    format('Here is your Fishing ID:~n', []),
+    format('-------------------------------------------------~n', []),
+    format('|         FLYING FISH MANOR FISHING ID          |~n', []),
+    format('-------------------------------------------------~n', []),
+    format('    NAME              : KOTORI HABANE~n', []),
+    format('    FISHING ROD LEVEL : ~d~n', [RodLevel]),
+    format('    FISHING LEVEL     : ~d~n', [Level]),
+    format('    PLAYER EXP        : ~d~n', [Exp]),
+    format('    NEXT LEVEL EXP    : ~d~n', [LevelUpCeilExp]),
+    format('-------------------------------------------------~n', []).
+
+fishing :-
+    isInAppropriateFishingTile(RESP),
+    RESP == not_beside_lake, 
+    format('Hello, this is Flying Fish Manor\'s Messenger Pigeon.~n', []),
+    format('We are sorry to inform you that you should be beside a lake in order to fish.~n', []),
+    format('Please move to an appropriate tile, we are waiting for your next visit!', []), !.
 fishing :-
     format('Welcome to Flying Fish Manor.~nHere are our Today\'s Menu~n', []),
     displayFishingRate,
-    format('please type \'fishit\' to fish, and \'displayFishingRate\' to display our Today\'s Menu again ^_^~n', []).
+    displayFishingID, nl,
+    format('please type \'fishit\' to fish, \'displayFishingID.\' to see your ID, and \'displayFishingRate\' to display our Today\'s Menu again ^_^~n', []).
 
