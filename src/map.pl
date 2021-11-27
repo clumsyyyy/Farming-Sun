@@ -100,7 +100,7 @@ s:- pos(A, B), A1 is (A + 1), map(A1, B, 'H'), write('You\'ve arrived at your Ho
 s:- pos(A, B), A1 is (A + 1), map(A1, B, 'Q'), write('You\'ve arrived at the Quest Centre!\nYou can pick up quests here.\nUse command \'quest\' ...\n'), changePos(A1, B), map, !.
 s:- pos(A, B), A1 is (A + 1), map(A1, B, 'M'), write('You\'ve arrived at the Marketplace!\nYou can buy items here.\nUse command \'market.\' ...\n'), changePos(A1, B), map, !.
 s:- pos(A, B), A1 is (A + 1), map(A1, B, 'R'), write('You\'ve arrived at the Ranch!\nUse command \'ranch.\' to start ranching...\n'), changePos(A1, B), map, !.
-s:- pos(A, B), A1 is (A + 1), write('Moved one tile below!\n'), changePos(A1, B), map, !.
+s:- pos(A, B), A1 is (A + 1), write('Moved one tile below!\n\n'), changePos(A1, B), map, !.
 
 
 d:- pos(A, B), B1 is (B + 1), map(A, B1, '#'), write('Oops, you\'ve hit a fence!\n\n'), map, !.

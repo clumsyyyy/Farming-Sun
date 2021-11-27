@@ -60,47 +60,47 @@ item_in_inventory(trout, -1, 0).
 market_item(101, shovel, 2, 300).
 market_item(102, fishing_rod, 2, 500).
 
-market_item(201, carrot_seed, -1, 50).
-market_item(202, corn_seed, -1, 50).
-market_item(203, tomato_seed, -1, 50).
-market_item(204, potato_seed, -1, 50).
+market_item(201, carrot_seed, -1, 25).
+market_item(202, corn_seed, -1, 25).
+market_item(203, tomato_seed, -1, 25).
+market_item(204, potato_seed, -1, 25).
 market_item(205, carrot, -1, 50).
 market_item(206, corn, -1, 50).
 market_item(207, tomato, -1, 50).
 market_item(208, potato, -1, 50).
 
-market_item(301, chicken, -1, 500).
-market_item(302, sheep, -1, 1000).
-market_item(303, cow, -1, 1500).
+market_item(301, chicken, -1, 250).
+market_item(302, sheep, -1, 500).
+market_item(303, cow, -1, 1000).
 market_item(304, egg, -1, 500).
 market_item(305, wool, -1, 500).
 market_item(306, milk, -1, 500).
 
-market_item(401, anemone, -1, 500).
-market_item(402, blackfin_tuna, -1, 500).
-market_item(403, moonfish, -1, 500).
+market_item(401, anemone, -1, 1000).
+market_item(402, blackfin_tuna, -1, 1900).
+market_item(403, moonfish, -1, 1000).
 
-market_item(411, marblefish, -1, 500).
-market_item(412, longfin, -1, 500).
-market_item(413, lionfish, -1, 500).
-market_item(414, mooneye, -1, 500).
-market_item(415, jewelfish, -1, 500).
+market_item(411, marblefish, -1, 400).
+market_item(412, longfin, -1, 400).
+market_item(413, lionfish, -1, 400).
+market_item(414, mooneye, -1, 400).
+market_item(415, jewelfish, -1, 400).
 
-market_item(421, gudgeon, -1, 500).
-market_item(422, glassfish, -1, 500).
-market_item(423, eulachon, -1, 500).
-market_item(424, dwarf_gourami, -1, 500).
-market_item(425, angelfish, -1, 500).
-market_item(426, spearfish, -1, 500).
+market_item(421, gudgeon, -1, 300).
+market_item(422, glassfish, -1, 300).
+market_item(423, eulachon, -1, 300).
+market_item(424, dwarf_gourami, -1, 300).
+market_item(425, angelfish, -1, 300).
+market_item(426, spearfish, -1, 300).
 
-market_item(431, salmon, -1, 500).
-market_item(432, tuna, -1, 500).
-market_item(433, catfish, -1, 500).
-market_item(434, swordfish, -1, 500).
-market_item(435, mackarel, -1, 500).
-market_item(436, common_carp, -1, 500).
-market_item(437, tilapia, -1, 500).
-market_item(438, trout, -1, 500).
+market_item(431, salmon, -1, 200).
+market_item(432, tuna, -1, 200).
+market_item(433, catfish, -1, 200).
+market_item(434, swordfish, -1, 200).
+market_item(435, mackarel, -1, 200).
+market_item(436, common_carp, -1, 200).
+market_item(437, tilapia, -1, 200).
+market_item(438, trout, -1, 200).
 
 item_group_helper_MARKET(sellable_market_item, [101, 203, 401, 402, 403, 411, 412, 413, 414, 415, 421, 422, 423, 424, 425, 426, 431, 432, 433, 434, 435, 436, 437, 438]).
 
@@ -241,13 +241,13 @@ buy:-
     write('||                                               ||\n'),
     write('||       ID      ||    NAME     ||     PRICE     ||\n'),
     write('||===============================================||\n'),
-    write('||  carrot_seed  || Carrot Seed ||   50 GOLDS    ||\n'),
-    write('||  potato_seed  || Potato Seed ||   50 GOLDS    ||\n'),
-    write('||  tomato_seed  || Tomato Seed ||   50 GOLDS    ||\n'),
-    write('||   corn_seed   ||  Corn Seed  ||   50 GOLDS    ||\n'),
-    write('||    chicken    || Chicken (R) ||   500 GOLDS   ||\n'),
-    write('||     sheep     ||  Sheep (R)  ||   1000 GOLDS  ||\n'),
-    write('||      cow      ||   cow (R)   ||   1500 GOLDS  ||\n'),
+    write('||  carrot_seed  || Carrot Seed ||   25 GOLDS    ||\n'),
+    write('||  potato_seed  || Potato Seed ||   25 GOLDS    ||\n'),
+    write('||  tomato_seed  || Tomato Seed ||   25 GOLDS    ||\n'),
+    write('||   corn_seed   ||  Corn Seed  ||   25 GOLDS    ||\n'),
+    write('||    chicken    || Chicken (R) ||   250 GOLDS   ||\n'),
+    write('||     sheep     ||  Sheep (R)  ||   500 GOLDS   ||\n'),
+    write('||      cow      ||   cow (R)   ||   1000 GOLDS  ||\n'),
     write('||     shovel    || Shovel (U)  ||   300 GOLDS   ||\n'),
     write('||  fishing_rod  || Fishrod (U) ||   500 GOLDS   ||\n'),
     write('||                                               ||\n'),
@@ -272,38 +272,54 @@ buy:-
             read(Quantity),
             market_item(_, Item, Level, Price),
             FinalPrice is Price * Quantity,
-            format('You bought ~d ~s!(s).~n', [Quantity, Alias]),
-            buyItem(FinalPrice, Item, Quantity, Level)
+            (
+                gold(Gold),
+                (FinalPrice =< Gold) ->
+                (
+                    format('You bought ~d ~s!(s).~n', [Quantity, Alias]),
+                    buyItem(FinalPrice, Item, Quantity, Level)
+                )
+                ;
+                (
+                    write('Gold insufficient!\n')
+                )
+            )
         )
     ).
     
 
 buyItem(FinalPrice, Item, Quantity, Level):-
-    gold(Gold), FinalPrice =< Gold,
+    gold(Gold), 
     NewGold is Gold - FinalPrice,
     retract(gold(Gold)),
     assertz(gold(NewGold)),
     write('\nYou are charged '), write(FinalPrice), write(' golds.\n'),
     item_in_inventory(Item, Level, Qty),
     Qty1 is Qty + Quantity,
-    (Item = chicken ; Item = cow; Item = sheep) ->
-        ( 
-            updateRanch(Item, Quantity) 
-        )
-        ;
-        (Item = carrot_seed; Item = tomato_seed; Item = potato_seed; Item = corn_seed) ->
+    (
         (
-            updateSeed(Item, Quantity)
+            (Item = chicken ; Item = cow; Item = sheep) ->
+            ( 
+                updateRanch(Item, Quantity) 
+            )
+            ;
+            (
+                (Item = carrot_seed; Item = tomato_seed; Item = potato_seed; Item = corn_seed) ->
+                (
+                    updateSeed(Item, Quantity)
+                )
+                ;
+                (
+                    retract(item_in_inventory(Item, Level, Qty)),
+                    assertz(item_in_inventory(Item, Level, Qty1))
+                )
+            )
         )
-        ;
-        (
-            retract(item_in_inventory(Item, Level, Qty)),
-            assertz(item_in_inventory(Item, Level, Qty1))
-        ).
+    ).
+    
+        
+        
 
-buyItem(FinalPrice, _, _, _):-
-    gold(Gold), FinalPrice > Gold,
-    write('You have insufficient gold!\n').
 
 updateSeed(Item, Quantity):-
     item_in_inventory(Item, _, Qty),
@@ -428,7 +444,8 @@ sellitnow :-
                                 NewQty is Qty - QtySELL,
                                 retract(item_in_inventory(CODENAME, _, Qty)),
                                 assertz(item_in_inventory(CODENAME, _, NewQty)),
-                                format('Selling succeed! your current gold is now ~d~n', [NewGold])
+                                format('Selling succeed! your current gold is now ~d~n', [NewGold]),
+                                checkGameState
                             );
                             write('You have cancelled the transaction.\n')
                         )
