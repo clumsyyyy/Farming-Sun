@@ -2,11 +2,12 @@
 
 initFarm:-
 /* Menginisialisasi predikat-predikat yang digunakan untuk aktivitas Farming */
-    % seed(Name, Quantity, Alias, SymbolPLanted, SymbolHarvested, DayToHarvest)
-    assertz(seed(tomato, 2, 't','T', 5)),
-    assertz(seed(corn, 1, 'c', 'C', 6)),
-    assertz(seed(carrot, 1, 'c', 'C', 3)),
-    assertz(seed(potato, 1, 'p', 'P', 8)),
+    % seed(SeedName, Product, PlantName, SymbolPLanted, SymbolHarvested, DayToHarvest)
+    % definisi untuk seed
+    assertz(seed(tomato_seed, tomato, 't','T', 5)),
+    assertz(seed(corn_seed, corn, 'c', 'C', 6)),
+    assertz(seed(carrot_seed, carrot, 'c', 'C', 3)),
+    assertz(seed(potato_seed,potato, 'p', 'P', 8)),
     % myPlant(A,B,Name,SymbolPlanted,SymbolHarvest,DayPlant,DayToHarvest)
     assertz(myPlant(-1,-1,-1,-1,-1,-1,-1)),
     % farmEXP(Component,Value)
@@ -49,14 +50,15 @@ plant:-
             displaySeed,
             write('\nWhat do you want to plant?\n'),
             read(SelectSeed),
-            seed(SelectSeed,Qty,SymP,SymH,DayToHarvest),
+            seed(SeedName,SelectSeed,SymP,SymH,DayToHarvest),
             format('You planted a ~w seed!~n',[SelectSeed]),
             retract(map(A1,B,Z)),
             assertz(map(A1,B,SymP)),
+            item_in_inventory(SeedName,Level,Qty),
             QtyNew is Qty-1,
-            retract(seed(SelectSeed,Qty,SymP,SymH,DayToHarvest)),
+            retract(item_in_inventory(SeedName,Level,Qty)),
             day(Day),
-            assertz(seed(SelectSeed,QtyNew,SymP,SymH,DayToHarvest)),
+            assertz(item_in_inventory(SeedName,Level,QtyNew)),
             (retract(myPlant(-1,-1,-1,-1,-1,-1,-1)) -> true ; true),
             assertz(myPlant(A1,B,SelectSeed,SymP,SymH,Day,DayToHarvest)),
             format('The ~w can be harvested in ~d days...~n~n',[SelectSeed,DayToHarvest]),
@@ -122,8 +124,9 @@ isTileDigged(A,B):-
 
 displaySeed:-
 /* Menampilkan bibit yang dapat ditanamkan */
-    forall(seed(Name, Qty,_,_,_), ( 
-        Qty > 0 ->  format('- ~d ~w seed~n',[Qty, Name]) ;  true
+    forall(seed(SeedName, Product,_,_,_), ( 
+        item_in_inventory(SeedName, _, Qty),
+        (Qty > 0 ->  format('- ~d ~w seed~n',[Qty, Product]) ;  true)
     )).
 
 
@@ -200,46 +203,46 @@ farmLvlUpEffect:-
     farmEXP(lvl, Level),
     (
         Level = 2 -> (
-            retract(seed(potato,Qty,SymP,SymH,8)),
-            assertz(seed(potato,Qty,SymP,SymH,7))
+            retract(seed(SeedName,tomato,SymP,SymH,8)),
+            assertz(seed(SeedName,tomato,SymP,SymH,7))
         )
         ; Level = 3 -> (
-            retract(seed(corn,Qty,SymP,SymH,6)),
-            assertz(seed(corn,Qty,SymP,SymH,5))
+            retract(seed(SeedName,corn,SymP,SymH,6)),
+            assertz(seed(SeedName,corn,SymP,SymH,5))
         )
         ; Level = 5 -> (
-            retract(seed(tomato,Qty1,SymP1,SymH1,5)),
-            retract(seed(corn,Qty2,SymP2,SymH2,5)),
-            retract(seed(potato,Qty3,SymP3,SymH3,7)),
-            assertz(seed(tomato,Qty1,SymP1,SymH1,4)),
-            assertz(seed(corn,Qty2,SymP2,SymH2,4)),
-            assertz(seed(potato,Qty3,SymP3,SymH3,6))
+            retract(seed(SeedName1,tomato,SymP1,SymH1,5)),
+            retract(seed(SeedName2,corn,SymP2,SymH2,5)),
+            retract(seed(SeedName3,potato,SymP3,SymH3,7)),
+            assertz(seed(SeedName1,tomato,SymP1,SymH1,4)),
+            assertz(seed(SeedName2,corn,SymP2,SymH2,4)),
+            assertz(seed(SeedName3,potato,SymP3,SymH3,6))
         )
         ; Level = 7 -> (   
-            retract(seed(corn,Qty1,SymP1,SymH1,4)),
-            retract(seed(carrot,Qty2,SymP2,SymH2,3)),
-            retract(seed(potato,Qty3,SymP3,SymH3,6)),
-            assertz(seed(corn,Qty1,SymP1,SymH1,3)),
-            assertz(seed(carrot,Qty2,SymP2,SymH2,2)),
-            assertz(seed(potato,Qty3,SymP3,SymH3,5))
+            retract(seed(SeedName1,corn,SymP1,SymH1,4)),
+            retract(seed(SeedName2,carrot,SymP2,SymH2,3)),
+            retract(seed(SeedName3,potato,SymP3,SymH3,6)),
+            assertz(seed(SeedName1,corn,SymP1,SymH1,3)),
+            assertz(seed(SeedName2,carrot,SymP2,SymH2,2)),
+            assertz(seed(SeedName3,potato,SymP3,SymH3,5))
         )
         ; Level = 8 -> (
-            retract(seed(tomato,Qty,SymP,SymH,4)),
-            assertz(seed(tomato,Qty,SymP,SymH,3))
+            retract(seed(SeedName,tomato,SymP,SymH,4)),
+            assertz(seed(SeedName,tomato,SymP,SymH,3))
         )
         ; Level = 9 -> (
-            retract(seed(corn,Qty1,SymP1,SymH1,3)),
-            retract(seed(potato,Qty2,SymP2,SymH2,5)),
-            assertz(seed(corn,Qty1,SymP1,SymH1,2)),
-            assertz(seed(potato,Qty2,SymP2,SymH2,4))
+            retract(seed(SeedName1,corn,SymP1,SymH1,3)),
+            retract(seed(SeedName2,potato,SymP2,SymH2,5)),
+            assertz(seed(SeedName1,corn,SymP1,SymH1,2)),
+            assertz(seed(SeedName2,potato,SymP2,SymH2,4))
         )
         ; Level = 10 -> (
-            retract(seed(tomato,Qty1,SymP1,SymH1,3)),
-            retract(seed(carrot,Qty2,SymP2,SymH2,2)),
-            retract(seed(potato,Qty3,SymP3,SymH3,4)),
-            assertz(seed(tomato,Qty1,SymP1,SymH1,2)),
-            assertz(seed(carrot,Qty2,SymP2,SymH2,1)),
-            assertz(seed(potato,Qty3,SymP3,SymH3,3))
+            retract(seed(SeedName1,tomato,SymP1,SymH1,3)),
+            retract(seed(SeedName2,carrot,SymP2,SymH2,2)),
+            retract(seed(SeedName3,potato,SymP3,SymH3,4)),
+            assertz(seed(SeedName1,tomato,SymP1,SymH1,2)),
+            assertz(seed(SeedName2,carrot,SymP2,SymH2,1)),
+            assertz(seed(SeedName3,potato,SymP3,SymH3,3))
         )
     ),
     !.
