@@ -2,13 +2,13 @@
     File akan terkompilasi apabila fungsi `game` diinisialisasi */
 :- include('globals.pl').
 :- include('map.pl').
-:- include('farming.pl').
 :- include('fishing.pl').
 :- include('ranching.pl').
 :- include('inventory.pl').
 :- include('market.pl').
 :- include('house.pl').
 :- include('quest.pl').
+:- include('farming.pl').
 
 
 continue:-

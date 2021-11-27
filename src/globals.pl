@@ -19,7 +19,7 @@
 
 % ======= predicate farming ======
 :- dynamic(seed/5).
-%:- dynamic(myplant/7).
+:- dynamic(myPlant/7).
 
 % ======= predicate ranching ======
 :- dynamic(livestock/2).

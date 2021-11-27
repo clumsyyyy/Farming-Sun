@@ -1,7 +1,7 @@
-:-include('globals.pl').
+% :-include('globals.pl').
 % :-dynamic(seed/5).
 % % seed(Name, Quantity, Alias, SymbolPLanted, SymbolHarvested, DayToHarvest)
-:-dynamic(myPlant/7).
+% :-dynamic(myPlant/7).
 % % myPlant(X,Y,Name,SymbolPlanted,SymbolHarvest,DayPlant,DayToHarvest)
 
 % fakta untuk jenis bibit yang dapat ditanam
@@ -9,10 +9,13 @@ initSeed:-
     assertz(seed(tomato, 2, 't','T', 5)),
     assertz(seed(corn, 1, 'c', 'C', 6)),
     assertz(seed(carrot, 1, 'c', 'C', 3)),
-    assertz(seed(potato, 1, 'p', 'P', 8)).
+    assertz(seed(potato, 1, 'p', 'P', 8)),
+    assertz(farmEXP(exp, 0)),
+    assertz(farmEXP(lvl, 1)),
+    assertz(farmEXP(lvlUpReq, 75)).
 
 % fakta untuk tanaman yang sedang ditanam
-myPlant(-1,-1,-1,-1,-1,-1,-1).
+% myPlant(-1,-1,-1,-1,-1,-1,-1).
 
 % command: dig
 dig:-
@@ -25,12 +28,9 @@ dig:-
         changePos(A1, B),
         assertz(map(A,B,'=')),
         write('You digged the tile!\nUse the command \'plant.\' to plant a seed!\n\n'),
-        farmEXP(exp,Exp),
+        map,
         occupation(O),
-        (O = 'farmer'  -> ExpPlus is Exp+10 ; ExpPlus is Exp+5),
-        retract(farmEXP(exp,Exp)),
-        assertz(farmEXP(exp,ExpPlus)),
-        map
+        O = 'farmer'  -> farmEXPUp(20) ; farmEXPUp(10)
     ;
         write('You can\'t dig here. Dig somewhere else.\n'),
     !.
@@ -77,8 +77,6 @@ grow(A,B,SymP,SymH,DayPlant,DayToHarvest):-
         assertz(map(A,B,SymH)); true);
     true.
         
-
-
 harvest:-
 /*  I.S. tile yang telah ditanamkan siap untuk dipanen
     F.S. tanaman berhasil dipanen, tile akan diubah ke status bisa digali */
@@ -95,11 +93,8 @@ harvest:-
         assertz(item_in_inventory(Name,_,QtyPlus)),
         format('Yay, you successfully harvested a ~w~n!',[Name]),
         write('It has been added to your inventory.\n\n'),
-        farmEXP(exp,Exp),
         occupation(O),
-        (O = farmer  -> ExpPlus is Exp+10 ; ExpPlus is Exp+5),
-        retract(farmEXP(exp,Exp)),
-        assertz(farmEXP(exp,ExpPlus)),
+        O = 'farmer'  -> farmEXPUp(40) ; farmEXPUp(25),
         doHarvest
     ;   
         write('You cannot harvest this plant yet.\n'),
@@ -140,3 +135,77 @@ isTileEmpty(A,B):-
     \+map(A2,B,'='), % di depan
     \+isTilePlanted(A2,B),
     \+map(A,B,_).    % yang dipijak
+
+% untuk exp
+
+farmEXPUp(EXP_Given):-
+    % regular EXP
+    farmEXP(exp, E), farmEXP(lvl, L), farmEXP(lvlUpReq, R),
+    E1 is E + EXP_Given,
+    E1 < R,
+    retract(farmEXP(exp, E)),
+    assertz(farmEXP(exp, E1)),
+    write('\nYou gained '), write(EXP_Given), write(' Farm EXP!\n'),
+    write('You are at level '), write(L), write('.\n'),
+    write('EXP Status: '), write(E1), write('/'), write(R), write('\n'),
+    !.
+
+farmEXPUp(EXP_Given):-
+    % level up
+    farmEXP(exp, E), farmEXP(lvl, L), farmEXP(lvlUpReq, R),
+    L1 is L + 1, E1 is E + EXP_Given,
+    E1 >= R,
+    E2 is E1 - R,
+    R1 is R + 25,
+    retract(farmEXP(lvl, L)),
+    retract(farmEXP(exp, E)),
+    retract(farmEXP(lvlUpReq, R)),
+    assertz(farmEXP(lvl, L1)),
+    assertz(farmEXP(exp, E2)),
+    assertz(farmEXP(lvlUpReq, R1)),
+    write('\nYou gained '), write(EXP_Given), write(' farm EXP!\n'),
+    write('Level Up!\n'),
+    write('Your farming experience is now at level '), write(L1), write('\n'),
+    write('EXP Status: '), write(E2), write('/'), write(R1), write('\n'),
+    farmLvlUpEffect,!.
+
+
+% Efek level up, lama hari untuk melakukan aktivitas farming berkurang
+farmLvlUpEffect:-
+    farmEXP(lvl, Level),
+    Level = 2 ->
+        retract(seed(potato,_,_,_,8)),
+        assertz(seed(potato,_,_,_,7))
+    ; Level = 3 ->
+        retract(seed(corn,_,_,_,6)),
+        assertz(seed(corn,_,_,_,5))
+    ; Level = 5 ->
+        retract(seed(tomato,_,_,_,5)),
+        retract(seed(corn,_,_,_,5)),
+        retract(seed(potato,_,_,_,7)),
+        assertz(seed(tomato,_,_,_,4)),
+        assertz(seed(corn,_,_,_,4)),
+        assertz(seed(potato,_,_,_,6))
+    ; Level = 7 ->
+        retract(seed(corn,_,_,_,4)),
+        retract(seed(carrot,_,_,_,3)),
+        retract(seed(potato,_,_,_,6)),
+        assertz(seed(corn,_,_,_,3)),
+        assertz(seed(carrot,_,_,_,2)),
+        assertz(seed(potato,_,_,_,5))
+    ; Level = 8 ->
+        retract(seed(tomato,_,_,_,4)),
+        assertz(seed(tomato,_,_,_,3))
+    ; Level = 9 ->
+        retract(seed(corn,_,_,_,3)),
+        retract(seed(potato,_,_,_,5)),
+        assertz(seed(corn,_,_,_,2)),
+        assertz(seed(potato,_,_,_,4))
+    ; Level = 10 ->
+        retract(seed(tomato,_,_,_,3)),
+        retract(seed(carrot,_,_,_,2)),
+        retract(seed(potato,_,_,_,4)),
+        assertz(seed(tomato,_,_,_,2)),
+        assertz(seed(carrot,_,_,_,1)),
+        assertz(seed(potato,_,_,_,3)),
+    !.
