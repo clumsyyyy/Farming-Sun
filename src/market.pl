@@ -57,7 +57,7 @@ item_in_inventory(trout, -1, 0).
 % 41X for SR fish
 % 42X for R fish
 % 43X for C fish 
-market_item(101, shovel, 2, 500).
+market_item(101, shovel, 2, 300).
 market_item(102, fishing_rod, 2, 500).
 
 market_item(201, carrot_seed, -1, 50).
@@ -330,8 +330,23 @@ upgradeTools(Item):-
     (
         (A = 'Y'; A = 'y') ->
         (
-            levelUpEquipment(Item),
-            format('Yay, your ~s has been upgraded to level ~d! Use it well...~n', [ToolsAlias, Level + 1])
+            gold(Gold),
+            market_item(_, Item, _, Price),
+            (
+                (Gold > Price) ->
+                    (
+                        levelUpEquipment(Item),
+                        Gold1 is Gold - Price,
+                        retract(gold(Gold)),
+                        assertz(gold(Gold1)),
+                        format('Yay, your ~s has been upgraded to level ~d! Use it well...~n', [ToolsAlias, Level + 1])
+                    )
+                    ;
+                    (
+                        write('Sorry, you don\'t have enough money to upgrade the item!\n')
+                    )
+            )
+            
         )
         ;
         (
@@ -348,15 +363,32 @@ upgradeTools(Item):-
     (
         (A = 'Y'; A = 'y') ->
         (
-            retract(item_in_inventory(Item, _, 0)),
-            assertz(item_in_inventory(Item, 2, 1)),
-            format('Now you own a new Level ~d ~s! Use it well...', [2, ToolsAlias])
+            gold(Gold),
+            market_item(_, Item, _, Price),
+            (
+                (Gold > Price ->
+                    (
+                        retract(item_in_inventory(Item, _, 0)),
+                        assertz(item_in_inventory(Item, 2, 1)),
+                        format('Now you own a new Level ~d ~s! Use it well...', [2, ToolsAlias]),
+                        Gold1 is Gold - Price,
+                        retract(gold(Gold)),
+                        assertz(gold(Gold1))
+                    )
+                    ;
+                    (
+                        write('Sorry, you don\'t have enough money to upgrade the item!\n')
+                    )
+                )
+            )
         )
         ;
         (
             write('Not buying a new tool! Goodluck though...\n')
         )
     ).
+
+
 sell:-
     marketValidationMSG, !.
 
