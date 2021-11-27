@@ -60,18 +60,18 @@ item_in_inventory(trout, -1, 0).
 market_item(101, shovel, 2, 500).
 market_item(102, fishing_rod, 2, 500).
 
-market_item(201, carrot_seed, -1, 500).
-market_item(202, corn_seed, -1, 500).
-market_item(203, tomato_seed, -1, 500).
-market_item(204, potato_seed, -1, 500).
-market_item(205, carrot, -1, 500).
-market_item(206, corn, -1, 500).
-market_item(207, tomato, -1, 500).
-market_item(208, potato, -1, 500).
+market_item(201, carrot_seed, -1, 50).
+market_item(202, corn_seed, -1, 50).
+market_item(203, tomato_seed, -1, 50).
+market_item(204, potato_seed, -1, 50).
+market_item(205, carrot, -1, 50).
+market_item(206, corn, -1, 50).
+market_item(207, tomato, -1, 50).
+market_item(208, potato, -1, 50).
 
 market_item(301, chicken, -1, 500).
-market_item(302, sheep, -1, 500).
-market_item(303, cow, -1, 500).
+market_item(302, sheep, -1, 1000).
+market_item(303, cow, -1, 1500).
 market_item(304, egg, -1, 500).
 market_item(305, wool, -1, 500).
 market_item(306, milk, -1, 500).
@@ -227,67 +227,136 @@ displayAvailableToSell :-
     format('|----------------- FISHING (C) ---------------|~n', []),
     forall(market_item(ID, _, _, _), display_market_fishing_c_sell(ID)), nl.
 
-% buy:-
-%     \+isOnMarket,
-%     write('You\'re currently not at the market!\n').
+buy:-
+    \+isOnMarket,
+    write('You\'re currently not at the market!\n').
 
-% buy:-
-%     isOnMarket,
-%     write('What do you want to buy? (input the number) \n'),
-%     write('1. Carrot seed (50 golds)\n'),
-%     write('2. Corn seed (50 golds)\n'),
-%     write('3. Tomato seed (50 golds)\n'),
-%     write('4. Potato seed (50 golds)\n'),
-%     write('5. Chicken (500 golds)\n'),
-%     write('6. Sheep (1000 golds)\n'),
-%     write('7. Cow (1500 golds)\n'),
-%     write('8. Level 2 shovel (300 golds)\n'),
-%     write('9. Level 2 fishing rod (500 golds)\n'),
-%     write('\n>>> '),
-%     read(Option),
-%     write('How many do you want to buy?\n>>> '),
-%     read(Quantity),
-%     market_item(Option, Item, ItemName, Price, Level),
-%     FinalPrice is Price * Quantity,
-%     write('You bought '), write(Quantity), write(' '), write(ItemName), write('.'),
-%     buyItem(FinalPrice, Item, Quantity, Level).
+buy:-
+    isOnMarket,
+    write('===================================================\n'),
+    write('||                                               ||\n'),
+    write('||      =====|| WELCOME TO THE SHOP! ||=====     ||\n'),
+    write('||                                               ||\n'),
+    write('||   Input the ID of the item you want to buy!   ||\n'),
+    write('||                                               ||\n'),
+    write('||       ID      ||    NAME     ||     PRICE     ||\n'),
+    write('||===============================================||\n'),
+    write('||  carrot_seed  || Carrot Seed ||   50 GOLDS    ||\n'),
+    write('||  potato_seed  || Potato Seed ||   50 GOLDS    ||\n'),
+    write('||  tomato_seed  || Tomato Seed ||   50 GOLDS    ||\n'),
+    write('||   corn_seed   ||  Corn Seed  ||   50 GOLDS    ||\n'),
+    write('||    chicken    || Chicken (R) ||   500 GOLDS   ||\n'),
+    write('||     sheep     ||  Sheep (R)  ||   1000 GOLDS  ||\n'),
+    write('||      cow      ||   cow (R)   ||   1500 GOLDS  ||\n'),
+    write('||     shovel    || Shovel (U)  ||   300 GOLDS   ||\n'),
+    write('||  fishing_rod  || Fishrod (U) ||   500 GOLDS   ||\n'),
+    write('||                                               ||\n'),
+    write('|| (R): bought items can be checked in ranch     ||\n'),
+    write('|| (U): if item exists, item will be upgraded    ||\n'),
+    write('||      otherwise, a level 2 item will be added  ||\n'),
+    write('||                                               ||\n'),
+    write('===================================================\n'),
+    write('INPUT THE ID OF THE ITEM YOU WANT TO BUY!\n'),
+    write('>>> '),
+    read(Item),
+    item_in_inventory(Item, Level, _),
+    (
+        (Level > 0) ->
+        (
+            upgradeTools(Item)
+        )
+        ;
+        (
+            item_alias(Item, Alias),
+            format('How many ~s do you want to buy?\n>>> ', [Alias]),
+            read(Quantity),
+            market_item(_, Item, Level, Price),
+            FinalPrice is Price * Quantity,
+            format('You bought ~d ~s!(s).~n', [Quantity, Alias]),
+            buyItem(FinalPrice, Item, Quantity, Level)
+        )
+    ).
+    
 
-% buyItem(FinalPrice, Item, Quantity, Level):-
-%     gold(Gold), FinalPrice =< Gold,
-%     NewGold is Gold - FinalPrice,
-%     retract(gold(Gold)),
-%     assertz(gold(NewGold)),
-%     write('\nYou are charged '), write(FinalPrice), write(' golds.\n'),
-%     item_in_inventory(Item, Level, Qty),
-%     Qty1 is Qty + Quantity,
-%     (Item = chicken ; Item = cow; Item = sheep) ->
-%         ( 
-%             updateRanch(Item, Quantity) 
-%         )
-%         ;
-%         (Item = carrot; Item = tomato; Item = potato; Item = corn) ->
-%         (
-%             updateSeed(Item, Quantity)
-%         )
-%         ;
-%         (
-%             retract(item_in_inventory(Item, Level, Qty)),
-%             assertz(item_in_inventory(Item, Level, Qty1))
-%         ).
+buyItem(FinalPrice, Item, Quantity, Level):-
+    gold(Gold), FinalPrice =< Gold,
+    NewGold is Gold - FinalPrice,
+    retract(gold(Gold)),
+    assertz(gold(NewGold)),
+    write('\nYou are charged '), write(FinalPrice), write(' golds.\n'),
+    item_in_inventory(Item, Level, Qty),
+    Qty1 is Qty + Quantity,
+    (Item = chicken ; Item = cow; Item = sheep) ->
+        ( 
+            updateRanch(Item, Quantity) 
+        )
+        ;
+        (Item = carrot_seed; Item = tomato_seed; Item = potato_seed; Item = corn_seed) ->
+        (
+            updateSeed(Item, Quantity)
+        )
+        ;
+        (
+            retract(item_in_inventory(Item, Level, Qty)),
+            assertz(item_in_inventory(Item, Level, Qty1))
+        ).
 
-% buyItem(FinalPrice, _, _, _):-
-%     gold(Gold), FinalPrice > Gold,
-%     write('You have insufficient gold!\n').
+buyItem(FinalPrice, _, _, _):-
+    gold(Gold), FinalPrice > Gold,
+    write('You have insufficient gold!\n').
 
-% updateRanch(Item, Quantity):-
-%     livestock(Item, Qty),
-%     NewQty is Qty + Quantity,
-%     retract(livestock(Item, Qty)),
-%     assertz(livestock(Item, NewQty)),
-%     write('Livestock bought! Check it out at your Ranch!\n'),
-%     Item = cow -> ranchEXPUp(15) ;
-%     Item = sheep -> ranchEXPUp(10) ;
-%     Item = chicken -> ranchEXPUp(5).
+updateSeed(Item, Quantity):-
+    item_in_inventory(Item, _, Qty),
+    NewQty is Qty + Quantity,
+    retract(item_in_inventory(Item, _, Qty)),
+    assertz(item_in_inventory(Item, _, NewQty)).
+
+updateRanch(Item, Quantity):-
+    livestock(Item, Qty),
+    NewQty is Qty + Quantity,
+    retract(livestock(Item, Qty)),
+    assertz(livestock(Item, NewQty)),
+    write('Livestock bought! Check it out at your Ranch!\n'),
+    Item = cow -> ranchEXPUp(15) ;
+    Item = sheep -> ranchEXPUp(10) ;
+    Item = chicken -> ranchEXPUp(5).
+
+upgradeTools(Item):-
+    item_in_inventory(Item, Level, Qty), Qty > 0, 
+    item_alias(Item, ToolsAlias),
+    format('You currently own a Level ~d ~s!~n', [Level, ToolsAlias]),
+    write('Would you like to upgrade it? (Y/N)\n>>> '),
+    read(A),
+    (
+        (A = 'Y'; A = 'y') ->
+        (
+            levelUpEquipment(Item),
+            format('Yay, your ~s has been upgraded to level ~d! Use it well...~n', [ToolsAlias, Level + 1])
+        )
+        ;
+        (
+            write('Okay, not upgrading your tool!\n')
+        )
+    ).
+
+upgradeTools(Item):-
+    item_in_inventory(Item, _, 0),
+    item_alias(Item, ToolsAlias),
+    format('You currently do not have a(n) ~s!~n', [ToolsAlias]),
+    write('Would you like to buy one? (Y/N)\n>>> '),
+    read(A),
+    (
+        (A = 'Y'; A = 'y') ->
+        (
+            retract(item_in_inventory(Item, _, 0)),
+            assertz(item_in_inventory(Item, 2, 1)),
+            format('Now you own a new Level ~d ~s! Use it well...', [2, ToolsAlias])
+        )
+        ;
+        (
+            write('Not buying a new tool! Goodluck though...\n')
+        )
+    ).
 sell:-
     marketValidationMSG, !.
 
@@ -341,10 +410,5 @@ sellitnow :-
     ).
 
 
-updateSeed(Item, Quantity):-
-    seed(Item, Qty, ID1, ID2, Duration),
-    NewQty is Qty + Quantity,
-    write('Seed bought! Check it out at your plant menu!\n'),
-    retract(seed(Item, Qty, ID1, ID2, Duration)),
-    assertz(seed(Item, NewQty, ID1, ID2, Duration)).
+
 
