@@ -3,7 +3,7 @@ print_items(Item, Level, Qty) :-
     Qty > 0 ->
         item_alias(Item, Alias),
         (  
-        Level =:= -1 ->
+        Level = 0 ->
             format('~w ~s (~w) ~n', [Qty, Alias, Item])
         ;
             format('~w Level ~w ~s (~w) ~n', [Qty, Level, Alias, Item])

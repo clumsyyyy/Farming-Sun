@@ -49,7 +49,12 @@ start:-
     assertz(gold(5000)), assertz(exp(0)),
     assertz(farmEXP(exp, 0)), assertz(farmEXP(lvl, 1)),
     assertz(fishEXP(exp, 0)), assertz(fishEXP(lvl, 1)),
-    assertz(ranchEXP(exp, 0)), assertz(ranchEXP(lvl, 1)),
-    game.
-    
+    write('Use W, A, S, and D (.) to move!\n\n'),
+    write('Use the HELP menu for more information!\n\n'),
+    initQuest,
+    initRanch,
+    initSeed,
+    status,
+    map.
+
 

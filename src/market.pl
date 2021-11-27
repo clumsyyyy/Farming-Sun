@@ -2,15 +2,15 @@
 
 
 % fakta item
-market_item(1, carrot, 'Carrot', 50, -1).
-market_item(2, corn_seed, 'Corn', 50, -1).
-market_item(3, tomato_seed, 'Tomato', 50, -1).
-market_item(4, potato, 'Potato', 50, -1).
-market_item(5, chicken, 'Chicken', 500, -1).
-market_item(6, sheep, 'Sheep', 1000, -1).
-market_item(7, cow, 'Cow', 1500, -1).
-market_item(8, shovel2, 'Lvl 2 Shovel', 300, 2).
-market_item(9, fishing_rod2, 'Lvl 2 Fishing Rod', 500, 2).
+market_item(1, carrot, 'Carrot', 50, 0).
+market_item(2, corn, 'Corn', 50, 0).
+market_item(3, tomato, 'Tomato', 50, 0).
+market_item(4, potato, 'Potato', 50, 0).
+market_item(5, chicken, 'Chicken', 500, 0).
+market_item(6, sheep, 'Sheep', 1000, 0).
+market_item(7, cow, 'Cow', 1500, 0).
+market_item(8, shovel, 'Lvl 2 Shovel', 300, 2).
+market_item(9, fishing_rod, 'Lvl 2 Fishing Rod', 500, 2).
 
 isOnMarket:-
     pos(X, Y), map(X, Y, 'M').
@@ -58,11 +58,41 @@ buyItem(FinalPrice, Item, Quantity, Level):-
     retract(gold(Gold)),
     assertz(gold(NewGold)),
     write('\nYou are charged '), write(FinalPrice), write(' golds.\n'),
-    assertz(item_in_inventory(Item, Level, Quantity)).
+    item_in_inventory(Item, Level, Qty),
+    Qty1 is Qty + Quantity,
+    (Item = chicken ; Item = cow; Item = sheep) ->
+        ( 
+            updateRanch(Item, Quantity) 
+        )
+        ;
+        (Item = carrot; Item = tomato; Item = potato; Item = corn) ->
+        (
+            updateSeed(Item, Quantity)
+        )
+        ;
+        (
+            retract(item_in_inventory(Item, Level, Qty)),
+            assertz(item_in_inventory(Item, Level, Qty1))
+        ).
 
 buyItem(FinalPrice, _, _, _):-
     gold(Gold), FinalPrice > Gold,
-    write('Gold insufficient!\n').
+    write('You have insufficient gold!\n').
 
+updateRanch(Item, Quantity):-
+    livestock(Item, Qty),
+    NewQty is Qty + Quantity,
+    retract(livestock(Item, Qty)),
+    assertz(livestock(Item, NewQty)),
+    write('Livestock bought! Check it out at your Ranch!\n'),
+    Item = cow -> ranchEXPUp(15) ;
+    Item = sheep -> ranchEXPUp(10) ;
+    Item = chicken -> ranchEXPUp(5).
 
+updateSeed(Item, Quantity):-
+    seed(Item, Qty, ID1, ID2, Duration),
+    NewQty is Qty + Quantity,
+    write('Seed bought! Check it out at your plant menu!\n'),
+    retract(seed(Item, Qty, ID1, ID2, Duration)),
+    assertz(seed(Item, NewQty, ID1, ID2, Duration)).
 

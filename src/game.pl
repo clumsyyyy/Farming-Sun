@@ -2,31 +2,25 @@
     File akan terkompilasi apabila fungsi `game` diinisialisasi */
 :- include('globals.pl').
 :- include('map.pl').
-:- include('farming.pl').
 :- include('fishing.pl').
 :- include('ranching.pl').
 :- include('inventory.pl').
 :- include('market.pl').
 :- include('house.pl').
 :- include('quest.pl').
+:- include('farming.pl').
 
 
-game:-
-/* Inisialisasi permainan */
-    write('Use W, A, S, and D (.) to move!\n\n'),
-    write('Use the HELP menu for more information!\n\n'),
-    initQuest,
-    initRanch,
+continue:-
     status,
     map.
-
 status:-
 /* Fungsi untuk menampilkan informasi terkait uang, hari, dan EXP pemain */
     day(Day), gold(Gold), occupation(Occupation),
     farmEXP(exp, FarmEXP), farmEXP(lvl, Farmlvl),
     fishEXP(exp, FishEXP), fishEXP(lvl, Fishlvl),
     ranchEXP(exp, RanchEXP), ranchEXP(lvl, Ranchlvl),
-    write('  Occupation: '), write(Occupation), write('\n'),
+    write('\n  Occupation: '), write(Occupation), write('\n'),
     write('     Day: '), write(Day), write(' | '),
     write('Gold: '), write(Gold), write('\n'),
     write('========== LEVELS ==========\n'),
@@ -39,15 +33,22 @@ quit:-
     halt(0).
 
 help:-
-    write('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n'),
-    write('% 1. start  : untuk memulai petualanganmu                                      %\n'),
-    write('% 2. map    : menampilkan peta                                                 %\n'),
-    write('% 3. status : menampilkan kondisimu terkini                                    %\n'),
-    write('% 4. w      : gerak ke utara 1 langkah                                         %\n'),
-    write('% 5. s      : gerak ke selatan 1 langkah                                       %\n'),
-    write('% 6. d      : gerak ke ke timur 1 langkah                                      %\n'),
-    write('% 7. a      : gerak ke barat 1 langkah                                         %\n'),
-    write('% 8. Status : menampilkan status pemain                                        %\n'),
-    write('% 9. help   : menampilkan segala bantuan                                       %\n'),
-    write('% 0. quit   : keluar dari permainan                                            %\n'),
-    write('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n').
+    write('================================== HELP MENU ==================================\n\n'),
+    write('1. The objective of the game is to obtain 20.000 gold before a year passes by!\n'),
+    write('2. Move with the command w., a., s., or d.\n'),
+    write('3. Location definitions are as such:\n'),
+    write('     - R: Ranch, use the command ranch. at this tile to begin ranching!\n'),
+    write('     - o: Lake, use the command fish. near this tile to begin fishing!\n'),
+    write('     - -: Land, use the command dig. and plant. at the tile to begin planting a seed!\n'),
+    write('     - Q: Quest, use the command quest. at this tile to pick quests up!\n'),
+    write('     - M: Marketplace, use the command market. at this tile to buy/sell items!\n'),
+    write('     - H: House, use the command house. at this tile to access your house menu!\n'),
+    write('4. You can plant a seed and harvest it after a certain amount of time passes by \nusing the harvest. command.\n'),
+    write('     - small characters represent the seed, while capital characters represent a harvest-ready plant.\n'),
+    write('5. You can produce animal goods by ranching and sell it at the marketplace.\n'),
+    write('     - use the command cow., sheep., or chicken., at the ranch to produce goods in a set amount of time.\n'),
+    write('6. Completing quests will give you extra EXP and money. You can only pick up more\n quests after the current quest have been completed.\n'),
+    write('7. The day will update when you sleep at your home.\n'),
+    write('     - use the command sleep. to sleep\n'),
+    write('     - use the command read. / write. to read / write your diary.\n'),
+    write('8. The occupation you selected will give you perks in certain activities!\n').

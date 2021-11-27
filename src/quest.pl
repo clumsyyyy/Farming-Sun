@@ -9,9 +9,9 @@ initQuest:-
 quest:-
     isNotInQuest,
     isOnTileQ,
-    random(1,2,H),
-    random(1,2,F),
-    random(1,2,R),
+    random(1,10,H),
+    random(1,10,F),
+    random(1,10,R),
     retract(myquest(_,_,_,_,_,_)),
     assertz(myquest(H,H,F,F,R,R)),
     Gold is H*10+F*10+R*10,
@@ -28,7 +28,7 @@ quest:-
 quest:-
     \+isNotInQuest,
     \+isQuestClear,
-    isOnTileQ,
+    %isOnTileQ,
     write('You have an on-going quest!\n'),
     myquest(Hi,Hf,Fi,Ff,Ri,Rf),
     H is Hi-Hf,
