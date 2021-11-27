@@ -105,10 +105,10 @@ item_alias(trout, "Trout").
 % YANG BAKAL DIDISPLAY DI INVENTORY CUMA YANG POSITIF AJA
 item_in_inventory(shovel,1,1).
 item_in_inventory(fishing_rod, 1, 1).
-item_in_inventory(carrot_seed, -1, 0).
-item_in_inventory(corn_seed, -1, 0).
-item_in_inventory(tomato_seed, -1, 0).
-item_in_inventory(potato_seed, -1, 0).
+item_in_inventory(carrot_seed, -1, 2).
+item_in_inventory(corn_seed, -1, 2).
+item_in_inventory(tomato_seed, -1, 4).
+item_in_inventory(potato_seed, -1, 3).
 item_in_inventory(carrot, -1, 0).
 item_in_inventory(corn, -1, 0).
 item_in_inventory(tomato, -1, 0).
