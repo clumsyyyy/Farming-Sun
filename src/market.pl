@@ -303,10 +303,11 @@ sellitnow :-
 
 sellitnow :-
     format('so, what do you want to sell? ', []),
+    item_group_helper_MARKET(sellable_market_item, PoolSellable),
     read(IDSELL),
     % CALCULATE PRICE
     (
-        market_item(IDSELL, CODENAME, _, Price) -> (
+        market_item(IDSELL, CODENAME, _, Price), member(IDSELL, PoolSellable) -> (
             item_in_inventory(CODENAME, _, Qty) -> (
                 format('You have ~d ', [Qty]), print_market_item_details(IDSELL), write(' in your inventory.\n'),
                 write('and, how many do you want to sell? '), read(QtySELL),
