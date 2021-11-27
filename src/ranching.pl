@@ -1,5 +1,6 @@
 :- include('globals.pl').
 
+
 initRanch:-
     assertz(livestock(cow, 0)),
     assertz(livestock(sheep, 0)),
@@ -72,8 +73,13 @@ chicken :-
     Delta >= Delay,
     livestock(cow, N),
     write('Your chicken produces '), write(N), write(' eggs!\n'),
+    item_in_inventory(egg, Lvl, Qty),
+    NewQty is Qty + N,
+    retract(egg, Lvl, Qty),
+    assertz(egg, Lvl, NewQty),
     retract(ranchTimeMgmt(chickenLastDay, LastDay)),
     assertz(ranchTimeMgmt(chickenLastDay, Day)),
+    doRanch,
     % exp  
     E is N * 3,
     ranchEXPUp(E),
@@ -103,8 +109,13 @@ cow :-
     Delta >= Delay,
     livestock(cow, N),
     write('Your cow produces '), write(N), write(' bottle of milk!\n'),
+    item_in_inventory(milk, Lvl, Qty),
+    NewQty is Qty + N,
+    retract(item_in_inventory(milk, Lvl, Qty)),
+    assertz(item_in_inventory(milk, Lvl, NewQty)),
     retract(ranchTimeMgmt(cowLastDay, LastDay)),
     assertz(ranchTimeMgmt(cowLastDay, Day)),
+    doRanch,
     % exp
     E is N * 3,
     ranchEXPUp(E),
@@ -134,8 +145,13 @@ sheep :-
     Delta >= Delay,
     livestock(sheep, N),
     write('Your sheep produces '), write(N), write(' pack of wool!\n'),
+    item_in_inventory(wool, Lvl, Qty),
+    NewQty is Qty + N,
+    retract(item_in_inventory(wool, Lvl, Qty)),
+    assertz(item_in_inventory(wool, Lvl, NewQty)),
     retract(ranchTimeMgmt(sheepLastDay, LastDay)),
     assertz(ranchTimeMgmt(sheepLastDay, Day)),
+    doRanch,
     % exp sheep
     E is N * 10,
     ranchEXPUp(E),

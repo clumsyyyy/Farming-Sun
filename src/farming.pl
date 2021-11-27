@@ -1,14 +1,15 @@
 :-include('globals.pl').
-:-dynamic(seed/5).
-% seed(Name, Quantity, Alias, SymbolPLanted, SymbolHarvested, DayToHarvest)
+% :-dynamic(seed/5).
+% % seed(Name, Quantity, Alias, SymbolPLanted, SymbolHarvested, DayToHarvest)
 :-dynamic(myPlant/7).
-% myPlant(X,Y,Name,SymbolPlanted,SymbolHarvest,DayPlant,DayToHarvest)
+% % myPlant(X,Y,Name,SymbolPlanted,SymbolHarvest,DayPlant,DayToHarvest)
 
 % fakta untuk jenis bibit yang dapat ditanam
-seed(tomato, 2, 't','T', 5).
-seed(corn, 1, 'c', 'C', 6).
-seed(carrot, 1, 'c', 'C', 3).
-seed(potato, 1, 'p', 'P', 8).
+initSeed:-
+    assertz(seed(tomato, 2, 't','T', 5)),
+    assertz(seed(corn, 1, 'c', 'C', 6)),
+    assertz(seed(carrot, 1, 'c', 'C', 3)),
+    assertz(seed(potato, 1, 'p', 'P', 8)).
 
 % fakta untuk tanaman yang sedang ditanam
 myPlant(-1,-1,-1,-1,-1,-1,-1).
@@ -23,7 +24,7 @@ dig:-
         A1 is (A-1), 
         changePos(A1, B),
         assertz(map(A,B,'=')),
-        write('You digged the tile\n'),
+        write('You digged the tile!\nUse the command \'plant.\' to plant a seed!\n\n'),
         farmEXP(exp,Exp),
         occupation(O),
         (O = 'farmer'  -> ExpPlus is Exp+10 ; ExpPlus is Exp+5),
@@ -48,16 +49,16 @@ plant:-
         write('\nWhat do you want to plant?\n'),
         read(SelectSeed),
         seed(SelectSeed,Qty,SymP,SymH,DayToHarvest),
-        format('You planted a ~w seed~n',[SelectSeed]),
+        format('You planted a ~w seed!~n',[SelectSeed]),
         retract(map(A1,B,Z)),
         assertz(map(A1,B,SymP)),
         QtyNew is Qty-1,
         retract(seed(SelectSeed,Qty,SymP,SymH,DayToHarvest)),
         day(Day),
         assertz(seed(SelectSeed,QtyNew,SymP,SymH,DayToHarvest)),
-        retract(myPlant(-1,-1,-1,-1,-1,-1,-1)),
+        %retract(myPlant(-1,-1,-1,-1,-1,-1,-1)),
         assertz(myPlant(A1,B,SelectSeed,SymP,SymH,Day,DayToHarvest)),
-        format('~w can be harvested in ~d days~n',[SelectSeed,DayToHarvest]),
+        format('The ~w can be harvested in ~d days...~n~n',[SelectSeed,DayToHarvest]),
         map
     ;
         isTilePlanted(A1,B) ->
@@ -76,15 +77,7 @@ grow(A,B,SymP,SymH,DayPlant,DayToHarvest):-
         assertz(map(A,B,SymH)); true);
     true.
         
-nextDay:-
-    day(Day),
-    Day1 is Day+1,
-    retract(day(Day)),
-    assertz(day(Day1)),
-    forall(myPlant(A,B,_,SymP,SymH,DayPlant,DayToHarvest), grow(A,B,SymP,SymH,DayPlant,DayToHarvest)),
-    write('\nDay '),write(Day1),write('\n'),
-    map,
-    !.
+
 
 harvest:-
 /*  I.S. tile yang telah ditanamkan siap untuk dipanen
@@ -100,10 +93,11 @@ harvest:-
         QtyPlus is Qty+1,
         retract(item_in_inventory(Name,_,Qty)),
         assertz(item_in_inventory(Name,_,QtyPlus)),
-        format('You harvested ~w~n',[Name]),
+        format('Yay, you successfully harvested a ~w~n!',[Name]),
+        write('It has been added to your inventory.\n\n'),
         farmEXP(exp,Exp),
         occupation(O),
-        (O = 'farmer'  -> ExpPlus is Exp+10 ; ExpPlus is Exp+5),
+        (O = farmer  -> ExpPlus is Exp+10 ; ExpPlus is Exp+5),
         retract(farmEXP(exp,Exp)),
         assertz(farmEXP(exp,ExpPlus)),
         doHarvest

@@ -18,8 +18,8 @@
 :- dynamic(inventory/1).    % invent
 
 % ======= predicate farming ======
-% :- dynamic(seed/6).
-% :- dynamic(myplant/8).
+:- dynamic(seed/5).
+%:- dynamic(myplant/7).
 
 % ======= predicate ranching ======
 :- dynamic(livestock/2).

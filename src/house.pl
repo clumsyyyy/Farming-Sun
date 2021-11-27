@@ -20,11 +20,16 @@ sleep:-
 /* Fungsi meng-update day ke predikat global */
     isOnHouse,
     write('You went to sleep.\n\n'),
+    nextDay,
+    continue.
+
+nextDay:-
     day(Day),
-    Day1 is Day + 1,
+    Day1 is Day+1,
     retract(day(Day)),
     assertz(day(Day1)),
-    game.
+    forall(myPlant(A,B,_,SymP,SymH,DayPlant,DayToHarvest), grow(A,B,SymP,SymH,DayPlant,DayToHarvest)),
+    !.
 
 isOnHouse:-
     pos(X, Y), map(X, Y, 'H').
