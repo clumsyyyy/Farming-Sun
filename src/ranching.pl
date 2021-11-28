@@ -295,11 +295,11 @@ cowCap:-
     ),
     !.
 sheepCap:-
-    ranchTimeMgmt(cowDelay, X), (
+    ranchTimeMgmt(sheepDelay, X), (
         (
             (X < 1.0) -> (
-                retract(ranchTimeMgmt(cowDelay, X)),
-                assertz(ranchTimeMgmt(cowDelay, 1.0))
+                retract(ranchTimeMgmt(sheepDelay, X)),
+                assertz(ranchTimeMgmt(sheepDelay, 1.0))
             );
             true
         )
