@@ -22,12 +22,23 @@ dig:-
     pos(A,B),
     ( 
         isTileEmpty(A,B) -> (
-            item_in_inventory(shovel,_,1), %cek apakah pemain memiliki shovel 
+            item_in_inventory(shovel,ShovelExp,1), %cek apakah pemain memiliki shovel
+            EXPGiven is 10*ShovelExp,
             assertz(map(A,B,'=')),
             write('\n'),
             write('\nYou digged the tile!\nUse the command \'plant.\' to plant a seed!\n\n'),
             occupation(O),
-            (O = 'farmer'  -> farmEXPUp(10) ; farmEXPUp(5)),
+            (
+                O = 'farmer'  -> (
+                    EXPGiven1 is EXPGiven+10,
+                    farmEXPUp(EXPGiven1)
+                 ) 
+                 ; 
+                 (
+                     EXPGiven1 is EXPGiven+5,
+                     farmEXPUp(5)
+                 )
+            ),
             map
         )
         ;
