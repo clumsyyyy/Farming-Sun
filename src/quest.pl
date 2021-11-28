@@ -93,11 +93,11 @@ doFish:-
     retract(myquest(_,_,_,_,_,_)),
     assertz(myquest(Hi,Hf,Fi,Ffx,Ri,Rf)),!;true.
 
-doRanch:-
+doRanch(Qty):-
 /* Jika sedang mengerjakan quest, maka komponen quest untuk ranch berkurang 1*/
     myquest(Hi,Hf,Fi,Ff,Ri,Rf),
     Rf > 0,
-    Rfx is Rf-1,
+    Rfx is Rf-Qty,
     retract(myquest(_,_,_,_,_,_)),
     assertz(myquest(Hi,Hf,Fi,Ff,Ri,Rfx)),!;true.
 

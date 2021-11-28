@@ -259,7 +259,11 @@ fishit :-
                     catchfishmsg(Item, catching_fish_ssr),
                     expGain_SSR(ExpGain),
                     adjustLevel(ExpGain),
-                    doFish
+                    myquest(Hi,Hf,Fi,Ff,Ri,Rf),
+                    Ff > 0,
+                    Ffx is Ff-1,
+                    retract(myquest(_,_,_,_,_,_)),
+                    assertz(myquest(Hi,Hf,Fi,Ffx,Ri,Rf)),!;true
                 );
                 RESP == incFail -> (
                     catchfishmsg(Item, catching_fish_fail_inven)
@@ -277,7 +281,11 @@ fishit :-
                     catchfishmsg(Item, catching_fish_sr),
                     expGain_SR(ExpGain),
                     adjustLevel(ExpGain),
-                    doFish
+                    myquest(Hi,Hf,Fi,Ff,Ri,Rf),
+                    Ff > 0,
+                    Ffx is Ff-1,
+                    retract(myquest(_,_,_,_,_,_)),
+                    assertz(myquest(Hi,Hf,Fi,Ffx,Ri,Rf)),!;true
                 );
                 RESP == incFail -> (
                     catchfishmsg(Item, catching_fish_fail_inven)
@@ -295,7 +303,11 @@ fishit :-
                     catchfishmsg(Item, catching_fish_r),
                     expGain_R(ExpGain),
                     adjustLevel(ExpGain),
-                    doFish
+                    myquest(Hi,Hf,Fi,Ff,Ri,Rf),
+                    Ff > 0,
+                    Ffx is Ff-1,
+                    retract(myquest(_,_,_,_,_,_)),
+                    assertz(myquest(Hi,Hf,Fi,Ffx,Ri,Rf)),!;true
                 );
                 RESP == incFail -> (
                     catchfishmsg(Item, catching_fish_fail_inven)
@@ -313,7 +325,11 @@ fishit :-
                     catchfishmsg(Item, catching_fish_c),
                     expGain_C(ExpGain),
                     adjustLevel(ExpGain),
-                    doFish
+                    myquest(Hi,Hf,Fi,Ff,Ri,Rf),
+                    Ff > 0,
+                    Ffx is Ff-1,
+                    retract(myquest(_,_,_,_,_,_)),
+                    assertz(myquest(Hi,Hf,Fi,Ffx,Ri,Rf)),!;true
                 );
                 RESP == incFail -> (
                     catchfishmsg(Item, catching_fish_fail_inven)
@@ -408,13 +424,13 @@ displayFishingID :-
     format('    NEXT LEVEL EXP    : ~d~n', [LevelUpCeilExp]),
     format('-------------------------------------------------~n', []).
 
-fishing :-
+fish :-
     isInAppropriateFishingTile(RESP),
     RESP == not_beside_lake, 
     format('Hello, this is Flying Fish Manor\'s Messenger Pigeon.~n', []),
     format('We are sorry to inform you that you should be beside a lake in order to fish.~n', []),
     format('Please move to an appropriate tile, we are waiting for your next visit!', []), !.
-fishing :-
+fish :-
     format('Welcome to Flying Fish Manor.~nHere are our Today\'s Menu~n', []),
     displayFishingRate,
     displayFishingID, nl,

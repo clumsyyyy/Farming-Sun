@@ -11,7 +11,7 @@ startGame:-
     write('|  _  | (_| | |  \\ V / __/ \\__ \\ |_  \n'),
     write('|_| |_|\\__,_|_|   \\/ \\ ___||___/\\__| \n'),
     write('Harvest Star!!!\n'),
-    write('Lets play and pay our debts together\n'),
+    write('Lets play and pay our debts together!\n'),
     write('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n'),
     write('% 1. start  : untuk memulai petualanganmu                                      %\n'),
     write('% 2. map    : menampilkan peta                                                 %\n'),
@@ -23,8 +23,8 @@ startGame:-
     write('% 8. Status : menampilkan status pemain                                        %\n'),
     write('% 9. help   : menampilkan segala bantuan                                       %\n'),
     write('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n'),
-    story,
-    start.
+    write('                                                                                \n'),
+    write('                         TYPE \'start.\' TO BEGIN!                              \n').
 
 selectJob(Num, Output):-
 /* Fungsi perantara untuk memilih pekerjaan */
@@ -37,6 +37,7 @@ start:-
 /*  I.S. dynamic predicate global untuk permainan belum terdefinisi, pemain memilih class
     F.S. dynamic predicate global (gold, day, exp permainan) diinisialisasi, permainan akan dimulai */
     % cek file 'game.pl' untuk melihat permainan
+    story,
     write('1. Fisherman\n'),
     write('2. Farmer\n'),
     write('3. Rancher\n'),
@@ -45,7 +46,6 @@ start:-
     selectJob(Option, Output),
     write(Output),
     write('Beginning game....\n'),
-    story,
     assertz(day(1)),
     assertz(gold(500)), assertz(exp(0)),
     assertz(fishEXP(exp, 0)), assertz(fishEXP(lvl, 1)),
@@ -62,7 +62,7 @@ start:-
 story:-
     write('\n\n\n'),
     write('Soooo, situation update. You just got scammed overnight.\n\n'),
-    write('Remember that project worth 5.000 gold? Yeah, that was a scam.\n\n'),
+    write('Remember that project worth 10.000 gold? Yeah, that was a scam.\n\n'),
     write('And you really had to spend all your money on Benshin last night, huh?\n\n'),
     write('But not all hope is lost! You can either go to the loans (and probably get scammed again), \n\n'),
     write('Or you can return to your home village for a short two-month trip!\n (You\'re a freelancer anyways, what\'s office work?\n\n'),

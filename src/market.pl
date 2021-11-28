@@ -1,55 +1,5 @@
 :- include('globals.pl').
 
-/*
-
-item_group_helper_FISHING(fishable_SSR, [anemone, blackfin_tuna, moonfish]). 
-item_group_helper_FISHING(fishable_SR, [marblefish, longfin, lionfish, mooneye, jewelfish]).
-item_group_helper_FISHING(fishable_R, [gudgeon, glassfish, eulachon, dwarf_gourami, angelfish, spearfish]).
-item_group_helper_FISHING(fishable_C, [salmon, tuna, catfish, swordfish, mackarel, common_carp, tilapia, trout]).
-*/
-/*
-
-item_in_inventory(shovel,1,1).
-item_in_inventory(fishing_rod, 1, 1).
-item_in_inventory(carrot_seed, -1, 0).
-item_in_inventory(corn_seed, -1, 0).
-item_in_inventory(tomato_seed, -1, 0).
-item_in_inventory(potato_seed, -1, 0).
-item_in_inventory(carrot, -1, 0).
-item_in_inventory(corn, -1, 0).
-item_in_inventory(tomato, -1, 0).
-item_in_inventory(potato, -1, 0).
-item_in_inventory(chicken, -1, 0).
-item_in_inventory(sheep, -1, 0).
-item_in_inventory(cow, -1, 0).
-item_in_inventory(egg, -1, 0).
-item_in_inventory(wool, -1, 0).
-item_in_inventory(milk, -1, 0).
-item_in_inventory(anemone, -1, 0).
-item_in_inventory(blackfin_tuna, -1, 0).
-item_in_inventory(moonfish, -1, 0).
-item_in_inventory(marblefish, -1, 0).
-item_in_inventory(longfin, -1, 0).
-item_in_inventory(lionfish, -1, 0).
-item_in_inventory(mooneye, -1, 0).
-item_in_inventory(jewelfish, -1, 0).
-item_in_inventory(gudgeon, -1, 0).
-item_in_inventory(glassfish, -1, 0).
-item_in_inventory(eulachon, -1, 0).
-item_in_inventory(dwarf_gourami, -1, 0).
-item_in_inventory(angelfish, -1, 0).
-item_in_inventory(spearfish, -1, 0).
-item_in_inventory(salmon, -1, 0).
-item_in_inventory(tuna, -1, 0).
-item_in_inventory(catfish, -1, 0).
-item_in_inventory(swordfish, -1, 97).
-item_in_inventory(mackarel, -1, 0).
-item_in_inventory(common_carp, -1, 0).
-item_in_inventory(tilapia, -1, 0).
-item_in_inventory(trout, -1, 0).
-
-*/
-
 % fakta item
 % ITEM ID, ITEM CODENAME, ITEM LEVEL, ITEM PRICE
 % ITEM ID: 1XX for Tools, 2XX for farming, 3XX for ranching, 
@@ -65,9 +15,9 @@ market_item(202, corn_seed, -1, 25).
 market_item(203, tomato_seed, -1, 25).
 market_item(204, potato_seed, -1, 25).
 market_item(205, carrot, -1, 50).
-market_item(206, corn, -1, 50).
-market_item(207, tomato, -1, 50).
-market_item(208, potato, -1, 50).
+market_item(206, corn, -1, 60).
+market_item(207, tomato, -1, 55).
+market_item(208, potato, -1, 75).
 
 market_item(301, chicken, -1, 250).
 market_item(302, sheep, -1, 500).
@@ -102,7 +52,7 @@ market_item(436, common_carp, -1, 200).
 market_item(437, tilapia, -1, 200).
 market_item(438, trout, -1, 200).
 
-item_group_helper_MARKET(sellable_market_item, [101, 203, 401, 402, 403, 411, 412, 413, 414, 415, 421, 422, 423, 424, 425, 426, 431, 432, 433, 434, 435, 436, 437, 438]).
+item_group_helper_MARKET(sellable_market_item, [101, 102, 201, 202, 203, 204, 205, 206, 207, 208, 301, 302, 303, 304, 305, 306, 401, 402, 403, 411, 412, 413, 414, 415, 421, 422, 423, 424, 425, 426, 431, 432, 433, 434, 435, 436, 437, 438]).
 
 isOnMarket:-
     pos(X, Y), map(X, Y, 'M').
@@ -208,10 +158,10 @@ display_market_fishing_c_sell(ID) :-
         true
     ); true.
 
-displayAvailableToSell :-
+catalog :-
     marketValidationMSG, !.
 
-displayAvailableToSell :-
+catalog :-
     format('|------------------- TOOLS -------------------|~n', []),
     forall(market_item(ID, _, _, _), display_market_tools_sell(ID)), nl,
     format('|------------------- FARMING ------------------|~n', []),
@@ -411,7 +361,7 @@ sell:-
 sell:-
     isOnMarket,
     format('Hello, Fellow Traveler.~n', []),
-    format('To see what are we having today, you can type \'displayAvailableToSell.\' and type its MARKET ID to sell.~n', []),
+    format('To see what are we having today, you can type \'catalog.\' and type its MARKET ID to sell.~n', []),
     format('You can also type \'inventory.\' to see what you have in your inventory.~n', []),
     format('if you\'re ready to sell, please type \'sellitnow.\'~n', []).
 

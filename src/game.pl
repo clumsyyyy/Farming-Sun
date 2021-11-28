@@ -20,7 +20,7 @@ status:-
     farmEXP(exp, FarmEXP), farmEXP(lvl, Farmlvl),
     fishEXP(exp, FishEXP), fishEXP(lvl, Fishlvl),
     ranchEXP(exp, RanchEXP), ranchEXP(lvl, Ranchlvl),
-    write('\n  Occupation: '), write(Occupation), write('\n'),
+    write('\n   Occupation: '), write(Occupation), write('\n'),
     write('     Day: '), write(Day), write(' | '),
     write('Gold: '), write(Gold), write('\n'),
     write('========== LEVELS ==========\n'),
@@ -29,12 +29,12 @@ status:-
     write(' Ranching| EXP: '), write(RanchEXP), write(' | LVL: '), write(Ranchlvl), write('\n').
 
 quit:-
-    write('Terima kasih telah bermain!\n'),
+    write('Thank you for playing the game! We hope to see you again soon!\n'),
     halt(0).
 
 help:-
     write('================================== HELP MENU ==================================\n\n'),
-    write('1. The objective of the game is to obtain 20.000 gold before a year passes by!\n'),
+    write('1. The objective of the game is to obtain 20.000 gold before two months passes by!\n'),
     write('2. Move with the command w., a., s., or d.\n'),
     write('3. Location definitions are as such:\n'),
     write('     - R: Ranch, use the command ranch. at this tile to begin ranching!\n'),
@@ -51,7 +51,32 @@ help:-
     write('7. The day will update when you sleep at your home.\n'),
     write('     - use the command sleep. to sleep\n'),
     write('     - use the command read. / write. to read / write your diary.\n'),
-    write('8. The occupation you selected will give you perks in certain activities!\n').
+    write('8. The occupation you selected will give you perks in certain activities!\n'),
+    write('9. Type \'commands.\' to see the list of commands you can do!').
+
+commands:-
+    write('====================== [ COMMANDS  LIST ] ======================\n'),
+    write('                                                                \n'),
+    write('1. w. , a. , s. , d.         - to move your character (symbol P)\n'),
+    write('2. dig.                      - to dig an empty tile             \n'),
+    write('3. plant.                    - to plant a seed on a digged tile \n'),
+    write('4. harvest.                  - to harvest a plant               \n'),
+    write('                (capital symbol represents a harvestable plant) \n'),
+    write('5. ranch.                    - to open the ranch menu           \n'),
+    write('                          (can only be performed in the R tile) \n'),
+    write('6. chicken. , cow. , sheep.  - to produce animal goods          \n'),
+    write('7. fish   .                  - to open the fish menu            \n'),
+    write('                          (can only be performed near the o tile\n'),
+    write('8. market. , buy. , sell.    - to open the market menu, buy/sell\n'),
+    write('                          (can only be performed in the M tile) \n'),
+    write('9. house.                    - to open the house menu           \n'),
+    write('                          (can only be performed in the H tile) \n'),
+    write('                                                                \n'),
+    write('Information regarding helper commands can be seen when          \n'),
+    write('performing other commands!                                      \n'),
+    write('                                                                \n'),
+    write('====================== [ COMMANDS  LIST ] ======================\n'), 
+    write('\n\n').
 
 checkGameState:-
     gold(Gold), day(Day),
