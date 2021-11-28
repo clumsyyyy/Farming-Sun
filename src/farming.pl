@@ -77,10 +77,9 @@ harvest:-
 /*  I.S. tile yang telah ditanamkan siap untuk dipanen
     F.S. tanaman berhasil dipanen, tile akan diubah ke status bisa digali */
     pos(A,B),
-    A1 is A+1,
     timeToHarvest(A1,B,RemainingDay),
-    map(A1,B,Z),
-    myPlant(A1,B,Name,_,_,_,_),
+    map(A,B,Z),
+    myPlant(A,B,Name,_,_,_,_),
     ( 
         RemainingDay =< 0 -> (
             retract(map(A1,B,Z)),
@@ -100,7 +99,7 @@ harvest:-
         )
         ; ( 
             write('You cannot harvest this plant yet.\n'),
-            showInfoHarvest(A1,B)
+            showInfoHarvest(A,B)
         )
     ),
     !.
