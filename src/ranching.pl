@@ -5,15 +5,23 @@ initRanch:-
     assertz(livestock(cow, 0)),
     assertz(livestock(sheep, 0)),
     assertz(livestock(chicken, 0)),
-    assertz(ranchEXP(exp, 0)),
+    assertz(ranchEXP(exp, 0.0)),
     assertz(ranchEXP(lvl, 1)),
     assertz(ranchEXP(lvlUpReq, 75)),
-    assertz(ranchTimeMgmt(cowDelay, 7.0)),
-    assertz(ranchTimeMgmt(chickenDelay, 12.0)),
-    assertz(ranchTimeMgmt(sheepDelay, 15.0)),
+    assertz(ranchTimeMgmt(cowDelay, 2.0)),
+    assertz(ranchTimeMgmt(chickenDelay, 5.0)),
+    assertz(ranchTimeMgmt(sheepDelay, 6.0)),
     assertz(ranchTimeMgmt(cowLastDay, -999)),
     assertz(ranchTimeMgmt(chickenLastDay, -999)),
-    assertz(ranchTimeMgmt(sheepLastDay, -999)).
+    assertz(ranchTimeMgmt(sheepLastDay, -999)),
+    occupation(Occupation), (
+        (Occupation = rancher -> (
+            assertz(ranchEXP(occupationBonus, 1.25))
+            )
+        )
+        ;
+        assertz(ranchEXP(occupationBonus, 1.0))
+    ).
 
 buyCow:-
     livestock(cow, X),
@@ -169,21 +177,23 @@ sheep :-
 
 ranchEXPUp(EXP_Given):-
     % regular EXP
-    ranchEXP(exp, E), ranchEXP(lvl, L), ranchEXP(lvlUpReq, R),
-    E1 is E + EXP_Given,
-    E1 < R,
+    ranchEXP(exp, E), ranchEXP(lvl, L), ranchEXP(lvlUpReq, R), ranchEXP(occupationBonus, B),
+    E1 is E + EXP_Given * B,
+    ERounded is round(E1),
+    ERounded < R,
     retract(ranchEXP(exp, E)),
-    assertz(ranchEXP(exp, E1)),
+    assertz(ranchEXP(exp, ERounded)),
     write('\nYou gained '), write(EXP_Given), write(' Ranch EXP!\n'),
     write('You are at level '), write(L), write('.\n'),
-    write('EXP Status: '), write(E1), write('/'), write(R), write('\n'),
+    write('EXP Status: '), write(ERounded), write('/'), write(R), write('\n'),
     !.
 ranchEXPUp(EXP_Given):-
     % level up
-    ranchEXP(exp, E), ranchEXP(lvl, L), ranchEXP(lvlUpReq, R),
-    L1 is L + 1, E1 is E + EXP_Given,
-    E1 >= R,
-    E2 is E1 - R,
+    ranchEXP(exp, E), ranchEXP(lvl, L), ranchEXP(lvlUpReq, R), ranchEXP(occupationBonus, B),
+    L1 is L + 1, E1 is E + EXP_Given * B,
+    ERounded is round(E1),
+    ERounded >= R,
+    E2 is ERounded - R,
     R1 is R + 25,
     retract(ranchEXP(lvl, L)),
     retract(ranchEXP(exp, E)),
@@ -194,7 +204,7 @@ ranchEXPUp(EXP_Given):-
     write('\nYou gained '), write(EXP_Given), write(' Ranch EXP!\n'),
     write('Level Up!\n'),
     write('Your ranching experience is now at level '), write(L1), write('\n'),
-    write('EXP Status: '), write(E2), write('/'), write(R1), write('\n'),
+    write('EXP Status: '), write(ERounded), write('/'), write(R1), write('\n'),
     ranchLvlUpEffect,!.
 
 
@@ -206,9 +216,9 @@ ranchLvlUpEffect:-
     retract(ranchTimeMgmt(chickenDelay, X)),
     retract(ranchTimeMgmt(cowDelay, Y)),
     retract(ranchTimeMgmt(sheepDelay, Z)),
-    X1 is X - 1.0,
-    Y1 is Y - 1.0,
-    Z1 is Z - 1.0,
+    X1 is X - 0.25,
+    Y1 is Y - 0.4,
+    Z1 is Z - 0.5,
     assertz(ranchTimeMgmt(chickenDelay, X1)),
     assertz(ranchTimeMgmt(cowDelay, Y1)),
     assertz(ranchTimeMgmt(sheepDelay, Z1)),
@@ -226,10 +236,32 @@ ranchLvlUpEffect:-
     assertz(ranchTimeMgmt(chickenDelay, X1)),
     assertz(ranchTimeMgmt(cowDelay, Y1)),
     assertz(ranchTimeMgmt(sheepDelay, Z1)),
+    chickenCap,
+    cowCap,
+    sheepCap,
     !.
 
 cheatDay(Skip):-
     retract(day(X)),
     X1 is X + Skip,
     assertz(day(X1)),
+    !.
+
+chickenCap:-
+    ranchTimeMgmt(chickenDelay, X),
+    X < 1.0,
+    retract(ranchTimeMgmt(chickenDelay, X)),
+    assertz(ranchTimeMgmt(chickenDelay, 1.0)),
+    !.
+cowCap:-
+    ranchTimeMgmt(cowDelay, X),
+    X < 1.0,
+    retract(ranchTimeMgmt(cowDelay, X)),
+    assertz(ranchTimeMgmt(cowDelay, 1.0)),
+    !.
+sheepCap:-
+    ranchTimeMgmt(sheepDelay, X),
+    X < 1.0,
+    retract(ranchTimeMgmt(sheepDelay, X)),
+    assertz(ranchTimeMgmt(sheepDelay, 1.0)),
     !.
