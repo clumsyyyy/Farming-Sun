@@ -6,11 +6,13 @@ house:-
     F.S. pemain dapat mengakses menu di rumah
     (untuk sementara, yang dapat diakses adalah fungsi `sleep`) */
     isOnHouse,
-    write('Welcome back to the house.\n'),
+    write('Welcome back to the house!\n'),
     write('What do you want to do?\n'),
-    write('1. Sleep\n'),
-    write('2. Write Diary\n'),
-    write('3. Read Diary\n'), !.
+    write('==================================\n'),
+    write('|| 1. Sleep            (sleep.) ||\n'),
+    write('|| 2. Write Diary (writeDiary.) ||\n'),
+    write('|| 3. Read Diary   (readDiary.) ||\n'), 
+    write('==================================\n'),!.
 
 house:-
     \+isOnHouse,
@@ -21,6 +23,7 @@ sleep:-
     isOnHouse,
     write('You went to sleep.\n\n'),
     nextDay,
+    checkGameState,
     continue.
 
 nextDay:-
@@ -34,7 +37,7 @@ nextDay:-
 isOnHouse:-
     pos(X, Y), map(X, Y, 'H').
 
-write:-
+writeDiary:-
     isOnHouse,
     write('Write your diary: '),
     read(Diary),
@@ -44,25 +47,30 @@ write:-
     write('\n'),
     house.
     
-write:-
+writeDiary:-
     \+isOnHouse, write('You\'re not at home!').
 
-read:-
+readDiary:-
     isOnHouse,
-    write('Input diary day: '),
-    read(Date),
-    day(Day),
-    Date < Day, 
-    write('Diary for day'), write(Date), write(':\n'),
-    diary(Date, Diary), write(Diary),
-    write('\n\n'),
-    house.
-read:-
-    isOnHouse,
-    write('Input diary day: '),
-    read(Date),
-    day(Day),
-    Day >= Date, write('You cannot read the diary, as it has not existed yet!').
+    write('Available diaries to read:\n'),
+    (diary(Day, Diary) ->
+        (
+            forall(diary(Day, _), (
+                format('- Day ~d~n', [Day])
+            )),
+            write('\nInput diary day: '),
+            read(Date),
+            write('Diary for day '), write(Date), write(':\n'),
+            (diary(Date, Diary) -> write('Diary for day '), write(Date), write(':\n'), write(Diary) ; write('No diary for that day!')),
+            write('\n\n'),
+            house
+        )
+        ;
+            write('No diaries available to read yet!')
+    ).
     
-read:-
+
+    
+readDiary:-
     \+isOnHouse, write('You\'re not at home!').
+
