@@ -5,7 +5,7 @@ initRanch:-
     assertz(livestock(cow, 0)),
     assertz(livestock(sheep, 0)),
     assertz(livestock(chicken, 0)),
-    assertz(ranchEXP(exp, 0.0)),
+    assertz(ranchEXP(exp, 0)),
     assertz(ranchEXP(lvl, 1)),
     assertz(ranchEXP(lvlUpReq, 75)),
     assertz(ranchTimeMgmt(cowDelay, 2.0)),
@@ -16,7 +16,7 @@ initRanch:-
     assertz(ranchTimeMgmt(sheepLastDay, -999)),
     occupation(Occupation), (
         (Occupation = rancher -> (
-            assertz(ranchEXP(occupationBonus, 1.25))
+            assertz(ranchEXP(occupationBonus, 1.35))
             )
         )
         ;
@@ -47,9 +47,12 @@ buySheep:-
     write('Succesfully bought a new sheep!\n'),
     ranchEXPUp(10),!.
 ranch:-
-    pos(X, Y), map(X, Y, Z), \+ (Z == 'R'), write('You\'re not in the ranch!'), !.
-ranch:-
-    pos(X, Y), map(X, Y, 'R'), ranchMenu.
+    map(X,Y,'R'), pos(A, B), (
+        (
+            (A =:= X, B =:= Y) -> ranchMenu
+        );
+        write('You are not in the ranch! Please move over to the ranch.\n')
+    ),!.
 
 ranchMenu:-
     day(A), ranchEXP(lvl, B),
@@ -65,15 +68,22 @@ ranchMenu:-
     write(' sheep\n'),
     write(Z),
     write(' cow(s)\n'),
-    write('\nWhat do you want to do?'),!.
+    write('\nWhat do you want to do?'),
+    write('\nTo check your chicken, sheep, or cow, use: \nchicken.\nsheep\ncow.'),
+    !.
 
 chicken:-
-    pos(X, Y), map(X, Y, Z), \+ (Z == 'R'), write('You\'re not in the ranch!'),!.
-chicken:-
+    map(X,Y,'R'), pos(A, B), (
+        (
+            (A =:= X, B =:= Y) -> chickenAction
+        );
+        write('You are not in the ranch! Please move over to the ranch.\n')
+    ),!.
+chickenAction:-
     livestock(chicken, X),
     X = 0,
     write('You have no chickens!\n'),!.
-chicken :-
+chickenAction:-
     livestock(chicken, X),
     X > 0,
     ranchTimeMgmt(chickenDelay, Delay), day(Day), ranchTimeMgmt(chickenLastDay, LastDay),
@@ -92,7 +102,7 @@ chicken :-
     E is N * 3,
     ranchEXPUp(E),
     !.
-chicken:-
+chickenAction:-
     livestock(chicken, X),
     X > 0,
     ranchTimeMgmt(chickenDelay, Delay), day(Day), ranchTimeMgmt(chickenLastDay, LastDay),
@@ -104,12 +114,17 @@ chicken:-
     write('Try to come back here in '), write(DR), write(' days.\n'),!.
 
 cow:-
-    pos(X, Y), map(X, Y, Z), \+ (Z == 'R'), write('You\'re not in the ranch!'),!.
-cow:-
+    map(X,Y,'R'), pos(A, B), (
+        (
+            (A =:= X, B =:= Y) -> cowAction
+        );
+        write('You are not in the ranch! Please move over to the ranch.\n')
+    ),!.
+cowAction:-
     livestock(cow, X),
     X = 0,
     write('You have no cows!\n'),!.
-cow :-
+cowAction:-
     livestock(cow, X),
     X > 0,
     ranchTimeMgmt(cowDelay, Delay), day(Day), ranchTimeMgmt(cowLastDay, LastDay),
@@ -128,7 +143,7 @@ cow :-
     E is N * 3,
     ranchEXPUp(E),
     !.
-cow :-
+cowAction:-
     livestock(cow, X),
     X > 0,
     ranchTimeMgmt(cowDelay, Delay), day(Day), ranchTimeMgmt(cowLastDay, LastDay),
@@ -140,12 +155,17 @@ cow :-
     write('Try to come back here in '), write(DR), write(' days.\n'),!.
 
 sheep:-
-    pos(X, Y), map(X, Y, Z), \+ (Z == 'R'), write('You\'re not in the ranch!'),!.
-sheep:-
+    map(X,Y,'R'), pos(A, B), (
+        (
+            (A =:= X, B =:= Y) -> sheepAction
+        );
+        write('You are not in the ranch! Please move over to the ranch.\n')
+    ),!.
+sheepAction:-
     livestock(sheep, X),
     X = 0,
     write('You have no sheep!\n'),!.
-sheep :-
+sheepAction:-
     livestock(sheep, X),
     X > 0,
     ranchTimeMgmt(sheepDelay, Delay), day(Day), ranchTimeMgmt(sheepLastDay, LastDay),
@@ -164,7 +184,7 @@ sheep :-
     E is N * 10,
     ranchEXPUp(E),
     !.
-sheep :-
+sheepAction:-
     livestock(sheep, X),
     X > 0,
     ranchTimeMgmt(sheepDelay, Delay), day(Day), ranchTimeMgmt(sheepLastDay, LastDay),
@@ -178,22 +198,23 @@ sheep :-
 ranchEXPUp(EXP_Given):-
     % regular EXP
     ranchEXP(exp, E), ranchEXP(lvl, L), ranchEXP(lvlUpReq, R), ranchEXP(occupationBonus, B),
-    E1 is E + EXP_Given * B,
-    ERounded is round(E1),
-    ERounded < R,
+    E_Bonus is round(EXP_Given * B),
+    E1 is E + E_Bonus,
+    E1 < R,
     retract(ranchEXP(exp, E)),
-    assertz(ranchEXP(exp, ERounded)),
-    write('\nYou gained '), write(EXP_Given), write(' Ranch EXP!\n'),
+    assertz(ranchEXP(exp, E1)),
+    write('\nYou gained '), write(E_Bonus), write(' Ranch EXP!\n'),
     write('You are at level '), write(L), write('.\n'),
-    write('EXP Status: '), write(ERounded), write('/'), write(R), write('\n'),
+    write('EXP Status: '), write(E1), write('/'), write(R), write('\n'),
     !.
 ranchEXPUp(EXP_Given):-
     % level up
     ranchEXP(exp, E), ranchEXP(lvl, L), ranchEXP(lvlUpReq, R), ranchEXP(occupationBonus, B),
-    L1 is L + 1, E1 is E + EXP_Given * B,
-    ERounded is round(E1),
-    ERounded >= R,
-    E2 is ERounded - R,
+    E_Bonus is round(EXP_Given * B),
+    E1 is E + E_Bonus,
+    L1 is L + 1,
+    E1 >= R,
+    E2 is E1 - R,
     R1 is R + 25,
     retract(ranchEXP(lvl, L)),
     retract(ranchEXP(exp, E)),
@@ -201,10 +222,10 @@ ranchEXPUp(EXP_Given):-
     assertz(ranchEXP(lvl, L1)),
     assertz(ranchEXP(exp, E2)),
     assertz(ranchEXP(lvlUpReq, R1)),
-    write('\nYou gained '), write(EXP_Given), write(' Ranch EXP!\n'),
+    write('\nYou gained '), write(E_Bonus), write(' Ranch EXP!\n'),
     write('Level Up!\n'),
     write('Your ranching experience is now at level '), write(L1), write('\n'),
-    write('EXP Status: '), write(ERounded), write('/'), write(R1), write('\n'),
+    write('EXP Status: '), write(E2), write('/'), write(R1), write('\n'),
     ranchLvlUpEffect,!.
 
 
@@ -222,6 +243,9 @@ ranchLvlUpEffect:-
     assertz(ranchTimeMgmt(chickenDelay, X1)),
     assertz(ranchTimeMgmt(cowDelay, Y1)),
     assertz(ranchTimeMgmt(sheepDelay, Z1)),
+    chickenCap,
+    cowCap,
+    sheepCap,
     !.
 ranchLvlUpEffect:-
     ranchEXP(lvl, Level),
@@ -247,21 +271,37 @@ cheatDay(Skip):-
     assertz(day(X1)),
     !.
 
+
 chickenCap:-
-    ranchTimeMgmt(chickenDelay, X),
-    X < 1.0,
-    retract(ranchTimeMgmt(chickenDelay, X)),
-    assertz(ranchTimeMgmt(chickenDelay, 1.0)),
+    ranchTimeMgmt(chickenDelay, X), (
+        (
+            (X < 1.0) -> (
+                retract(ranchTimeMgmt(chickenDelay, X)),
+                assertz(ranchTimeMgmt(chickenDelay, 1.0))
+            );
+            true
+        )
+    ),
     !.
 cowCap:-
-    ranchTimeMgmt(cowDelay, X),
-    X < 1.0,
-    retract(ranchTimeMgmt(cowDelay, X)),
-    assertz(ranchTimeMgmt(cowDelay, 1.0)),
+    ranchTimeMgmt(cowDelay, X), (
+        (
+            (X < 1.0) -> (
+                retract(ranchTimeMgmt(cowDelay, X)),
+                assertz(ranchTimeMgmt(cowDelay, 1.0))
+            );
+            true
+        )
+    ),
     !.
 sheepCap:-
-    ranchTimeMgmt(sheepDelay, X),
-    X < 1.0,
-    retract(ranchTimeMgmt(sheepDelay, X)),
-    assertz(ranchTimeMgmt(sheepDelay, 1.0)),
+    ranchTimeMgmt(cowDelay, X), (
+        (
+            (X < 1.0) -> (
+                retract(ranchTimeMgmt(cowDelay, X)),
+                assertz(ranchTimeMgmt(cowDelay, 1.0))
+            );
+            true
+        )
+    ),
     !.

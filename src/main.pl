@@ -56,8 +56,7 @@ start:-
     initFarm,
     status,
     map,
-    assertz(fishEXP(exp, 0)), assertz(fishEXP(lvl, 1)), assertz(fishEXP(level_up_ceil_exp, 300)),
-    assertz(ranchEXP(exp, 0)), assertz(ranchEXP(lvl, 1)).
+    assertz(fishEXP(exp, 0)), assertz(fishEXP(lvl, 1)), assertz(fishEXP(level_up_ceil_exp, 300)).
     
 
 story:-
