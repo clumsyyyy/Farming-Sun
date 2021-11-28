@@ -175,7 +175,7 @@ catalog :-
     format('|----------------- FISHING (R) ---------------|~n', []),
     forall(market_item(ID, _, _, _), display_market_fishing_r_sell(ID)), nl,
     format('|----------------- FISHING (C) ---------------|~n', []),
-    forall(market_item(ID, _, _, _), display_market_fishing_c_sell(ID)), nl.
+    forall(market_item(ID, _, _, _), display_market_fishing_c_sell(ID)), nl, !.
 
 buy:-
     \+isOnMarket,
@@ -363,7 +363,7 @@ sell:-
     format('Hello, Fellow Traveler.~n', []),
     format('To see what are we having today, you can type \'catalog.\' and type its MARKET ID to sell.~n', []),
     format('You can also type \'inventory.\' to see what you have in your inventory.~n', []),
-    format('if you\'re ready to sell, please type \'sellitnow.\'~n', []).
+    format('if you\'re ready to sell, please type \'sellitnow.\'~n', []), !.
 
 sellitnow :-
     marketValidationMSG, !.
@@ -406,7 +406,7 @@ sellitnow :-
             write('You don\'t have that item in your inventory!\n')
         );
         format('I am sorry but, it looks like you\'ve inputted the wrong ID, try again!~n', [])
-    ).
+    ), !.
 
 
 

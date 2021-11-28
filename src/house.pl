@@ -31,6 +31,8 @@ nextDay:-
     Day1 is Day+1,
     retract(day(Day)),
     assertz(day(Day1)),
+    retract(fishing_today(_)),
+    assertz(fishing_today(0)),
     forall(myPlant(A,B,_,SymP,SymH,DayPlant,DayToHarvest), grow(A,B,SymP,SymH,DayPlant,DayToHarvest)),
     !.
 

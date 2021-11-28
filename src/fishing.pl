@@ -22,6 +22,7 @@ rateFishing_SSR(0.03).
 rateFishing_SR(0.2).
 rateFishing_R(10).
 rateFishing_C(30).
+daily_fish_limit(20).
 
 item_group_helper_FISHING(fishable_SSR, [anemone, blackfin_tuna, moonfish]). 
 item_group_helper_FISHING(fishable_SR, [marblefish, longfin, lionfish, mooneye, jewelfish]).
@@ -208,6 +209,12 @@ adjustLevel(AddedExp) :-
     retract(fishEXP(exp, _)),
     assertz(fishEXP(exp, NewExp)).
 
+incFishCount :-
+    fishing_today(FishCount),
+    NewFishCount is FishCount + 1,
+    retract(fishing_today(_)),
+    assertz(fishing_today(NewFishCount)).
+
 fishit :- 
     isInAppropriateFishingTile(RESP),
     RESP == not_beside_lake, 
@@ -220,10 +227,18 @@ fishit :-
     format('We are sorry to inform you that you do not have a fishing rod.~n', []),
     format('Please come back when you have one. We are waiting for your next visit!', []), !.
 fishit :-
+    daily_fish_limit(Limit),
+    fishing_today(Today),
+    Today >= Limit,
+    format('Hello, this is Flying Fish Manor\'s Assistant, Ageha Himegi.~n', []),
+    format('We are sorry to inform you that you have reached the daily fishing limit.~n', []),
+    format('Please come back tomorrow. We are waiting for your next visit!', []), !.
+fishit :-
     getTotalInv(TotalInv),
     TotalInv >= 100, catchfishmsg(none_fish, catching_fish_fail_inven), !.
 fishit :-
     adjustRate,
+    incFishCount,
     random(9999, 100000, Seed),
     set_seed(Seed),
     randomize,
@@ -347,7 +362,7 @@ fishit :-
         )
         ;
         catchfishmsg(none_fish, catching_fish_none)
-    ).
+    ), !.
 
 
 displayFishingRate :-
@@ -389,7 +404,7 @@ displayFishingRate :-
         item_alias(X, Alias),
         format('~s ~n', [Alias])
     )),
-    nl.
+    nl, !.
 
 isInAppropriateFishingTile(Response) :- 
     pos(CurX, CurY),
@@ -424,12 +439,12 @@ displayFishingID :-
     format('-------------------------------------------------~n', []),
     format('|         FLYING FISH MANOR FISHING ID          |~n', []),
     format('-------------------------------------------------~n', []),
-    format('    NAME              : KOTORI HABANE~n', []),
+    format('    NAME              : CANDICE N.~n', []),
     format('    FISHING ROD LEVEL : ~d~n', [RodLevel]),
     format('    FISHING LEVEL     : ~d~n', [Level]),
     format('    PLAYER EXP        : ~d~n', [Exp]),
     format('    NEXT LEVEL EXP    : ~d~n', [LevelUpCeilExp]),
-    format('-------------------------------------------------~n', []).
+    format('-------------------------------------------------~n', []), !.
 
 fish :-
     isInAppropriateFishingTile(RESP),
@@ -438,8 +453,14 @@ fish :-
     format('We are sorry to inform you that you should be beside a lake in order to fish.~n', []),
     format('Please move to an appropriate tile, we are waiting for your next visit!', []), !.
 fish :-
+    daily_fish_limit(Limit),
     format('Welcome to Flying Fish Manor.~nHere are our Today\'s Menu~n', []),
     displayFishingRate,
     displayFishingID, nl,
-    format('please type \'fishit\' to fish, \'displayFishingID.\' to see your ID, and \'displayFishingRate\' to display our Today\'s Menu again ^_^~n', []).
+    format('please type \'fishit.\' to fish, ~n\'displayFishingID.\' to see your ID, ~nand \'displayFishingRate.\' to display our Today\'s Menu again~n', []), 
+    format('please do note, however, that your fishing activity has limit up to ~d time(s) per day.~n',[Limit]), 
+    format('Happy Fishing! ^_^~n', []),
+    nl,
+    format('Best Regards, ~nFlying Fish Manor\'s Personal Assistant~n',[]),
+    format('Ageha Himegi~n', []), !.
 

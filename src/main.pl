@@ -48,15 +48,14 @@ start:-
     write('Beginning game....\n'),
     assertz(day(1)),
     assertz(gold(500)), assertz(exp(0)),
-    assertz(fishEXP(exp, 0)), assertz(fishEXP(lvl, 1)),
+    assertz(fishEXP(exp, 0)), assertz(fishEXP(lvl, 1)), assertz(fishEXP(level_up_ceil_exp, 300)), assertz(fishing_today(0)),
     write('Use W, A, S, and D (.) to move!\n\n'),
     write('Use the HELP menu for more information!\n\n'),
     initQuest,
     initRanch,
     initFarm,
     status,
-    map,
-    assertz(fishEXP(exp, 0)), assertz(fishEXP(lvl, 1)), assertz(fishEXP(level_up_ceil_exp, 300)).
+    map, !.
     
 
 story:-

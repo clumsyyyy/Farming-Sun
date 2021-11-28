@@ -24,7 +24,7 @@ inventory :-
     getTotalInv(Total),
     format('Your Inventory: (~w / 100) ~n', [Total]),
     displayInventory, nl,
-    format('to throw some item, type \'throwItem.\'~n', []).
+    format('to throw some item, type \'throwItem.\'~n', []), !.
 
 topItemInInv(Item, Level, Qty) :-
     item_in_inventory(Item, Level, Qty),
@@ -74,4 +74,4 @@ throwItem :-
         )
     ;
         format('That item doesn\'t exists ~nExiting...~n', []), false
-    ).
+    ), !.

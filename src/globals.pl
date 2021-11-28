@@ -17,6 +17,9 @@
 :- dynamic(day/1).          % hari
 :- dynamic(inventory/1).    % invent
 
+% ======= predicate fishing ======
+:- dynamic(fishing_today/1).
+
 % ======= predicate farming ======
 :- dynamic(seed/5).
 :- dynamic(myPlant/7).
