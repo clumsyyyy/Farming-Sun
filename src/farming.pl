@@ -38,8 +38,7 @@ dig:-
                      EXPGiven1 is EXPGiven+5,
                      farmEXPUp(5)
                  )
-            ),
-            map
+            )
         )
         ;
         write('You can\'t dig here. Dig somewhere else.\n')
@@ -70,8 +69,7 @@ plant:-
             assertz(item_in_inventory(SeedName,Level,QtyNew)),
             (retract(myPlant(-1,-1,-1,-1,-1,-1,-1)) -> true ; true),
             assertz(myPlant(A,B,SelectSeed,SymP,SymH,Day,DayToHarvest)),
-            format('The ~w can be harvested in ~d days...~n~n',[SelectSeed,DayToHarvest]),
-            map
+            format('The ~w can be harvested in ~d days...~n~n',[SelectSeed,DayToHarvest])
         )
         ; 
         isTilePlanted(A,B) -> (
