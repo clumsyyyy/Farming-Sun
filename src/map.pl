@@ -107,7 +107,7 @@ d:- pos(A, B), B1 is (B + 1), map(A, B1, '#'), write('Oops, you\'ve hit a fence!
 d:- pos(A, B), B1 is (B + 1), map(A, B1, _), myPlant(A,B1,Name,_,_,_,_), format('You\'ve arrived at ~w plant !~n~n', [Name]),showInfoHarvest(A,B1), changePos(A, B1), map, !.
 d:- pos(A, B), B1 is (B + 1), map(A, B1, '='), write('You\'ve arrived at the digged tile!\nYou can plant seed here.\nUse command \'dig.\' then \'plant.\' ...\n'), changePos(A,B1), map, !.
 d:- pos(A, B), B1 is (B + 1), map(A, B1, 'o'),  write('You\'ve arrived at the Lake!\nYou can fish here.\nUse command \'fish.\'...\n'), map, !.
-d:- pos(A, B), B1 is (B + 1), map(A, B1, 'H'), write('You\'ve arrived at your House!\nUse command \'house.\' to access your house...\n'), changePos(A, B1), map.
+d:- pos(A, B), B1 is (B + 1), map(A, B1, 'H'), write('You\'ve arrived at your House!\nUse command \'house.\' to access your house...\n'), changePos(A, B1), map, !.
 d:- pos(A, B), B1 is (B + 1), map(A, B1, 'Q'), write('You\'ve arrived at the Quest Centre!\nYou can pick up quests here.\nUse command \'quest\' ...\n'), changePos(A, B1), map, !.
 d:- pos(A, B), B1 is (B + 1), map(A, B1, 'M'), write('You\'ve arrived at the Marketplace!\nYou can buy items here.\nUse command \'market.\' ...\n'), changePos(A, B1), map, !.
 d:- pos(A, B), B1 is (B + 1), map(A, B1, 'R'), write('You\'ve arrived at the Ranch!\nUse command \'ranch.\' to start ranching...\n'), changePos(A, B1), map, !.

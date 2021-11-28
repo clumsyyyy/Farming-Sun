@@ -22,9 +22,11 @@ sleep:-
 /* Fungsi meng-update day ke predikat global */
     isOnHouse,
     write('You went to sleep.\n\n'),
+    fishing_today(X),
+    retract(fishing_today(X)), assertz(fishing_today(0)),
     nextDay,
     checkGameState,
-    continue.
+    continue, !.
 
 nextDay:-
     day(Day),

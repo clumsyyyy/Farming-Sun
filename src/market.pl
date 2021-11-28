@@ -14,20 +14,20 @@ market_item(201, carrot_seed, -1, 25).
 market_item(202, corn_seed, -1, 25).
 market_item(203, tomato_seed, -1, 25).
 market_item(204, potato_seed, -1, 25).
-market_item(205, carrot, -1, 50).
-market_item(206, corn, -1, 60).
-market_item(207, tomato, -1, 55).
-market_item(208, potato, -1, 75).
+market_item(205, carrot, -1, 60).
+market_item(206, corn, -1, 80).
+market_item(207, tomato, -1, 70).
+market_item(208, potato, -1, 100).
 
 market_item(301, chicken, -1, 250).
 market_item(302, sheep, -1, 500).
 market_item(303, cow, -1, 1000).
-market_item(304, egg, -1, 500).
-market_item(305, wool, -1, 500).
-market_item(306, milk, -1, 500).
+market_item(304, egg, -1, 250).
+market_item(305, wool, -1, 250).
+market_item(306, milk, -1, 250).
 
 market_item(401, anemone, -1, 1000).
-market_item(402, blackfin_tuna, -1, 1900).
+market_item(402, blackfin_tuna, -1, 1000).
 market_item(403, moonfish, -1, 1000).
 
 market_item(411, marblefish, -1, 400).

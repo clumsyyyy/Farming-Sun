@@ -16,7 +16,7 @@ quest:-
             random(1,10,R),
             retract(myquest(_,_,_,_,_,_)),
             assertz(myquest(H,H,F,F,R,R)),
-            Gold is H*300+F*100+R*200,
+            Gold is H*300+F*100+R*250,
             EXP is H*25+F*25+R*25,
             retract(rewardquest(_,_)),
             assertz(rewardquest(Gold,EXP)),
@@ -113,5 +113,5 @@ isOnTileQ:-
 isQuestClear:-
 /* Mengecek apakah telah menyelesaikan quest*/
     \+isNotInQuest,
-    myquest(_,X,_,X,_,X),
-    X =:= 0.
+    myquest(_,X,_,Y,_,Z),
+    X =< 0, Y =< 0, Z =< 0.
