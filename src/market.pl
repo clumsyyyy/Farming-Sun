@@ -289,9 +289,9 @@ updateRanch(Item, Quantity):-
     retract(livestock(Item, Qty)),
     assertz(livestock(Item, NewQty)),
     write('Livestock bought! Check it out at your Ranch!\n'),
-    Item = cow -> ranchEXPUp(15 * Quantity) ;
-    Item = sheep -> ranchEXPUp(10 * Quantity) ;
-    Item = chicken -> ranchEXPUp(5 * Quantity).
+    Item = cow -> ranchEXPUp(30 * Quantity) ;
+    Item = sheep -> ranchEXPUp(20 * Quantity) ;
+    Item = chicken -> ranchEXPUp(10 * Quantity).
 
 upgradeTools(Item):-
     item_in_inventory(Item, Level, Qty), Qty > 0, 
