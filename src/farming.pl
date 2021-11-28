@@ -23,8 +23,6 @@ dig:-
     ( 
         isTileEmpty(A,B) -> (
             item_in_inventory(shovel,_,1), %cek apakah pemain memiliki shovel 
-            A1 is (A-1), 
-            changePos(A1, B),
             assertz(map(A,B,'=')),
             write('\n'),
             write('\nYou digged the tile!\nUse the command \'plant.\' to plant a seed!\n\n'),
@@ -42,10 +40,9 @@ plant:-
     F.S. bibit akan ditanam, jumlah bibit diupdate, pemain dapat memanen
     di waktu yang ditentukan */
     pos(A,B),
-    A1 is A+1,
     ( 
-        isTileDigged(A1,B) -> (
-            map(A1,B,Z),
+        isTileDigged(A,B) -> (
+            map(A,B,Z),
             write('\nYou have:\n'),
             displaySeed,
             write('\nWhat do you want to plant?\n'),
@@ -54,22 +51,22 @@ plant:-
             item_in_inventory(SeedName,Level,Qty),
             Qty > 0,
             format('You planted a ~w seed!~n',[SelectSeed]),
-            retract(map(A1,B,Z)),
-            assertz(map(A1,B,SymP)),
+            retract(map(A,B,Z)),
+            assertz(map(A,B,SymP)),
             QtyNew is Qty-1,
             retract(item_in_inventory(SeedName,Level,Qty)),
             day(Day),
             assertz(item_in_inventory(SeedName,Level,QtyNew)),
             (retract(myPlant(-1,-1,-1,-1,-1,-1,-1)) -> true ; true),
-            assertz(myPlant(A1,B,SelectSeed,SymP,SymH,Day,DayToHarvest)),
+            assertz(myPlant(A,B,SelectSeed,SymP,SymH,Day,DayToHarvest)),
             format('The ~w can be harvested in ~d days...~n~n',[SelectSeed,DayToHarvest]),
             map
         )
         ; 
-        isTilePlanted(A1,B) -> (
-            myPlant(A1,B,Name,_,_,_,DayToHarvest),
+        isTilePlanted(A,B) -> (
+            myPlant(A,B,Name,_,_,_,DayToHarvest),
             format('This tile is already planted with ~w~n',[Name]),
-            showInfoHarvest(A1,B)
+            showInfoHarvest(A,B)
         )
         ;
         write('You can only plant on digged tile\n')
@@ -108,11 +105,6 @@ harvest:-
 
 isTileEmpty(A,B):-
 /* Mengecek apakah tile kosong dan dapat digali */
-    A1 is A-1,
-    A2 is A+1,
-    \+map(A1,B,_),   % di belakang
-    \+map(A2,B,'='), % di depan
-    \+isTilePlanted(A2,B),
     \+map(A,B,_).    % yang dipijak
 
 isTilePlanted(A,B):-
@@ -146,9 +138,9 @@ showInfoHarvest(A,B):-
     timeToHarvest(A,B,RemainingDay),
     (
         RemainingDay > 0 -> 
-            format('~w can be harvested in ~d days~n',[Name,RemainingDay])
+            format('The ~w can be harvested in ~d days~n',[Name,RemainingDay])
         ; %else remainingday <= 0
-            format('~w is ready to be harvested~n',[Name])
+            format('The ~w is ready to be harvested~n',[Name])
     ),
     !.
 
