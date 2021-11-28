@@ -3,7 +3,10 @@
 
 gameStarted:-
     playing(X), X = true.
+isStarted:-
+    gameStarted(X), X = true.
 playing(false).
+gameStarted(false).
 startGame:-
 /*  I.S. Game belum dimulai, gunakan perintah ini untuk memulai game dan menampilkan menu awal.
     F.S. Game berjalan, pemain dapat memilih job yang diinginkan dan memulai game */
@@ -17,7 +20,8 @@ startGame:-
             write(' _|   \\__,_| _|    _|  _|  _| _| _|  _| \\__, |     _____/  \\__,_| _|  _| \n'),
             write('                                        |___/                            \n'),
             write('                                                                         \n'),
-            write('             Your journey awaits! TYPE \'start.\' TO BEGIN!               \n')
+            write('             Your journey awaits! TYPE \'start.\' TO BEGIN!               \n'),
+            retract(gameStarted(false)), assertz(gameStarted(true))
         )
         ;
         gameStarted ->
@@ -40,7 +44,7 @@ start:-
     % cek file 'game.pl' untuk melihat permainan
 
     (
-        \+gameStarted->
+        isStarted->
         (
             story,
             write('1. Fisherman\n'),
@@ -58,12 +62,13 @@ start:-
             write('Use W, A, S, and D (.) to move!\n\n'),
             write('Use the HELP menu for more information!\n\n'),
             initQuest, initRanch, initFarm, status, map,
-            retract(playing(false)), assertz(playing(true))
+            retract(playing(false)), assertz(playing(true)), assertz(goal(false)),
+            retract(gameStarted(true)), assertz(gameStarted(false))
         )
         ;
-        gameStarted->
+        (gameStarted ; \+isStarted)->
         (
-            write('You cannot execute this procedure, as you are currently playing!')
+            write('You cannot execute this procedure!')
         )
     ).
 
@@ -72,13 +77,13 @@ start:-
 story:-
     write('\n\n\n'),
     write('Soooo, situation update. You just got scammed overnight.\n\n'),
-    write('Remember that project worth 10.000 gold? Yeah, that was a scam.\n\n'),
-    write('And you really had to spend all your money on Benshin last night, huh?\n\n'),
+    write('Remember that project worth 20.000 gold? Yeah, that was a scam.\n\n'),
+    write('And you really had to spend all your money on gacha last night, huh?\n\n'),
     write('But not all hope is lost! You can either go to the loans (and probably get scammed again), \n\n'),
     write('Or you can return to your home village for a short two-month trip!\n (You\'re a freelancer anyways, what\'s office work?\n\n'),
     write('You have to do all the fun harvestry stuff to solve your electric bills,\n\n'),
     write('Before you lose everything. Yes, everything. Including your gachas.\n\n'),
     write('So, what are you waiting for?\n\n'),
     write('As a starter, your family has provided you with 1000 gold (don\'t spend them all on gachas again)\n and some seeds that you can plant!\n\n'),
-    write('You have two months to collect 10.000 gold, so it\'s a go-big-or-go-home situation!\n\nGood luck!\n\n'),
+    write('You have two months to collect 20.000 gold, so it\'s a go-big-or-go-home situation!\n\nGood luck!\n\n'),
     write('Oh, and one last thing before beginning... which role do you prefer to take?\n\n').

@@ -78,7 +78,7 @@ readDiary:-
     \+isOnHouse, write('You\'re not at home!').
 
 fairy:-
-    random(1, 10, R),
+    random(1, 30, R),
     (R = 5)->
     (
         sleepStory,
