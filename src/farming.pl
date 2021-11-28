@@ -102,11 +102,17 @@ harvest:-
             write('It has been added to your inventory.\n'),
             occupation(O),
             (O = 'farmer'  -> farmEXPUp(40) ; farmEXPUp(25)),
-            myquest(Hi,Hf,Fi,Ff,Ri,Rf),
-            Hf > 0,
-            Hfx is Hf-1,
-            retract(myquest(_,_,_,_,_,_)),
-            assertz(myquest(Hi,Hfx,Fi,Ff,Ri,Rf)),!;true
+            (   
+                (
+                myquest(Hi,Hf,Fi,Ff,Ri,Rf),
+                Hf > 0,
+                Hfx is Hf-1,
+                retract(myquest(_,_,_,_,_,_)),
+                assertz(myquest(Hi,Hfx,Fi,Ff,Ri,Rf))
+                )
+                ;
+                true
+            )
         )
         ; ( 
             write('You cannot harvest this plant yet.\n'),
