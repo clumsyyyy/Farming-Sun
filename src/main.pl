@@ -10,26 +10,14 @@ startGame:-
     (
         \+gameStarted ->
         (
-            write(' _   _                          _   \n'),
-            write('| | | | __ _ _ ____ _____ _____| |_  \n'),
-            write('| |_| |/ _` | __\\ \\ / / _ \\/ __| __| \n'),
-            write('|  _  | (_| | |  \\ V / __/ \\__ \\ |_  \n'),
-            write('|_| |_|\\__,_|_|   \\/ \\ ___||___/\\__| \n'),
-            write('Harvest Star!!!\n'),
-            write('Lets play and pay our debts together!\n'),
-            write('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n'),
-            write('% 1. start  : untuk memulai petualanganmu                                      %\n'),
-            write('% 2. map    : menampilkan peta                                                 %\n'),
-            write('% 3. status : menampilkan kondisimu terkini                                    %\n'),
-            write('% 4. w      : gerak ke utara 1 langkah                                         %\n'),
-            write('% 5. s      : gerak ke selatan 1 langkah                                       %\n'),
-            write('% 6. d      : gerak ke ke timur 1 langkah                                      %\n'),
-            write('% 7. a      : gerak ke barat 1 langkah                                         %\n'),
-            write('% 8. Status : menampilkan status pemain                                        %\n'),
-            write('% 9. help   : menampilkan segala bantuan                                       %\n'),
-            write('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n'),
-            write('                                                                                \n'),
-            write('                         TYPE \'start.\' TO BEGIN!                              \n')
+            
+            write('  ____|                       _)                     ___|                \n'),
+            write('  |     _` |   __|  __ `__ \\   |  __ \\    _` |    \\ ___ \\   |   |  __ \\  \n'),
+            write('  __|  (   |  |     |   |   |  |  |   |  (   |           |  |   |  |   | \n'),
+            write(' _|   \\__,_| _|    _|  _|  _| _| _|  _| \\__, |     _____/  \\__,_| _|  _| \n'),
+            write('                                        |___/                            \n'),
+            write('                                                                         \n'),
+            write('             Your journey awaits! TYPE \'start.\' TO BEGIN!               \n')
         )
         ;
         gameStarted ->
@@ -64,12 +52,12 @@ start:-
             write(Output),
             write('Beginning game....\n'),
             assertz(day(1)),
-            assertz(gold(1000)), assertz(exp(0)),
-            assertz(fishEXP(exp, 0)), assertz(fishEXP(lvl, 1)),
+            assertz(gold(1000)), assertz(exp(0)),    
+            assertz(fishEXP(exp, 0)), assertz(fishEXP(lvl, 1)), 
+            assertz(fishEXP(level_up_ceil_exp, 300)), assertz(fishing_today(0)), 
             write('Use W, A, S, and D (.) to move!\n\n'),
             write('Use the HELP menu for more information!\n\n'),
             initQuest, initRanch, initFarm, status, map,
-            assertz(fishEXP(exp, 0)), assertz(fishEXP(lvl, 1)), assertz(fishEXP(level_up_ceil_exp, 300)),
             retract(playing(false)), assertz(playing(true))
         )
         ;

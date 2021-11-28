@@ -20,27 +20,45 @@ quest:-
             EXP is H*25+F*25+R*25,
             retract(rewardquest(_,_)),
             assertz(rewardquest(Gold,EXP)),
-            write('You got a new quest!\n'),
-            write('\nYou need to collect: \n'),
-            format('- ~d harvest item~n',[H]),
-            format('- ~d fish~n',[F]),
-            format('- ~d ranch item~n',[R]),
-            format('Reward on completion: ~d Gold - ~d EXP ~n',[Gold,EXP])
+            write('_______________________________\n'),
+            write('|                             |\n'),
+            write('|   ( ( THE QUEST BOARD ) )   |\n'),
+            write('|                             |\n'),
+            write('|     You got a new quest!    |\n'),
+            write('|                             |\n'),
+            write('|     You need to collect:    |\n'),
+            format('|   - ~d harvest item          |~n',[H]),
+            format('|   - ~d fish                  |~n',[F]),
+            format('|   - ~d ranch item            |~n',[R]),
+            format('|                             |~n', []),
+            format('| Here, bring ANNA with you!  |~n', []),
+            format('| (use quest. to use ANNA)    |~n', []),
+            format('|                             |~n', []),
+            format('===============================~n', []),
+            format('Reward on completion:   ~n', []),
+            format('~d GOLD and ~d EXP!      ~n', [Gold, EXP])
         )
         ;
         \+isNotInQuest, \+isQuestClear -> (
         /* Apabila sedang mengerjakan quest dan quest belum selesai*/
-            write('You have an on-going quest!\n'),
             myquest(Hi,Hf,Fi,Ff,Ri,Rf),
             H is Hi-Hf,
             F is Fi-Ff,
             R is Ri-Rf,
             rewardquest(Gold,EXP),
-            write('\nYour quest progress status:\n'),
-            format('- ~d/~d harvest item collected~n',[H,Hi]),
-            format('- ~d/~d fish collected~n',[F,Fi]),
-            format('- ~d/~d ranch item collected~n',[R,Ri]),
-            format('Reward on completion: ~d Gold - ~d EXP ~n',[Gold,EXP])
+            format('_________________________________________________~n', []),
+            format('[                                               ]~n', []),
+            format('[   Hello, I am Anna. ^_^         [v0.2.1]      ]~n', []),
+            format('[  (Automated Natural Navigation Assistant)     ]~n', []),
+            format('[                                               ]~n', []),
+            format('[ You currently have an on-going quest.         ]~n', []),
+            format('[ Your quest progress status:                   ]~n', []),
+            format('[ - ~d/~d harvest item collected                  ]~n',[H,Hi]),
+            format('[ - ~d/~d fish collected                          ]~n',[F,Fi]),
+            format('[ - ~d/~d ranch item collected                    ]~n',[R,Ri]),
+            format('[_______________________________________________]~n~n', []),
+            format('Reward on completion:  ~n ~d Gold - ~d EXP ~n',[Gold,EXP]),
+            format('Whenever you\'ve finished the tasks, you can~n use me again using \'quest.\'~n', [])
         )
         ;
         isQuestClear -> (
@@ -55,6 +73,16 @@ quest:-
             retract(exp(E)),
             assertz(gold(Gplus)),
             assertz(exp(Eplus)),
+            format('_________________________________________________~n', []),
+            format('[                                               ]~n', []),
+            format('[   Hello, I am Anna. ^_^          [v0.2.1]     ]~n', []),
+            format('[  (Automated Natural Navigation Assistant)     ]~n', []),
+            format('[                                               ]~n', []),
+            format('[ Congratulations, you have finished the quests.]~n', []),
+            format('[ The rewards have been added to your accounts. ]~n', []),
+            format('[ I wish you well for your next adventures.     ]~n', []),
+            format('[                                               ]~n', []),
+            format('[_______________________________________________]~n~n', []),
             write('You have completed the quest, Here is the reward: \n'),
             format('~d Gold - ~d EXP~n',[Gold,EXP]),
             write('Reward has been added. Your current status: \n'),
@@ -69,7 +97,16 @@ quest:-
         ;
         \+isOnTileQ -> (
         /* Apabila tidak berada di tile Q*/
-            write('You are not in tile Q!\n')
+            format('_________________________________________________~n', []),
+            format('[                                               ]~n', []),
+            format('[   Hello, I am Anna. ^_^          [v0.2.1]     ]~n', []),
+            format('[  (Automated Natural Navigation Assistant)     ]~n', []),
+            format('[                                               ]~n', []),
+            format('[ I am here to inform you that you have not     ]~n', []),
+            format('[ picked up any quests. You can pick new ones   ]~n', []),
+            format('[ You can go to the Quest Board (\'Q\') to        ]~n', []),
+            format('[ take new quests.                              ]~n', []),
+            format('[_______________________________________________]~n~n', [])
         )
     ),
     !.

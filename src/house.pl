@@ -6,6 +6,7 @@ house:-
     F.S. pemain dapat mengakses menu di rumah
     (untuk sementara, yang dapat diakses adalah fungsi `sleep`) */
     isOnHouse,
+    houseArt,
     write('Welcome back to the house!\n'),
     write('What do you want to do?\n'),
     write('==================================\n'),
@@ -22,8 +23,6 @@ sleep:-
 /* Fungsi meng-update day ke predikat global */
     isOnHouse,
     write('You went to sleep.\n\n'),
-    fishing_today(X),
-    retract(fishing_today(X)), assertz(fishing_today(0)),
     nextDay,
     checkGameState,
     continue, !.
@@ -78,3 +77,9 @@ readDiary:-
 readDiary:-
     \+isOnHouse, write('You\'re not at home!').
 
+houseArt:-
+    write('           x   \n'),          
+    write('.-. _______|   \n'),
+    write('|=|/     /  \\ \n'),
+    write('| |_____|_""_| \n'),
+    write('|_|_[X]_|____| \n').

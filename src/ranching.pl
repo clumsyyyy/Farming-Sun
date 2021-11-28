@@ -55,11 +55,7 @@ ranch:-
     ),!.
 
 ranchMenu:-
-    day(A), ranchEXP(lvl, B),
-    write('Day '),
-    write(A),
-    write('  Level: '),
-    write(B),
+    ranchArt,
     write('\nwelcome to the ranch! You have: \n'),
     livestock(chicken, X), livestock(sheep, Y), livestock(cow, Z),
     write(X),
@@ -69,7 +65,9 @@ ranchMenu:-
     write(Z),
     write(' cow(s)\n'),
     write('\nWhat do you want to do?'),
-    write('\nTo check your chicken, sheep, or cow, use: \nchicken.\nsheep\ncow.'),
+    write('\nTo check your chicken, sheep, or cow, use: chicken., sheep., or cow.'),
+    write('\nPlease note that you can\'t farm your animals everyday, you have to wait\nfor several days to farm them again!\n'),
+    write('So, what\'s it\'s going to be?\n'),
     !.
 
 chicken:-
@@ -305,3 +303,16 @@ sheepCap:-
         )
     ),
     !.
+
+
+ranchArt:-
+    write('                             +&-            \n'),
+    write('                           _.-^-._    .--.  \n'),
+    write('                        .-\'   _ \'-. |__|  \n'),
+    write('                       /     |_|     \\|  | \n'),
+    write('                      /  [The Ranch]  \\  | \n'),
+    write('                     /|     _____     |\\ |  \n'),
+    write('                      |    |==|==|    |  |  \n'),
+    write('  |---|---|---|---|---|    |--|--|    |  |  \n'),
+    write('  |---|---|---|---|---|    |==|==|    |  |  \n'),
+    write(' ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^').

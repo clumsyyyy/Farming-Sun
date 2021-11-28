@@ -26,7 +26,7 @@ status:-
     write('========== LEVELS ==========\n'),
     write(' Farming | EXP: '), write(FarmEXP), write(' | LVL: '), write(Farmlvl), write('\n'),
     write(' Fishing | EXP: '), write(FishEXP), write(' | LVL: '), write(Fishlvl), write('\n'),
-    write(' Ranching| EXP: '), write(RanchEXP), write(' | LVL: '), write(Ranchlvl), write('\n').
+    write(' Ranching| EXP: '), write(RanchEXP), write(' | LVL: '), write(Ranchlvl), write('\n'), !.
 
 quit:-
     write('Thank you for playing the game! We hope to see you again soon!\n'),

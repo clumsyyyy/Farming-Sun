@@ -66,10 +66,11 @@ market:-
 
 market:-
     isOnMarket,
+    marketArt,
     write('Welcome to the Marketplace!\n'),
     write('What do you want to do?\n'),
-    write('1. Buy\n'),
-    write('2. Sell\n').
+    write('1. Buy New Items  (use command \'buy.\')\n'),
+    write('2. Sell My Stuffs (use command \'sell.\')\n').
 
 
 
@@ -183,6 +184,7 @@ buy:-
 
 buy:-
     isOnMarket,
+    gold(Gold),
     write('===================================================\n'),
     write('||                                               ||\n'),
     write('||      =====|| WELCOME TO THE SHOP! ||=====     ||\n'),
@@ -206,6 +208,7 @@ buy:-
     write('||      otherwise, a level 2 item will be added  ||\n'),
     write('||                                               ||\n'),
     write('===================================================\n'),
+    format('You currently have: ~d Gold ~n', [Gold]),
     write('INPUT THE ID OF THE ITEM YOU WANT TO BUY!\n'),
     write('>>> '),
     read(Item),
@@ -223,7 +226,6 @@ buy:-
             market_item(_, Item, Level, Price),
             FinalPrice is Price * Quantity,
             (
-                gold(Gold),
                 (FinalPrice =< Gold) ->
                 (
                     format('You bought ~d ~s!(s).~n', [Quantity, Alias]),
@@ -231,7 +233,7 @@ buy:-
                 )
                 ;
                 (
-                    write('Gold insufficient!\n')
+                    write('Sorry, but you have insufficient gold!\n')
                 )
             )
         )
@@ -283,9 +285,9 @@ updateRanch(Item, Quantity):-
     retract(livestock(Item, Qty)),
     assertz(livestock(Item, NewQty)),
     write('Livestock bought! Check it out at your Ranch!\n'),
-    Item = cow -> ranchEXPUp(15) ;
-    Item = sheep -> ranchEXPUp(10) ;
-    Item = chicken -> ranchEXPUp(5).
+    Item = cow -> ranchEXPUp(15 * Quantity) ;
+    Item = sheep -> ranchEXPUp(10 * Quantity) ;
+    Item = chicken -> ranchEXPUp(5 * Quantity).
 
 upgradeTools(Item):-
     item_in_inventory(Item, Level, Qty), Qty > 0, 
@@ -299,7 +301,7 @@ upgradeTools(Item):-
             gold(Gold),
             market_item(_, Item, _, Price),
             (
-                (Gold > Price) ->
+                (Gold >= Price) ->
                     (
                         levelUpEquipment(Item),
                         Gold1 is Gold - Price,
@@ -408,6 +410,16 @@ sellitnow :-
         format('I am sorry but, it looks like you\'ve inputted the wrong ID, try again!~n', [])
     ), !.
 
+marketArt:-
+    write('  ________                           \n'),
+    write('  |MARKET|             ____          \n'),
+    write(' ___||_________________|  |_____     \n'),
+    write('/______________________________\\    \n'),
+    write('/________________________________\\  \n'),
+    write('  ||___|___||||||||||||___|__|||     \n'),
+    write('  ||___|___||||| | ||||___|__|||     \n'),
+    write('  |||||||||||||| | |||||||||||||     \n'),
+    write('oooooooooooooooooooooooooooooooooo   \n').
 
 
 
