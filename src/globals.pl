@@ -4,6 +4,8 @@
 % ====== predicate global ======
 :- dynamic(pos/2).          % posisi pemain
 % arg 1: absis, arg 2: ordinat
+:- dynamic(gameStarted/1).
+:- dynamic(goal/1).
 :- dynamic(playing/1).      % status eksekusi. args 1: startGame, args 2: Start
 :- dynamic(occupation/1).   % pekerjaan pemain (fisherman, farmer, rancher)
 :- dynamic(level/1).        % level

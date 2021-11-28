@@ -29,14 +29,14 @@ dig:-
             write('\nYou digged the tile!\nUse the command \'plant.\' to plant a seed!\n\n'),
             occupation(O),
             (
-                O = 'farmer'  -> (
+                O = farmer  -> (
                     EXPGiven1 is EXPGiven+10,
                     farmEXPUp(EXPGiven1)
                  ) 
                  ; 
                  (
-                     EXPGiven1 is EXPGiven+5,
-                     farmEXPUp(5)
+                    EXPGiven1 is EXPGiven+5,
+                    farmEXPUp(EXPGiven)
                  )
             )
         )
@@ -69,7 +69,17 @@ plant:-
             assertz(item_in_inventory(SeedName,Level,QtyNew)),
             (retract(myPlant(-1,-1,-1,-1,-1,-1,-1)) -> true ; true),
             assertz(myPlant(A,B,SelectSeed,SymP,SymH,Day,DayToHarvest)),
-            format('The ~w can be harvested in ~d days...~n~n',[SelectSeed,DayToHarvest])
+            format('The ~w can be harvested in ~d days...~n~n',[SelectSeed,DayToHarvest]),
+            occupation(O),
+            (
+                O = farmer  -> (
+                    farmEXPUp(10)
+                 ) 
+                 ; 
+                 (
+                    farmEXPUp(5)
+                 )
+            )
         )
         ; 
         isTilePlanted(A,B) -> (
@@ -88,7 +98,7 @@ harvest:-
     pos(A,B),
     timeToHarvest(A1,B,RemainingDay),
     map(A,B,Z),
-    myPlant(A,B,Name,_,_,_,_),
+    myPlant(A,B,Name,_,_,_,DayToHarvest),
     ( 
         RemainingDay =< 0 -> (
             retract(map(A1,B,Z)),
@@ -98,8 +108,7 @@ harvest:-
             assertz(item_in_inventory(Name,_,QtyPlus)),
             format('Yay, you successfully harvested a ~w!~n',[Name]),
             write('It has been added to your inventory.\n'),
-            occupation(O),
-            (O = 'farmer'  -> farmEXPUp(40) ; farmEXPUp(25)),
+            EXPGiven is DayToHarvest*5,
             (   
                 (
                 myquest(Hi,Hf,Fi,Ff,Ri,Rf),
@@ -110,7 +119,20 @@ harvest:-
                 )
                 ;
                 true
+            ),
+            occupation(O),
+            (
+                O = farmer  -> (
+                    EXPGiven1 is EXPGiven+10,
+                    farmEXPUp(EXPGiven1)
+                 ) 
+                 ; 
+                 (
+                    EXPGiven1 is EXPGiven+5,
+                    farmEXPUp(EXPGiven1)
+                 )
             )
+            
         )
         ; ( 
             write('You cannot harvest this plant yet.\n'),
@@ -214,8 +236,8 @@ farmLvlUpEffect:-
     farmEXP(lvl, Level),
     (
         Level = 2 -> (
-            retract(seed(SeedName,tomato,SymP,SymH,8)),
-            assertz(seed(SeedName,tomato,SymP,SymH,7))
+            retract(seed(SeedName,potato,SymP,SymH,8)),
+            assertz(seed(SeedName,potato,SymP,SymH,7))
         )
         ; Level = 3 -> (
             retract(seed(SeedName,corn,SymP,SymH,6)),

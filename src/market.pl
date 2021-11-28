@@ -22,13 +22,13 @@ market_item(208, potato, -1, 100).
 market_item(301, chicken, -1, 250).
 market_item(302, sheep, -1, 500).
 market_item(303, cow, -1, 1000).
-market_item(304, egg, -1, 250).
-market_item(305, wool, -1, 250).
-market_item(306, milk, -1, 250).
+market_item(304, egg, -1, 150).
+market_item(305, wool, -1, 150).
+market_item(306, milk, -1, 200).
 
-market_item(401, anemone, -1, 1000).
-market_item(402, blackfin_tuna, -1, 1000).
-market_item(403, moonfish, -1, 1000).
+market_item(401, anemone, -1, 800).
+market_item(402, blackfin_tuna, -1, 800).
+market_item(403, moonfish, -1, 800).
 
 market_item(411, marblefish, -1, 400).
 market_item(412, longfin, -1, 400).
