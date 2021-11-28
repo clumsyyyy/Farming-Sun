@@ -255,5 +255,5 @@ farmLvlUpEffect:-
             assertz(seed(SeedName2,carrot,SymP2,SymH2,1)),
             assertz(seed(SeedName3,potato,SymP3,SymH3,3))
         )
-    ),
+    ) ; true,
     !.

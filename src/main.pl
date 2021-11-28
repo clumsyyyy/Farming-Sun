@@ -58,7 +58,9 @@ start:-
             write('Use W, A, S, and D (.) to move!\n\n'),
             write('Use the HELP menu for more information!\n\n'),
             initQuest, initRanch, initFarm, status, map,
-            retract(playing(false)), assertz(playing(true))
+            retract(playing(false)), assertz(playing(true)),
+            assertz(alchemist(numPotion, 1)), random(2, 10, DayArrived), 
+            assertz(alchemist(dayArrived, DayArrived)), assertz(alchemist(hasArrived, false))
         )
         ;
         gameStarted->

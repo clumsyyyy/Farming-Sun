@@ -8,8 +8,8 @@ initRanch:-
     assertz(ranchEXP(exp, 0)),
     assertz(ranchEXP(lvl, 1)),
     assertz(ranchEXP(lvlUpReq, 75)),
-    assertz(ranchTimeMgmt(cowDelay, 5.0)),
-    assertz(ranchTimeMgmt(chickenDelay, 3.0)),
+    assertz(ranchTimeMgmt(cowDelay, 3.0)),
+    assertz(ranchTimeMgmt(chickenDelay, 5.0)),
     assertz(ranchTimeMgmt(sheepDelay, 3.0)),
     assertz(ranchTimeMgmt(cowLastDay, -999)),
     assertz(ranchTimeMgmt(chickenLastDay, -999)),
@@ -23,29 +23,6 @@ initRanch:-
         assertz(ranchEXP(occupationBonus, 1.0))
     ).
 
-buyCow:-
-    livestock(cow, X),
-    X1 is X+1,
-    retract(livestock(cow, X)),
-    assertz(livestock(cow, X1)),
-    write('Succesfully bought a new cow!\n'),
-    ranchEXPUp(15),!.
-
-buyChicken:-
-    livestock(chicken, X),
-    X1 is X+1,
-    retract(livestock(chicken, X)),
-    assertz(livestock(chicken, X1)),
-    write('Succesfully bought a new chicken!\n'),
-    ranchEXPUp(5),!.
-
-buySheep:-
-    livestock(sheep, X),
-    X1 is X+1,
-    retract(livestock(sheep, X)),
-    assertz(livestock(sheep, X1)),
-    write('Succesfully bought a new sheep!\n'),
-    ranchEXPUp(10),!.
 ranch:-
     map(X,Y,'R'), pos(A, B), (
         (
@@ -97,7 +74,7 @@ chickenAction:-
     assertz(ranchTimeMgmt(chickenLastDay, Day)),
     doRanch(N),
     % exp  
-    E is N * 3,
+    E is N * 10,
     ranchEXPUp(E),
     !.
 chickenAction:-
@@ -138,7 +115,7 @@ cowAction:-
     assertz(ranchTimeMgmt(cowLastDay, Day)),
     doRanch(N),
     % exp
-    E is N * 3,
+    E is N * 10,
     ranchEXPUp(E),
     !.
 cowAction:-
@@ -179,7 +156,7 @@ sheepAction:-
     assertz(ranchTimeMgmt(sheepLastDay, Day)),
     doRanch(N),
     % exp sheep
-    E is N * 10,
+    E is N * 15,
     ranchEXPUp(E),
     !.
 sheepAction:-
