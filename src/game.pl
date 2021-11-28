@@ -84,13 +84,13 @@ checkGameState:-
         (Gold >= 10000, Day =< 60)->
         (
             write('Yay, you have completed the game!\n'),
-            write('You\'ve collected 5000 gold in less than two months!\n'),
+            write('You\'ve collected 10000 gold in less than two months!\n'),
             write('You can continue playing, or use the command \'quit\' to exit the game...\n')
         )
         ;
         (Gold < 10000, Day > 60) ->
         (
-            write('Sorry, you\'re unable to complete the objective! :(\n'),
+            write('\nSorry, you\'re unable to complete the objective! :(\n'),
             write('Better luck next time!\n')
         )
         ;
