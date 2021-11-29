@@ -231,6 +231,7 @@ grow(A,B,SymP,SymH,DayPlant,DayToHarvest):-
 
 farmEXPUp(EXPGiven):-
 /* Melakukan prosedur untuk menaikkan EXP*/
+    globalEXPUp(EXPGiven),
     farmEXP(exp, E), farmEXP(lvl, L), farmEXP(lvlUpReq, R),
     E1 is E + EXPGiven,
     (

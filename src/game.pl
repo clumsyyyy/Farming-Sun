@@ -100,3 +100,21 @@ checkGameState:-
         )
 
     ).
+
+globalEXPUp(EXPGiven) :-
+    globalEXP(lvlUpReq, R), globalEXP(exp, X),
+    TotalEXP is X + EXPGiven,
+    ((TotalEXP >= R) -> (
+        retract(globalEXP(lvl, L)),
+        retract(globalEXP(lvlUpReq, R)),
+        retract(globalEXP(exp, X)),
+        NewL is L + 1,
+        NewR is R + (L * 100),
+        NewX is TotalEXP - R,
+        assertz(globalEXP(lvl, NewL)),
+        assertz(globalEXP(lvlUpReq, NewR)),
+        assertz(globalEXP(exp, NewX)),!
+    ));
+    retract(globalEXP(exp, X)),
+    NewX is X + EXPGiven,
+    assertz(globalEXP(exp, NewX)),!.

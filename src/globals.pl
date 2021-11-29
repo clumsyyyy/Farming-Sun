@@ -9,11 +9,8 @@
 :- dynamic(playing/1).      % status eksekusi. args 1: startGame, args 2: Start
 :- dynamic(occupation/1).   % pekerjaan pemain (fisherman, farmer, rancher)
 :- dynamic(level/1).        % level
-:- dynamic(exp/1).          % exp
-:- dynamic(farmLevel/1).    % level farming
 :- dynamic(farmEXP/2).      % exp farming
 :- dynamic(fishEXP/2).      % exp mancing
-:- dynamic(ranchLevel/1).   % level ranching
 :- dynamic(ranchEXP/2).     % exp ranching
 % arg 1: level, lvlUpReq, exp
 :- dynamic(gold/1).         % duit
@@ -38,3 +35,6 @@
 
 % ======= diary ========
 :- dynamic(diary/2).
+
+% ======= global EXP =========
+:- dynamic(globalEXP/2).    % exp overall

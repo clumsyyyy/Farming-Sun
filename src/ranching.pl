@@ -171,6 +171,7 @@ sheepAction:-
     write('Try to come back here in '), write(DR), write(' days.\n'),!.
 
 ranchEXPUp(EXP_Given):-
+    globalEXPUp(EXP_Given),
     % regular EXP
     ranchEXP(exp, E), ranchEXP(lvl, L), ranchEXP(lvlUpReq, R), ranchEXP(occupationBonus, B),
     E_Bonus is round(EXP_Given * B),
@@ -183,6 +184,7 @@ ranchEXPUp(EXP_Given):-
     write('EXP Status: '), write(E1), write('/'), write(R), write('\n'),
     !.
 ranchEXPUp(EXP_Given):-
+    globalEXPUp(EXP_Given),
     % level up
     ranchEXP(exp, E), ranchEXP(lvl, L), ranchEXP(lvlUpReq, R), ranchEXP(occupationBonus, B),
     E_Bonus is round(EXP_Given * B),

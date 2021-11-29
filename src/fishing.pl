@@ -190,6 +190,7 @@ adjustRate(LevelBonus, OccsBonus, RodBonus) :-
     assertz(rateFishing_C(NewRateC)).
 
 adjustLevel(AddedExp) :-
+    globalEXPUp(AddedExp),
     fishEXP(exp, Exp),
     fishEXP(lvl, Level),
     fishEXP(level_up_ceil_exp, LevelUpCeilExp),
