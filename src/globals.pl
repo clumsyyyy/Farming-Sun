@@ -19,6 +19,7 @@
 :- dynamic(gold/1).         % duit
 :- dynamic(day/1).          % hari
 :- dynamic(inventory/1).    % invent
+:- dynamic(alchemist/2).    % alchemist
 
 % ======= predicate fishing ======
 :- dynamic(fishing_today/1).

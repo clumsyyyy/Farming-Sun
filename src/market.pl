@@ -70,8 +70,12 @@ market:-
     write('Welcome to the Marketplace!\n'),
     write('What do you want to do?\n'),
     write('1. Buy New Items  (use command \'buy.\')\n'),
-    write('2. Sell My Stuffs (use command \'sell.\')\n').
-
+    write('2. Sell My Stuffs (use command \'sell.\')\n'),
+    alchemist(hasArrived, X),
+    (X = true) ->
+        write('3. Buy Item From Alchemist (use command \'alchemistBuy.\')\n')
+        ; true,
+    !.
 
 
 print_market_item_details(ID) :-
@@ -285,9 +289,9 @@ updateRanch(Item, Quantity):-
     retract(livestock(Item, Qty)),
     assertz(livestock(Item, NewQty)),
     write('Livestock bought! Check it out at your Ranch!\n'),
-    Item = cow -> ranchEXPUp(15 * Quantity) ;
-    Item = sheep -> ranchEXPUp(10 * Quantity) ;
-    Item = chicken -> ranchEXPUp(5 * Quantity).
+    Item = cow -> ranchEXPUp(30 * Quantity) ;
+    Item = sheep -> ranchEXPUp(20 * Quantity) ;
+    Item = chicken -> ranchEXPUp(10 * Quantity).
 
 upgradeTools(Item):-
     item_in_inventory(Item, Level, Qty), Qty > 0, 
@@ -421,5 +425,73 @@ marketArt:-
     write('  |||||||||||||| | |||||||||||||     \n'),
     write('oooooooooooooooooooooooooooooooooo   \n').
 
+alchemistBuy:-
+    marketValidationMSG, !.
+alchemistBuy:-
+    alchemist(hasArrived, X), alchemist(numPotion, Num),
+    (X = true, Num > 0) -> (
+    write('\n      o                                         '),
+    write('\n       o                                        '),
+    write('\n     ___              ___  ___  ___  ___        '),
+    write('\n     | |        ._____|_|__|_|__|_|__|_|_____.  '),
+    write('\n     | |        |__________________________|%|  '),
+    write('\n     |o|          | | |%|  | |  | |  |~| | |    '),
+    write('\n    .\' \'.         | | |%|  | |  |~|  |#| | |    '),
+    write('\n   /  o  \\        | | :%:  :~:  : :  :#: | |    '),
+    write('\n  :____o__:     ._|_|_.\"    \"    \"    \"._|_|_.  '),
+    write('\n  \'._____.\'     |___|%|                |___|%|  '),
+    write('\n\nSo, you want to feel what it\'s like to be stronger?'),
+    write('\nYou\'ve come to the right place. I have very limited amount of these potions.'),
+    write('\nThink carefully before you buy one.'),
+    write('\n\n||==============================================||'),
+    write('\n||                                              ||'),
+    write('\n||           Albedo\'s Mastery Potion            ||'),
+    write('\n||                  Effect:                     ||'),
+    write('\n||       Fishing Lvl (+1), Farming Lvl (+1),    ||'),
+    write('\n||              Ranching Lvl (+1)               ||'),
+    write('\n||                  Price:                      ||'),
+    write('\n||                 1500 gold                    ||'),
+    write('\n||                                              ||'),
+    write('\n||==============================================||'),
+    write('\n\nDo you want to buy and use this potion immediately? (Y/N) '),
+    read(Confirm),
+    (
+        (Confirm == 'y'; Confirm == 'Y') -> (
+            gold(Gold),
+            (
+                Gold >= 1500 -> (
+                    retract(gold(Gold)),
+                    NewGold is Gold - 1500,
+                    assertz(gold(NewGold)),
+                    retract(alchemist(numPotion, Num)),
+                    NewNum is Num - 1,
+                    assertz(alchemist(numPotion, NewNum)),
+                    write('\nYou have bought the potion!\n'),
+                    format('Your current gold is now ~d~n', [NewGold]),
+                    potionImmediateEffect
+                );
+                write('\nYou don\'t have enough gold!\n')
+            )
+        );
+        write('\nYou have cancelled the transaction.\n')
+    )
+    ) ; (X = true, Num =  0) -> (
+        write('\nIt\'s unfortunate that you don\'t have the capacity to use this potion anymore.\n')
+    ); write('You don\'t deserve the recognition of the alchemist yet.\n'),!.
 
+potionImmediateEffect:-
+    write('\nCongratulations! The potion works just fine!\n'),
+    write('You should feel a bit smarter by now.\n'),
+    write('\nFarming:\n'),
+    farmEXP(lvlUpReq, FarmLvlReq), farmEXPUp(FarmLvlReq), 
+    write('\nFishing:\n'),
+    fishEXP(level_up_ceil_exp, FishLvlCeil), fishEXP(exp, FishExp),
+    FishRestExp is FishLvlCeil - FishExp,
+    adjustLevel(FishRestExp),
+    write('\nRanching:'),
+    ranchEXP(lvlUpReq, RanchLvlReq),
+    ranchEXPUp(RanchLvlReq),!.
 
+cheatGold(X):-
+    retract(gold(_)),
+    assertz(gold(X)).

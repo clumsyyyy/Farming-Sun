@@ -328,5 +328,5 @@ farmLvlUpEffect:-
             format('Day to harvest for corn has decreased from 2 days to 1 days~n',[]),
             format('Day to harvest for potato has decreased from 4 days to 3 days~n',[])
         )
-    ),
+    ) ; true,
     !.

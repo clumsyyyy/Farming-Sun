@@ -25,7 +25,17 @@ sleep:-
     write('You went to sleep.\n\n'),
     fairy,
     nextDay,
-    continue, checkGameState,!.
+    checkGameState,
+    continue, 
+    day(Day), alchemist(dayArrived, AlcheDay),
+    (Day = AlcheDay) ->
+        write('\n\nThere\'s something different upon this peaceful morning...\n'),
+        write('Albedo the Alchemist has arrived to the town!\n'),
+        write('Please kindly check the marketplace to find out what he has brought.\n'),
+        retract(alchemist(hasArrived, _)),
+        assertz(alchemist(hasArrived, true))
+        ;true,
+    !.
 
 nextDay:-
     day(Day),
