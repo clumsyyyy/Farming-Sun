@@ -114,30 +114,6 @@ quest:-
 
 %======== Predikat pembantu =========%
 
-doHarvest:-
-/* Jika sedang mengerjakan quest, maka komponen quest untuk harvest berkurang 1*/
-    myquest(Hi,Hf,Fi,Ff,Ri,Rf),
-    Hf > 0,
-    Hfx is Hf-1,
-    retract(myquest(_,_,_,_,_,_)),
-    assertz(myquest(Hi,Hfx,Fi,Ff,Ri,Rf)),!;true.
-    
-doFish:-
-/* Jika sedang mengerjakan quest, maka komponen quest untuk fish berkurang 1*/
-    myquest(Hi,Hf,Fi,Ff,Ri,Rf),
-    Ff > 0,
-    Ffx is Ff-1,
-    retract(myquest(_,_,_,_,_,_)),
-    assertz(myquest(Hi,Hf,Fi,Ffx,Ri,Rf)),!;true.
-
-doRanch(Qty):-
-/* Jika sedang mengerjakan quest, maka komponen quest untuk ranch berkurang 1*/
-    myquest(Hi,Hf,Fi,Ff,Ri,Rf),
-    Rf > 0,
-    Rfx is Rf-Qty,
-    retract(myquest(_,_,_,_,_,_)),
-    assertz(myquest(Hi,Hf,Fi,Ff,Ri,Rfx)),!;true.
-
 isNotInQuest:-
 /* Mengecek apakah sedang berada dalam quest atau tidak*/
     myquest(X,X,X,X,X,X),

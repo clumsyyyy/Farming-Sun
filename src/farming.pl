@@ -25,8 +25,12 @@ dig:-
             item_in_inventory(shovel,ShovelExp,1), %cek apakah pemain memiliki shovel
             EXPGiven is 10*ShovelExp,
             assertz(map(A,B,'=')),
-            write('\n'),
-            write('\nYou digged the tile!\nUse the command \'plant.\' to plant a seed!\n\n'),
+            format('~n[)==/==/==/==/==/==/==/==/==/==/==/==/==/==/==(]~n', []),
+            format('                                               ~n', []),
+            format('              You digged the tile!             ~n', []),
+            format('   Use the command \'plant.\' to plant a seed! ~n', []),
+            format('                                               ~n', []),
+            format('[)==/==/==/==/==/==/==/==/==/==/==/==/==/==/==(]~n', []),
             occupation(O),
             (
                 O = farmer  -> (
@@ -41,7 +45,12 @@ dig:-
             )
         )
         ;
-        write('You can\'t dig here. Dig somewhere else.\n')
+        format('~n[)==/==/==/==/==/==/==/==/==/==/==/==/==/==/==(]~n', []),
+        format('                                               ~n', []),
+        format('             This tile is occupied             ~n', []),
+        format('    You can\'t dig here. Dig somewhere else.   ~n', []),
+        format('                                               ~n', []),
+        format('[)==/==/==/==/==/==/==/==/==/==/==/==/==/==/==(]~n', [])
     ),
     !.
     
@@ -60,7 +69,6 @@ plant:-
             seed(SeedName,SelectSeed,SymP,SymH,DayToHarvest),
             item_in_inventory(SeedName,Level,Qty),
             Qty > 0,
-            format('You planted a ~w seed!~n',[SelectSeed]),
             retract(map(A,B,Z)),
             assertz(map(A,B,SymP)),
             QtyNew is Qty-1,
@@ -69,7 +77,12 @@ plant:-
             assertz(item_in_inventory(SeedName,Level,QtyNew)),
             (retract(myPlant(-1,-1,-1,-1,-1,-1,-1)) -> true ; true),
             assertz(myPlant(A,B,SelectSeed,SymP,SymH,Day,DayToHarvest)),
-            format('The ~w can be harvested in ~d days...~n~n',[SelectSeed,DayToHarvest]),
+            format('~n`-.-`-.-`-.-`-.-`-.-`-.-`-.-`-.-`-.-`-.-`-.-`-.-`~n', []),
+            format('                                                 ~n', []),
+            format('             You planted a ~w seed!              ~n',[SelectSeed]),
+            format('    The ~w can be harvested in ~d days...        ~n',[SelectSeed,DayToHarvest]),
+            format('                                                 ~n', []),
+            format('`-.-`-.-`-.-`-.-`-.-`-.-`-.-`-.-`-.-`-.-`-.-`-.-`~n', []),
             occupation(O),
             (
                 O = farmer  -> (
@@ -84,11 +97,20 @@ plant:-
         ; 
         isTilePlanted(A,B) -> (
             myPlant(A,B,Name,_,_,_,DayToHarvest),
-            format('This tile is already planted with ~w~n',[Name]),
-            showInfoHarvest(A,B)
+            format('~n`-o-`-o-`-o-`-o-`-o-`-o-`-o-`-o-`-o-`-o-`-o-`-o-`~n', []),
+            format('                                                ~n', []),
+            format('    This tile is already planted with ~w      ~n',[Name]),
+            write('     '),showInfoHarvest(A,B),
+            format('                                                ~n', []),
+            format('`-o-`-o-`-o-`-o-`-o-`-o-`-o-`-o-`-o-`-o-`-o-`-o-`~n', [])
         )
         ;
-        write('You can only plant on digged tile\n')
+        format('~n`-_-`-_-`-_-`-_-`-_-`-_-`-_-`-_-`-_-`-_-`-_-`-_-`~n', []),
+        format('                                                ~n', []),
+        format('       You can only plant on digged tile!       ~n', []),
+        format('      Dig empty tile before start planting      ~n', []),
+        format('                                                ~n', []),
+        format('`-_-`-_-`-_-`-_-`-_-`-.-`-_-`-_-`-_-`-_-`-_-`-_-`~n', [])
     ),
     !.
         
@@ -106,8 +128,12 @@ harvest:-
             QtyPlus is Qty+1,
             retract(item_in_inventory(Name,_,Qty)),
             assertz(item_in_inventory(Name,_,QtyPlus)),
-            format('Yay, you successfully harvested a ~w!~n',[Name]),
-            write('It has been added to your inventory.\n'),
+            format('~n`-O-`-O-`-O-`-O-`-O-`-O-`-O-`-O-`-O-`-O-`-O-`-O-`~n', []),
+            format('                                                ~n', []),
+            format('    Yay, you successfully harvested a ~w!     ~n',[Name]),
+            format('     It has been added to your inventory.     ~n', []),
+            format('                                                ~n', []),
+            format('`-O-`-O-`-O-`-O-`-O-`-O-`-O-`-O-`-O-`-O-`-O-`-O-`~n', []),
             EXPGiven is DayToHarvest*5,
             (   
                 (
@@ -135,8 +161,12 @@ harvest:-
             
         )
         ; ( 
-            write('You cannot harvest this plant yet.\n'),
-            showInfoHarvest(A,B)
+            format('~n`-o-`-o-`-o-`-o-`-o-`-o-`-o-`-o-`-o-`-o-`-o-`-o-`~n', []),
+            format('                                                ~n', []),
+            format('      You cannot harvest this plant yet.        ~n',[]),
+            write('     '),showInfoHarvest(A,B),
+            format('                                                ~n', []),
+            format('`-o-`-o-`-o-`-o-`-o-`-o-`-o-`-o-`-o-`-o-`-o-`-o-`~n', [])
         )
     ),
     !.
@@ -237,11 +267,15 @@ farmLvlUpEffect:-
     (
         Level = 2 -> (
             retract(seed(SeedName,potato,SymP,SymH,8)),
-            assertz(seed(SeedName,potato,SymP,SymH,7))
+            assertz(seed(SeedName,potato,SymP,SymH,7)),
+            format('~nLevel 2 Perks: ~n',[]),
+            format('Day to harvest for potato has decreased from 8 days to 7 days~n',[])
         )
         ; Level = 3 -> (
             retract(seed(SeedName,corn,SymP,SymH,6)),
-            assertz(seed(SeedName,corn,SymP,SymH,5))
+            assertz(seed(SeedName,corn,SymP,SymH,5)),
+            format('~nLevel 3 Perks: ~n',[]),
+            format('Day to harvest for corn has decreased from 6 days to 5 days~n',[])
         )
         ; Level = 5 -> (
             retract(seed(SeedName1,tomato,SymP1,SymH1,5)),
@@ -249,7 +283,11 @@ farmLvlUpEffect:-
             retract(seed(SeedName3,potato,SymP3,SymH3,7)),
             assertz(seed(SeedName1,tomato,SymP1,SymH1,4)),
             assertz(seed(SeedName2,corn,SymP2,SymH2,4)),
-            assertz(seed(SeedName3,potato,SymP3,SymH3,6))
+            assertz(seed(SeedName3,potato,SymP3,SymH3,6)),
+            format('~nLevel 5 Perks: ~n',[]),
+            format('Day to harvest for tomato has decreased from 5 days to 4 days~n',[]),
+            format('Day to harvest for corn has decreased from 5 days to 4 days~n',[]),
+            format('Day to harvest for potato has decreased from 7 days to 6 days~n',[])
         )
         ; Level = 7 -> (   
             retract(seed(SeedName1,corn,SymP1,SymH1,4)),
@@ -257,17 +295,26 @@ farmLvlUpEffect:-
             retract(seed(SeedName3,potato,SymP3,SymH3,6)),
             assertz(seed(SeedName1,corn,SymP1,SymH1,3)),
             assertz(seed(SeedName2,carrot,SymP2,SymH2,2)),
-            assertz(seed(SeedName3,potato,SymP3,SymH3,5))
+            assertz(seed(SeedName3,potato,SymP3,SymH3,5)),
+            format('~nLevel 7 Perks: ~n',[]),
+            format('Day to harvest for tomato has decreased from 5 days to 4 days~n',[]),
+            format('Day to harvest for corn has decreased from 5 days to 4 days~n',[]),
+            format('Day to harvest for potato has decreased from 7 days to 6 days~n',[])
         )
         ; Level = 8 -> (
             retract(seed(SeedName,tomato,SymP,SymH,4)),
-            assertz(seed(SeedName,tomato,SymP,SymH,3))
+            assertz(seed(SeedName,tomato,SymP,SymH,3)),
+            format('~nLevel 8 Perks: ~n',[]),
+            format('Day to harvest for tomato has decreased from 4 days to 3 days~n',[])
         )
         ; Level = 9 -> (
             retract(seed(SeedName1,corn,SymP1,SymH1,3)),
             retract(seed(SeedName2,potato,SymP2,SymH2,5)),
             assertz(seed(SeedName1,corn,SymP1,SymH1,2)),
-            assertz(seed(SeedName2,potato,SymP2,SymH2,4))
+            assertz(seed(SeedName2,potato,SymP2,SymH2,4)),
+            format('~nLevel 9 Perks: ~n',[]),
+            format('Day to harvest for corn has decreased from 3 days to 2 days~n',[]),
+            format('Day to harvest for potato has decreased from 5 days to 4 days~n',[])
         )
         ; Level = 10 -> (
             retract(seed(SeedName1,tomato,SymP1,SymH1,3)),
@@ -275,7 +322,11 @@ farmLvlUpEffect:-
             retract(seed(SeedName3,potato,SymP3,SymH3,4)),
             assertz(seed(SeedName1,tomato,SymP1,SymH1,2)),
             assertz(seed(SeedName2,carrot,SymP2,SymH2,1)),
-            assertz(seed(SeedName3,potato,SymP3,SymH3,3))
+            assertz(seed(SeedName3,potato,SymP3,SymH3,3)),
+            format('~nLevel 10 Perks: ~n',[]),
+            format('Day to harvest for tomato has decreased from 3 days to 2 days~n',[]),
+            format('Day to harvest for corn has decreased from 2 days to 1 days~n',[]),
+            format('Day to harvest for potato has decreased from 4 days to 3 days~n',[])
         )
     ),
     !.
