@@ -25,8 +25,8 @@ sleep:-
     write('You went to sleep.\n\n'),
     fairy,
     nextDay,
-    checkGameState,
     continue, 
+    checkGameState,
     day(Day), alchemist(dayArrived, AlcheDay),
     (Day = AlcheDay) ->
         write('\n\nThere\'s something different upon this peaceful morning...\n'),

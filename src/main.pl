@@ -56,13 +56,13 @@ start:-
             write(Output),
             write('Beginning game....\n'),
             assertz(day(1)),
-            assertz(gold(1000)), assertz(exp(0)),    
+            assertz(gold(1000)), assertz(exp(0)), assertz(level(1)),  
             assertz(fishEXP(exp, 0)), assertz(fishEXP(lvl, 1)), 
             assertz(fishEXP(level_up_ceil_exp, 300)), assertz(fishing_today(0)), 
             write('Use W, A, S, and D (.) to move!\n\n'),
             write('Use the HELP menu for more information!\n\n'),
             initQuest, initRanch, initFarm, status, map,
-            retract(playing(false)), assertz(playing(true)),
+            retract(playing(false)), assertz(playing(true)), assertz(goal(false)),
             assertz(alchemist(numPotion, 1)), random(2, 10, DayArrived), 
             assertz(alchemist(dayArrived, DayArrived)), assertz(alchemist(hasArrived, false))
         )
