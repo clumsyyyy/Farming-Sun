@@ -70,7 +70,6 @@ quest:-
             Gplus is G+Gold,
             Eplus is E+EXP,
             globalEXPUp(EXP),
-            retract(globalEXP(exp, E)), assertz(globalEXP(exp, Eplus)),
             retract(gold(G)),
             assertz(gold(Gplus)),
             format('_________________________________________________~n', []),
@@ -137,3 +136,11 @@ doRanch(Qty):-
         Rfx is Rf-Qty,
         retract(myquest(_,_,_,_,_,_)),
         assertz(myquest(Hi,Hf,Fi,Ff,Ri,Rfx)),!;true.
+
+doHarvest:-
+/* Jika sedang mengerjakan quest, maka komponen quest untuk harvest berkurang 1*/
+    myquest(Hi,Hf,Fi,Ff,Ri,Rf),
+    Hf > 0,
+    Hfx is Hf-1,
+    retract(myquest(_,_,_,_,_,_)),
+    assertz(myquest(Hi,Hfx,Fi,Ff,Ri,Rf)),!;true.
