@@ -17,6 +17,7 @@ continue:-
 status:-
 /* Fungsi untuk menampilkan informasi terkait uang, hari, dan EXP pemain */
     day(Day), gold(Gold), occupation(Occupation),
+    globalEXP(exp, EXP), globalEXP(lvl, Level),
     farmEXP(exp, FarmEXP), farmEXP(lvl, Farmlvl),
     fishEXP(exp, FishEXP), fishEXP(lvl, Fishlvl),
     ranchEXP(exp, RanchEXP), ranchEXP(lvl, Ranchlvl),
@@ -24,9 +25,10 @@ status:-
     write('     Day: '), write(Day), write(' | '),
     write('Gold: '), write(Gold), write('\n'),
     write('========== LEVELS ==========\n'),
-    write(' Farming | EXP: '), write(FarmEXP), write(' | LVL: '), write(Farmlvl), write('\n'),
-    write(' Fishing | EXP: '), write(FishEXP), write(' | LVL: '), write(Fishlvl), write('\n'),
-    write(' Ranching| EXP: '), write(RanchEXP), write(' | LVL: '), write(Ranchlvl), write('\n'), !.
+    write(' Farming  | EXP: '), write(FarmEXP), write(' | LVL: '), write(Farmlvl), write('\n'),
+    write(' Fishing  | EXP: '), write(FishEXP), write(' | LVL: '), write(Fishlvl), write('\n'),
+    write(' Ranching | EXP: '), write(RanchEXP), write(' | LVL: '), write(Ranchlvl), write('\n'), 
+    write(' Overall  | EXP: '), write(EXP), write(' | LVL: '), write(Level), write('\n'), !.
 
 quit:-
     write('Thank you for playing the game! We hope to see you again soon!\n'),
@@ -106,7 +108,7 @@ globalEXPUp(EXPGiven) :-
     TotalEXP is E + EXPGiven,
     ((TotalEXP >= R) -> (
         retract(globalEXP(lvl, L)),
-        retract(globalEXP(exp, E1)),
+        retract(globalEXP(exp, E)),
         retract(globalEXP(lvlUpReq, R)),
         L1 is L + 1,
         E2 is TotalEXP - R,
