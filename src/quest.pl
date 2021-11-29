@@ -68,7 +68,7 @@ quest:-
             gold(G),
             Gplus is G+Gold,
             globalEXPUp(EXP),
-            globalEXP(exp, Eplus),
+            globalEXP(exp, Eplus), globalEXP(lvl, GlobalLvl),
             retract(gold(G)),
             assertz(gold(Gplus)),
             format('_________________________________________________~n', []),
@@ -86,6 +86,7 @@ quest:-
             write('Reward has been added. Your current status: \n'),
             format('Gold: ~d~n',[Gplus]),
             format('EXP : ~d~n',[Eplus]),
+            format('Level: ~d~n', [GlobalLvl]),
             checkGameState,
             retract(myquest(_,_,_,_,_,_)),
             assertz(myquest(-1,-1,-1,-1,-1,-1)),
@@ -126,3 +127,11 @@ isQuestClear:-
     \+isNotInQuest,
     myquest(_,X,_,Y,_,Z),
     X =< 0, Y =< 0, Z =< 0.
+
+doRanch(Qty):-
+    /* Jika sedang mengerjakan quest, maka komponen quest untuk ranch berkurang 1*/
+        myquest(Hi,Hf,Fi,Ff,Ri,Rf),
+        Rf > 0,
+        Rfx is Rf-Qty,
+        retract(myquest(_,_,_,_,_,_)),
+        assertz(myquest(Hi,Hf,Fi,Ff,Ri,Rfx)),!;true.
