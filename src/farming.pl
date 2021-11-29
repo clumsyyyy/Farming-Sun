@@ -210,7 +210,7 @@ showInfoHarvest(A,B):-
         RemainingDay > 0 -> 
             format('The ~w can be harvested in ~d days~n',[Name,RemainingDay])
         ; %else remainingday <= 0
-            format('The ~w is ready to be harvested~n',[Name])
+            format('   The ~w is ready to be harvested~n',[Name])
     ),
     !.
 

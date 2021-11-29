@@ -70,46 +70,113 @@ map:-
 - Apabila pemain bergerak biasa, posisi akan diupdate dan map baru akan dicetak.
 */
 
-w:- pos(A, B), A1 is (A - 1), map(A1, B, '#'), write('Oops, you\'ve hit a fence!\n\n'), map, !.
-w:- pos(A, B), A1 is (A - 1), map(A1, B, _), myPlant(A1,B,Name,_,_,_,_), format('You\'ve arrived at ~w plant !~n~n', [Name]),showInfoHarvest(A1,B), changePos(A1, B), map, !.
-w:- pos(A, B), A1 is (A - 1), map(A1, B, '='), write('You\'ve arrived at the digged tile!\nYou can plant seed here.\nUse command \'dig.\' then \'plant.\' ...\n'), changePos(A1, B), map, !.
-w:- pos(A, B), A1 is (A - 1), map(A1, B, 'o'), write('You\'ve arrived at the Lake!\nYou can fish here.\nUse command \'fish.\'...\n'), map, !.
-w:- pos(A, B), A1 is (A - 1), map(A1, B, 'H'), write('You\'ve arrived at your House!\nUse command \'house.\' to access your house...\n'), changePos(A1, B), map, !.
-w:- pos(A, B), A1 is (A - 1), map(A1, B, 'Q'), write('You\'ve arrived at the Quest Centre!\nYou can pick up quests here.\nUse command \'quest\' ...\n'), changePos(A1, B), map, !.
-w:- pos(A, B), A1 is (A - 1), map(A1, B, 'M'), write('You\'ve arrived at the Marketplace!\nYou can buy items here.\nUse command \'market.\' ...\n'), changePos(A1, B), map, !.
-w:- pos(A, B), A1 is (A - 1), map(A1, B, 'R'), write('You\'ve arrived at the Ranch!\nUse command \'ranch.\' to start ranching...\n'), changePos(A1, B), map, !.
-w:- pos(A, B), A1 is (A - 1), write('Moved one tile above!\n\n'), changePos(A1, B), map, !.
+w:- pos(A, B), A1 is (A - 1), map(A1, B, '#'), mapArt('#'), map, !.
+w:- pos(A, B), A1 is (A - 1), map(A1, B, _), myPlant(A1,B,Name,_,_,_,_), mapArtPlant(A1,B,Name), changePos(A1, B), map, !.
+w:- pos(A, B), A1 is (A - 1), map(A1, B, '='), mapArt('equal'), changePos(A1, B), map, !.
+w:- pos(A, B), A1 is (A - 1), map(A1, B, 'o'), mapArt('o'), map, !.
+w:- pos(A, B), A1 is (A - 1), map(A1, B, 'H'), mapArt('H'), changePos(A1, B), map, !.
+w:- pos(A, B), A1 is (A - 1), map(A1, B, 'Q'), mapArt('Q'), changePos(A1, B), map, !.
+w:- pos(A, B), A1 is (A - 1), map(A1, B, 'M'), mapArt('M'), changePos(A1, B), map, !.
+w:- pos(A, B), A1 is (A - 1), map(A1, B, 'R'), mapArt('R'), changePos(A1, B), map, !.
+w:- pos(A, B), A1 is (A - 1), mapArt('Above'), changePos(A1, B), map, !.
 
 
-a:- pos(A, B), B1 is (B - 1), map(A, B1, '#'), write('Oops, you\'ve hit a fence!\n\n'), map, !.
-a:- pos(A, B), B1 is (B - 1), map(A, B1, _), myPlant(A,B1,Name,_,_,_,_), format('You\'ve arrived at ~w plant !~n~n', [Name]),showInfoHarvest(A,B1), changePos(A, B1), map, !.
-a:- pos(A, B), B1 is (B - 1), map(A, B1, '='), write('You\'ve arrived at the digged tile!\nYou can plant seed here.\nUse command \'dig.\' then \'plant.\' ...\n'), changePos(A,B1), map, !.
-a:- pos(A, B), B1 is (B - 1), map(A, B1, 'o'),  write('You\'ve arrived at the Lake!\nYou can fish here.\nUse command \'fish.\'...\n'), map, !.
-a:- pos(A, B), B1 is (B - 1), map(A, B1, 'H'), write('You\'ve arrived at your House!\nUse command \'house.\' to access your house...\n'), changePos(A, B1), map, !.
-a:- pos(A, B), B1 is (B - 1), map(A, B1, 'Q'), write('You\'ve arrived at the Quest Centre!\nYou can pick up quests here.\nUse command \'quest\' ...\n'), changePos(A, B1), map, !.
-a:- pos(A, B), B1 is (B - 1), map(A, B1, 'M'), write('You\'ve arrived at the Marketplace!\nYou can buy items here.\nUse command \'market.\' ...\n'), changePos(A, B1),map, !.
-a:- pos(A, B), B1 is (B - 1), map(A, B1, 'R'), write('You\'ve arrived at the Ranch!\nUse command \'ranch.\' to start ranching...\n'), changePos(A, B1), map, !.
-a:- pos(A, B), B1 is (B - 1), write('Moved one tile left!\n\n'), changePos(A, B1), map, !.
+a:- pos(A, B), B1 is (B - 1), map(A, B1, '#'), mapArt('#'), map, !.
+a:- pos(A, B), B1 is (B - 1), map(A, B1, _), myPlant(A,B1,Name,_,_,_,_), mapArtPlant(A,B1,Name), changePos(A, B1), map, !.
+a:- pos(A, B), B1 is (B - 1), map(A, B1, '='), mapArt('equal'), changePos(A,B1), map, !.
+a:- pos(A, B), B1 is (B - 1), map(A, B1, 'o'),  mapArt('o'), map, !.
+a:- pos(A, B), B1 is (B - 1), map(A, B1, 'H'), mapArt('H'), changePos(A, B1), map, !.
+a:- pos(A, B), B1 is (B - 1), map(A, B1, 'Q'), mapArt('Q'), changePos(A, B1), map, !.
+a:- pos(A, B), B1 is (B - 1), map(A, B1, 'M'), mapArt('M'), changePos(A, B1),map, !.
+a:- pos(A, B), B1 is (B - 1), map(A, B1, 'R'), mapArt('R'), changePos(A, B1), map, !.
+a:- pos(A, B), B1 is (B - 1), mapArt('Left'), changePos(A, B1), map, !.
 
 
-s:- pos(A, B), A1 is (A + 1), map(A1, B, '#'), write('Oops, you\'ve hit a fence!\n\n'), map, !.
-s:- pos(A, B), A1 is (A + 1), map(A1, B, _), myPlant(A1,B,Name,_,_,_,_), format('You\'ve arrived at ~w plant !~n~n', [Name]),showInfoHarvest(A1,B), changePos(A1, B), map, !.
-s:- pos(A, B), A1 is (A + 1), map(A1, B, '='), write('You\'ve arrived at the digged tile!\nYou can plant seed here.\nUse command \'dig.\' then \'plant.\' ...\n'), changePos(A1,B), map, !.
-s:- pos(A, B), A1 is (A + 1), map(A1, B, 'o'),  write('You\'ve arrived at the Lake!\nYou can fish here.\nUse command \'fish.\'...\n'), map, !.
-s:- pos(A, B), A1 is (A + 1), map(A1, B, 'H'), write('You\'ve arrived at your House!\nUse command \'house.\' to access your house...\n'), changePos(A1, B), map, !.
-s:- pos(A, B), A1 is (A + 1), map(A1, B, 'Q'), write('You\'ve arrived at the Quest Centre!\nYou can pick up quests here.\nUse command \'quest\' ...\n'), changePos(A1, B), map, !.
-s:- pos(A, B), A1 is (A + 1), map(A1, B, 'M'), write('You\'ve arrived at the Marketplace!\nYou can buy items here.\nUse command \'market.\' ...\n'), changePos(A1, B), map, !.
-s:- pos(A, B), A1 is (A + 1), map(A1, B, 'R'), write('You\'ve arrived at the Ranch!\nUse command \'ranch.\' to start ranching...\n'), changePos(A1, B), map, !.
-s:- pos(A, B), A1 is (A + 1), write('Moved one tile below!\n\n'), changePos(A1, B), map, !.
+s:- pos(A, B), A1 is (A + 1), map(A1, B, '#'), mapArt('#'), map, !.
+s:- pos(A, B), A1 is (A + 1), map(A1, B, _), myPlant(A1,B,Name,_,_,_,_), mapArtPlant(A1,B,Name), changePos(A1, B), map, !.
+s:- pos(A, B), A1 is (A + 1), map(A1, B, '='), mapArt('equal'), changePos(A1,B), map, !.
+s:- pos(A, B), A1 is (A + 1), map(A1, B, 'o'),  mapArt('o'), map, !.
+s:- pos(A, B), A1 is (A + 1), map(A1, B, 'H'), mapArt('H'), changePos(A1, B), map, !.
+s:- pos(A, B), A1 is (A + 1), map(A1, B, 'Q'), mapArt('Q'), changePos(A1, B), map, !.
+s:- pos(A, B), A1 is (A + 1), map(A1, B, 'M'), mapArt('M'), changePos(A1, B), map, !.
+s:- pos(A, B), A1 is (A + 1), map(A1, B, 'R'), mapArt('R'), changePos(A1, B), map, !.
+s:- pos(A, B), A1 is (A + 1), mapArt('Below'), changePos(A1, B), map, !.
 
 
-d:- pos(A, B), B1 is (B + 1), map(A, B1, '#'), write('Oops, you\'ve hit a fence!\n\n'), map, !.
-d:- pos(A, B), B1 is (B + 1), map(A, B1, _), myPlant(A,B1,Name,_,_,_,_), format('You\'ve arrived at ~w plant !~n~n', [Name]),showInfoHarvest(A,B1), changePos(A, B1), map, !.
-d:- pos(A, B), B1 is (B + 1), map(A, B1, '='), write('You\'ve arrived at the digged tile!\nYou can plant seed here.\nUse command \'dig.\' then \'plant.\' ...\n'), changePos(A,B1), map, !.
-d:- pos(A, B), B1 is (B + 1), map(A, B1, 'o'),  write('You\'ve arrived at the Lake!\nYou can fish here.\nUse command \'fish.\'...\n'), map, !.
-d:- pos(A, B), B1 is (B + 1), map(A, B1, 'H'), write('You\'ve arrived at your House!\nUse command \'house.\' to access your house...\n'), changePos(A, B1), map, !.
-d:- pos(A, B), B1 is (B + 1), map(A, B1, 'Q'), write('You\'ve arrived at the Quest Centre!\nYou can pick up quests here.\nUse command \'quest\' ...\n'), changePos(A, B1), map, !.
-d:- pos(A, B), B1 is (B + 1), map(A, B1, 'M'), write('You\'ve arrived at the Marketplace!\nYou can buy items here.\nUse command \'market.\' ...\n'), changePos(A, B1), map, !.
-d:- pos(A, B), B1 is (B + 1), map(A, B1, 'R'), write('You\'ve arrived at the Ranch!\nUse command \'ranch.\' to start ranching...\n'), changePos(A, B1), map, !.
-d:- pos(A, B), B1 is (B + 1), write('Moved one tile right!\n\n'), changePos(A, B1), map, !.
+d:- pos(A, B), B1 is (B + 1), map(A, B1, '#'), mapArt('#'), map, !.
+d:- pos(A, B), B1 is (B + 1), map(A, B1, _), myPlant(A,B1,Name,_,_,_,_), mapArtPlant(A,B1,Name), changePos(A, B1), map, !.
+d:- pos(A, B), B1 is (B + 1), map(A, B1, '='), mapArt('equal'), changePos(A,B1), map, !.
+d:- pos(A, B), B1 is (B + 1), map(A, B1, 'o'),  mapArt('o'), map, !.
+d:- pos(A, B), B1 is (B + 1), map(A, B1, 'H'), mapArt('H'), changePos(A, B1), map, !.
+d:- pos(A, B), B1 is (B + 1), map(A, B1, 'Q'), mapArt('Q'), changePos(A, B1), map, !.
+d:- pos(A, B), B1 is (B + 1), map(A, B1, 'M'), mapArt('M'), changePos(A, B1), map, !.
+d:- pos(A, B), B1 is (B + 1), map(A, B1, 'R'), mapArt('R'), changePos(A, B1), map, !.
+d:- pos(A, B), B1 is (B + 1), mapArt('Right'), changePos(A, B1), map, !.
 
+mapArt(Symbol):-
+    format('~n-------------------------------------------------~n', []),
+    printArrivedAt(Symbol),
+    format('-------------------------------------------------~n~n', []).
+
+mapArtPlant(A,B,Name):-
+    format('~n-------------------------------------------------~n', []),
+    format('         You\'ve arrived at ~w plant !~n', [Name]),
+    write('     '),showInfoHarvest(A,B),
+    format('-------------------------------------------------~n~n', []).
+
+printArrivedAt(Symbol):-
+    Symbol = '#' -> (
+        write('          Oops, you\'ve hit a fence!\n')
+    )
+    ; 
+    Symbol = 'Right' -> (
+        write('            Moved one tile right!\n')
+    )
+    ;
+    Symbol = 'Left' -> (
+        write('            Moved one tile left!\n')
+    )
+    ;
+    Symbol = 'Above' -> (
+        write('            Moved one tile above!\n')
+    )
+    ;
+    Symbol = 'Below' -> (
+        write('            Moved one tile below!\n')
+    )
+    ;
+    Symbol = 'o' -> (
+        write('         You\'ve arrived at the Lake!\n'),
+        write('              You can fish here.\n'),
+        write('            Use command \'fish.\'...\n')
+    )
+    ;
+    Symbol = 'H' -> (
+        write('        You\'ve arrived at your House!\n'),
+        write('  Use command \'house.\' to access your house...\n')
+    )
+    ;
+    Symbol = 'Q' -> (
+        write('       You\'ve arrived at the Quest Centre!\n'),
+        write('           You can pick up quests here.\n'),
+        write('             Use command \'quest\' ...\n')
+    )
+    ;
+    Symbol = 'M' -> (
+        write('      You\'ve arrived at the Marketplace!\n'),
+        write('        You can buy or sell items here.\n'),
+        write('            Use command \'market.\' ...\n')
+    )
+    ;
+    Symbol = 'R' -> (
+        write('         You\'ve arrived at the Ranch!\n'),
+        write('   Use command \'ranch.\' to start ranching...\n')
+    )
+    ;
+    Symbol = 'equal' -> (
+        write('        You\'ve arrived at the digged tile!\n'),
+        write('             You can plant seed here.\n'),
+        write('    Use command \'dig.\' then \'plant.\' ...\n')
+    )
+    ,
+    true.
